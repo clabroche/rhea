@@ -1,0 +1,84 @@
+{
+  "name": "rhea",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "npm-run-all --parallel client server ",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint",
+    "capacitor-copy": "vue-cli-service capacitor-copy",
+    "capacitor-init": "vue-cli-service capacitor-init",
+    "capacitor-open": "vue-cli-service capacitor-open",
+    "capacitor-update": "vue-cli-service capacitor-update",
+    "capacitor:build": "vue-cli-service capacitor:build",
+    "capacitor:serve": "vue-cli-service capacitor:serve",
+    "client": "vue-cli-service serve ",
+    "server": "cd server && nodemon bin/www"
+  },
+  "dependencies": {
+    "@capacitor/android": "^1.3.0",
+    "@capacitor/cli": "^1.3.0",
+    "@capacitor/core": "^1.3.0",
+    "@fortawesome/fontawesome-free": "^5.11.2",
+    "@ionic-native/barcode-scanner": "^5.17.1",
+    "@ionic-native/core": "^5.17.1",
+    "aws-sdk": "^2.560.0",
+    "aws-sign": "^1.0.0",
+    "aws-signature-v4": "^1.4.0",
+    "aws4": "^1.8.0",
+    "axios": "^0.19.0",
+    "capacitor": "^0.5.5",
+    "cheerio": "^1.0.0-rc.3",
+    "core-js": "^3.3.2",
+    "fast-sort": "^1.6.0",
+    "javascript-barcode-reader": "^0.5.4",
+    "lodash-es": "^4.17.15",
+    "npm-run-all": "^4.1.5",
+    "phonegap-plugin-barcodescanner": "^8.1.0",
+    "quagga": "^0.12.1",
+    "vue": "^2.6.10",
+    "vue-js-modal": "^1.3.31",
+    "vue-line-clamp": "^1.3.2",
+    "vue-router": "^3.1.3"
+  },
+  "devDependencies": {
+    "@nklayman/vue-cli-plugin-capacitor": "^0.1.1",
+    "@vue/cli-plugin-babel": "^4.0.0",
+    "@vue/cli-plugin-eslint": "^4.0.0",
+    "@vue/cli-plugin-router": "^4.1.2",
+    "@vue/cli-service": "^4.0.0",
+    "babel-eslint": "^10.0.3",
+    "eslint": "^5.16.0",
+    "eslint-plugin-vue": "^5.0.0",
+    "node-sass": "^4.12.0",
+    "sass-loader": "^8.0.0",
+    "vue-cli-plugin-capacitor": "^1.0.0-alpha.1",
+    "vue-template-compiler": "^2.6.10"
+  },
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "node": true
+    },
+    "rules": {
+      "no-console": "off"
+    },
+    "extends": [
+      "plugin:vue/essential",
+      "eslint:recommended"
+    ],
+    "parserOptions": {
+      "parser": "babel-eslint"
+    }
+  },
+  "postcss": {
+    "plugins": {
+      "autoprefixer": {}
+    }
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions"
+  ],
+  "homepage": "."
+}
