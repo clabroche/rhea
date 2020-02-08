@@ -11,6 +11,10 @@
           <i class="fas fa-cookie"></i>
           Produits
         </li>
+        <li @click="$router.push({name: 'categories'}); sidebar.open = false">
+          <i class="fas fa-cookie"></i>
+          Categories
+        </li>
       </ul>
       <ul>
         <a :href="androidURL">

@@ -3,5 +3,6 @@ var router = express.Router();
 
 router.use('/items', require('./items'))
 router.use('/lists', require('./lists'))
+router.use('/categories', require('./categories'))
 
 module.exports = router;

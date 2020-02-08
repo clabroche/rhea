@@ -5,6 +5,7 @@ import List from '../views/List.vue'
 import Item from '../views/Item.vue'
 import Items from '../views/Items.vue'
 import Login from '../views/Login.vue'
+import Categories from '../views/Categories.vue'
 
 Vue.use(VueRouter)
 
@@ -28,7 +29,11 @@ const routes = [
     path: '/items',
     name: 'items',
     component: Items
-  },  {
+  }, {
+    path: '/categories',
+    name: 'categories',
+    component: Categories
+  }, {
     path: '/login',
     name: 'login',
     component: Login
