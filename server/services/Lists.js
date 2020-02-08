@@ -110,11 +110,15 @@ List.prototype.update = async function() {
     .updateOne({_id: this._id}, {$set: listToUpdate})
   return listToUpdate
 }
-List.deleteItem = async function(listId, itemId) {
+List.deleteItem = async function (listId, itemId) {
   const list = await List.getList(listId)
   list.confs = list.confs.filter(conf => mongo.getID(conf._id).toString() !== mongo.getID(itemId).toString())
   await list.update()
   return list
+}
+List.delete = async function (listId) {
+  await mongo.collection('lists').deleteOne({_id: ObjectID(listId)})
+  return listId
 }
 
 module.exports = List

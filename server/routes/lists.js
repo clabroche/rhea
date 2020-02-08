@@ -27,6 +27,10 @@ router.delete('/:listId/items/:itemId', authentification, async function (req, r
   const list = await Lists.deleteItem(req.params.listId, req.params.itemId)
   res.json(list)
 })
+router.delete('/:listId', authentification, async function (req, res, next) {
+  const list = await Lists.delete(req.params.listId)
+  res.json(list)
+})
 router.put('/:listId/items/:itemId/increment/:amount', authentification, async function (req, res, next) {
   const { listId, itemId, amount } = req.params
   await Lists.increment(listId, itemId, amount)

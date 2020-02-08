@@ -29,12 +29,19 @@ export default {
     return list
   },
   async deleteItem(listId, itemId) {
-    if(!listId) throw new Error('Provide listId param')
-    if(!itemId) throw new Error('Provide itemId param')
-    const {data: list} = await API.delete('/lists/' + listId+'/items/'+itemId, {
+    if (!listId) throw new Error('Provide listId param')
+    if (!itemId) throw new Error('Provide itemId param')
+    const { data: list } = await API.delete('/lists/' + listId + '/items/' + itemId, {
       headers: {
         token: Auth.token
       },
+    })
+    return list
+  },
+  async deleteList(listId) {
+    if (!listId) throw new Error('Provide listId param')
+    const { data: list } = await API.delete('/lists/' + listId, {
+      headers: { token: Auth.token },
     })
     return list
   },

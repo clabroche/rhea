@@ -2,7 +2,12 @@
   <div class="root-lists">
     <div class="lists-container">
       <div v-for="list of lists" :key="list._id" @click="$router.push({name:'list', params: {listId: list._id}})">
-        <line-vue :additionalAction="true" :name="list.name" :description="list.description"/>
+        <line-vue
+          :additionalAction="true"
+          :name="list.name"
+          :description="list.description" 
+          @action="openOptions(list)"
+        />
       </div>
     </div>
     <bottom-bar :text="lists.length + ' listes au total'" @action="createList" />
@@ -12,6 +17,9 @@
         <input type="text" v-model="listToCreate.description" placeholder="Description...">
       </div>
     </modal-vue>
+    <options-vue ref="options" :options="[
+      {label:  'Suppression', select: deleteList},
+    ]"/>
   </div>
 </template>
 
@@ -20,15 +28,18 @@ import BottomBarVue from '../components/BottomBar.vue';
 import ModalVue from '../components/Modal.vue';
 import Lists from '../services/lists.js';
 import LineVue from '../components/Line.vue'
+import OptionsVue from '../components/Options.vue';
 export default {
   components: {
     'bottom-bar': BottomBarVue,
     'modal-vue': ModalVue,
-    'line-vue': LineVue
+    'line-vue': LineVue,
+    optionsVue: OptionsVue
   }, 
   data() {
     return {
       lists: [],
+      selectedList: null,
       listToCreate: {
         name: '',
         description: ''
@@ -45,6 +56,15 @@ export default {
     clearInterval(this.interval)
   },
   methods: {
+    async openOptions(list) {
+      this.$refs.options.open(list.name)
+      this.selectedList = list
+    },
+    async deleteList() {
+      await Lists.deleteList(this.selectedList._id) 
+      this.selecteList = null
+      return this.getLists()
+    },
     async getLists() {
       this.lists = await Lists.getLists()
     },
