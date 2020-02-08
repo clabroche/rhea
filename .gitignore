@@ -23,3 +23,5 @@ yarn-error.log*
 server/public/my-library.apk
 
 prod-infos.json
+
+rheavue.tar

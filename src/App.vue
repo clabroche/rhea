@@ -50,7 +50,7 @@ export default {
   },
   computed: {
     androidURL() {
-      return `${process.env.VUE_APP_SERVER_URL}:${process.env.VUE_APP_SERVER_PORT}/location-sharing.apk`
+      return `${process.env.VUE_APP_SERVER_URL}:${process.env.VUE_APP_SERVER_PORT}/rhea.apk`
     }
   },
   created() {
