@@ -34,11 +34,32 @@ List.prototype.loadItems = async function() {
   }).filter(a => a) // Remove undefined items
 }
 /** @param {string} listId */
-List.getList = async function(listId) {
+List.getList = async function (listId) {
   const list = await mongo
     .collection('lists')
-    .findOne({_id: mongo.getID(listId)})
+    .findOne({ _id: mongo.getID(listId) })
+  list.confs = await PromiseB.map(list.confs, async conf => {
+    const item = await mongo.collection('items').findOne({ _id: mongo.getID(conf._id) })
+    return Object.assign(conf, item)
+  })
   return new List(list)
+}
+/** @param {string} listId */
+List.increment = async function (listId, itemId, amount) {
+  const list = await this.getList(listId)
+  const conf = list.confs.filter(conf => conf._id.toString() === itemId.toString()).pop()
+  conf.selected = +amount
+  if (conf.selected > conf.total) conf.selected = 0
+  await list.update()
+  return list
+}
+List.quantity = async function (listId, itemId, amount) {
+  const list = await this.getList(listId)
+  const conf = list.confs.filter(conf => conf._id.toString() === itemId.toString()).pop()
+  conf.total = +amount
+  if(conf.total < conf.selected) conf.selected = conf.total
+  await list.update()
+  return list
 }
 /** @param {string} userId */
 List.getListsFromUser = async function(userId) {

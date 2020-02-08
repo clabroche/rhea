@@ -1,5 +1,5 @@
 <template>
-  <modal :name="uuid" height="auto" :width="width || '60%'" :scrollable="noScroll ? !noScroll : true" class="modal" @closed="cancel()">
+  <modal :name="uuid" height="auto" :width="width || '90%'" :scrollable="noScroll ? !noScroll : true" class="modal" @closed="cancel()">
     <div id="modal-content" :style="{height: height || 'auto'}">
       <div class="close-cross" v-if="closeCross" @click="close()">
         <i class="fas fa-times"></i>

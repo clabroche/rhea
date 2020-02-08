@@ -1,0 +1,28 @@
+
+version: "2"
+services:
+    rhea:
+        image: rhea
+        hostname: rhea
+        environment:
+          PORT: 9845
+          mongoDbURL: mongodb://root:apasswordtochange@mongodb/rhea?authSource=admin
+        expose:
+          - 9845
+        ports:
+          - 9875:9845
+        links:
+          - mongodb
+    mongodb:
+      image: mongo:4
+      hostname: mongodb
+      expose:
+        - 27017
+      ports:
+        - 2075:27017
+      environment:
+         MONGO_INITDB_ROOT_USERNAME: root
+         MONGO_INITDB_ROOT_PASSWORD: apasswordtochange
+      command: mongod --port 27017 
+      volumes:
+         - ./mongo-volume:/data/db

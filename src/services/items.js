@@ -1,15 +1,9 @@
-import axios from 'axios'
+import API from './API'
 import Auth from './Auth'
 export default {
   books: [],
-  axios: axios.create({
-    baseURL: process.env.VUE_APP_SERVER_URL + ':' + process.env.VUE_APP_SERVER_PORT,
-    headers: {
-      user: 'toto'
-    }
-  }),
   async getItem(itemToGet) {
-    const {data: item} = await this.axios.get('/items/' + itemToGet._id, {
+    const {data: item} = await API.get('/items/' + itemToGet._id, {
       headers: {
         token: Auth.token
       }
@@ -17,7 +11,7 @@ export default {
     return item
   },  
   async createItem(itemToCreate) {
-    const {data: item} = await this.axios.post('/items', itemToCreate, {
+    const {data: item} = await API.post('/items', itemToCreate, {
       headers: {
         token: Auth.token
       },
@@ -25,7 +19,7 @@ export default {
     return item
   },
   async getAll() {
-    const {data: items} = await this.axios.get('/items', {
+    const {data: items} = await API.get('/items', {
       headers: {
         token: Auth.token
       },
@@ -33,7 +27,7 @@ export default {
     return items
   },
   async get(itemId) {
-    const {data: item} = await this.axios.get('/items/' + itemId, {
+    const {data: item} = await API.get('/items/' + itemId, {
       headers: {
         token: Auth.token
       },
@@ -41,7 +35,7 @@ export default {
     return item
   },
   async remove(itemId) {
-    const {data: items} = await this.axios.delete('/items/' + itemId, {
+    const {data: items} = await API.delete('/items/' + itemId, {
       headers: {
         token: Auth.token
       },

@@ -56,7 +56,8 @@ export default {
     width: { default: 'auto' },
     single: { default: false },
     categories: {default: false},
-    placeholder: {default: 'Cliquez pour choisir...'}
+    placeholder: {default: 'Cliquez pour choisir...'},
+    autofocus: {default: false}
   },
   components: {
     // spinner: Spinner
@@ -121,7 +122,9 @@ export default {
       this.filter()
       await this.$nextTick()
       await this.$nextTick()
-      this.$refs.filter.focus()
+      if(this.autofocus) {
+        this.$refs.filter.focus()
+      }
       const cb = () => {
         this.isOpen = false
         document.removeEventListener('click', cb)

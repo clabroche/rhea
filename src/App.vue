@@ -39,6 +39,7 @@
 import Header from './services/Header'
 import sidebar from './services/sidebar'
 import Auth from './services/Auth'
+import httpError from './services/HTTPError'
 export default {
   data() {
     return {
@@ -51,6 +52,13 @@ export default {
     androidURL() {
       return `${process.env.VUE_APP_SERVER_URL}:${process.env.VUE_APP_SERVER_PORT}/location-sharing.apk`
     }
+  },
+  created() {
+    httpError.subscribe(err => {
+      if(err.response.status === 403) {
+        this.$router.push({name: 'login'})
+      } 
+    })
   },
   methods: {
     disconnect() {

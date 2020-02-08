@@ -71,7 +71,7 @@ export default {
     return {
       list: [],
       categories: [],
-      itemToCreate: {total: 1},
+      itemToCreate: {total: 1, name: '', description: '', price: 0},
       selectedItem: {},
       allItems: []
     }
@@ -79,7 +79,7 @@ export default {
   computed: {
     getTotalPrice() {
       return this.list.items.reduce((price, item) => {
-        return (+item.price || 0) + price
+        return (+item.price || 0) * +item.total + price
       }, 0).toFixed(2).replace('.', ',')
     }
   },
@@ -109,8 +109,7 @@ export default {
     updateQuantity() {
       this.$refs.quantityModal.open(this.selectedItem).subscribe(async res => {
         if(!res) return 
-        if(this.selectedItem.total < this.selectedItem.selected) this.selectedItem.selected = this.selectedItem.total
-        await lists.update(this.list)
+        await lists.updateQuantity(this.list._id, this.selectedItem._id,  this.selectedItem.total)
         this.selectedItem = {}
         return this.getList()
       })
@@ -134,27 +133,25 @@ export default {
       this.allItems = await Items.getAll()
       this.$refs.createModal.open().subscribe(async res => {
         if(!res) return
-        if(!this.itemToCreate._id) {
+        if(!this.itemToCreate._id && this.itemToCreate.name) { // Manual item -> create it
           const item = await Items.createItem(this.itemToCreate)
           this.itemToCreate._id = item._id
         }
-        this.itemToCreate.selected = 0
-        await lists.addItem(this.list._id, this.itemToCreate)
-        this.itemToCreate = {total:1}
-        this.allItems = await Items.getAll()
-        return this.getList()
+        if(this.itemToCreate._id) { // Is valid item
+          this.itemToCreate.selected = 0
+          await lists.addItem(this.list._id, this.itemToCreate)
+          this.itemToCreate = {total:1}
+          this.allItems = await Items.getAll()
+          return this.getList()
+        }
       })
     },
     async incrementItem(item) {
-      item.selected++
-      if(item.selected> item.total) item.selected = 0
-      await lists.update(this.list)
+      await lists.incrementItem(this.list._id, item._id, +item.selected+1)
       return this.getList()
     },
     async checkBoxClick(item, checked) {
-      if(!checked) item.selected = item.total
-      else item.selected = 0
-      await lists.update(this.list)
+      await lists.incrementItem(this.list._id, item._id, !checked ? item.total : 0)
       return this.getList()
     }
   },

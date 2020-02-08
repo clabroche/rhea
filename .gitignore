@@ -21,3 +21,5 @@ yarn-error.log*
 *.sw?
 
 server/public/my-library.apk
+
+prod-infos.json
