@@ -12,7 +12,7 @@
     "capacitor-init": "vue-cli-service capacitor-init",
     "capacitor-open": "vue-cli-service capacitor-open",
     "capacitor-update": "vue-cli-service capacitor-update",
-    "capacitor:build": "vue-cli-service capacitor:build && cp ./dist/app-release.apk ./server/public/rhea.apk",
+    "capacitor:build": "cd android && ./build.sh",
     "capacitor:serve": "vue-cli-service capacitor:serve",
     "client": "vue-cli-service serve ",
     "server": "cd server && nodemon bin/www"
