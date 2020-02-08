@@ -43,12 +43,12 @@ Item.getItem = async function(id) {
   const item = await mongo
     .collection('items')
     .findOne({_id: mongo.getID(id)})
-  return new Item(item) 
+  return item ? new Item(item) : null
 }
 Item.delete = async function(id) {
   const item = await mongo
     .collection('items')
     .deleteOne({_id: mongo.getID(id)})
-  return true
+  return item
 }
 module.exports = Item

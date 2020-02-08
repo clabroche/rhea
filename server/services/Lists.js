@@ -27,7 +27,7 @@ List.prototype.loadItems = async function() {
   this.items = await PromiseB.map(this.confs, async (itemConf, i) => {
     const item = await Items.getItem(itemConf._id)
     if(!item) { // If item doesn't exist, remove it from array
-      this.conf.splice(i, 1)
+      this.confs.splice(i, 1)
       return 
     }
     return Object.assign(item, itemConf) // Merge itemconf with real item
