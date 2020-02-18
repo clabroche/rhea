@@ -37,6 +37,8 @@ const ssh = new SSH()
 function bash(cmd, args = []) {
   return new Promise((resolve, reject) => {
     const sp = spawn(cmd, args, {})
+    sp.stdout.on('data', a=>console.log(a.toString('utf-8')))
+    sp.stderr.on('data', a=>console.log(a.toString('utf-8')))
     sp.on('close', code => {
       if(code !== 0) reject()
       else resolve()
