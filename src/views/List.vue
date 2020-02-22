@@ -3,7 +3,7 @@
     <div class="list-container">
       <div v-for="category of categories" :key="category.label">
         <div class="label" @click="category.collapse = !category.collapse">
-          <span>{{category.label !== 'undefined' ? category.label : 'Autres'}}</span>
+          <span>{{category.label !== 'undefined' && allCategoriesById[category.label]? allCategoriesById[category.label].name : 'Autres'}}</span>
           <i class="fas" :class="category.collapse ? 'fa-chevron-down' : 'fa-chevron-up'"></i>
         </div>
         <div v-if="!category.collapse">
@@ -59,6 +59,7 @@ import ModalVue from '../components/Modal.vue';
 import lodash from 'lodash'
 import OptionsVue from '../components/Options.vue';
 import MultiselectVue from '../components/Multiselect.vue'
+import Category from '../services/categories';
 export default {
   components: {
     multiselect: MultiselectVue,
@@ -73,7 +74,8 @@ export default {
       categories: [],
       itemToCreate: {total: 1, name: '', description: '', price: 0},
       selectedItem: {},
-      allItems: []
+      allItems: [],
+      allCategoriesById: {},
     }
   },
   computed: {
@@ -85,6 +87,7 @@ export default {
   },
   async mounted() {
     await this.getList()
+    ;(await Category.getCategories()).map(cat => this.$set(this.allCategoriesById, cat._id, cat))
     this.interval = setInterval(async () => {
       this.getList()
     }, 500);
@@ -98,8 +101,9 @@ export default {
       const str = JSON.stringify(list)
       if(this.backList=== str) return
       this.backList = str
-      const categories = lodash.groupBy(list.items, 'category')
+      const categories = lodash.groupBy(list.items, item => item.categoriesId[0])
       this.categories = Object.keys(categories).map(key => ({label: key, items: categories[key], collapse: false}))      
+      console.log(this.categories)
       this.list = list
     },
     selectItem(items) {
