@@ -69,10 +69,13 @@ export default {
       this.lists = await Lists.getLists()
     },
     createList() {
-      this.$refs.createModal.open().subscribe(async res => {
+      this.$refs.createModal.open().subscribe(async (res) => {
         if(!res) return 
         await Lists.createList(this.listToCreate)
-        this.createList = {}
+        this.listToCreate =  {
+          name: '',
+          description: ''
+        }
       })
     }
   }

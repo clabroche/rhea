@@ -14,7 +14,6 @@
     <modal-vue ref="createModal">
       <div slot="body">
         <input type="text" v-model="categoryToCreate.name" placeholder="Nom...">
-        <input type="text" v-model="categoryToCreate.description" placeholder="Description...">
       </div>
     </modal-vue>
     <options-vue ref="options" :options="[
@@ -42,7 +41,6 @@ export default {
       selectedCategory: null,
       categoryToCreate: {
         name: '',
-        description: ''
       }
     }
   },
@@ -72,7 +70,7 @@ export default {
       this.$refs.createModal.open().subscribe(async res => {
         if(!res) return 
         await Categories.createCategory(this.categoryToCreate)
-        this.createCategory = {}
+        this.categoryToCreate = {name: ''}
       })
     }
   }

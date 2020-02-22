@@ -5,7 +5,7 @@ const {mongo} = require('../helpers/mongoConnect')
 function User(user) {
   this._id = mongo.getID(user._id)
   this.email = user.email || ''
-  this.token = user.token || ''
+  this.tokens = user.tokens || []
 }
 User.getUser = async function(userId) {
   const user = await mongo

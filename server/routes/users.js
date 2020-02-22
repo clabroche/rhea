@@ -72,9 +72,10 @@ router.post('/register', async function(req, res, next) {
   res.json(req.body.token)
 });
 
-function generateToken(user) {
+async function generateToken(user) {
   user.token = uuid()
-  return mongo.collection('users').updateOne({email: user.email}, {$set: {token: user.token}})
+  await mongo.collection('users').updateOne({email: user.email}, {$push: {tokens: user.token}})
+  return user.token
 }
 
 module.exports = router

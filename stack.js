@@ -21,6 +21,7 @@ const stack = [
     spawnOptions: {
       cwd: '/home/coco/Projects/rhea',
       env: Object.assign({
+        VUE_APP_SERVER_URL: 'http://localhost',
         VUE_APP_SERVER_PORT: 9847,
         mongoDbURL: `mongodb://root:123456@localhost:27017/${BASE}?authSource=admin`
       }, process.env)
@@ -33,6 +34,7 @@ const stack = [
     spawnOptions: {
       cwd: '/home/coco/Projects/rhea',
       env: Object.assign({
+        VUE_APP_SERVER_URL: 'http://localhost',
         VUE_APP_SERVER_PORT: 9847,
         mongoDbURL: `mongodb://root:123456@localhost:27017/${BASE}?authSource=admin`
       }, process.env)

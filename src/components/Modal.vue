@@ -85,6 +85,7 @@ export default {
 <style scoped lang="scss">
 .modal {
   color: #4A5361;
+  z-index: 1299;
   #modal-content {
     height: auto;
     .close-cross {
