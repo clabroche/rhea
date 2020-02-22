@@ -101,7 +101,7 @@ export default {
       const str = JSON.stringify(list)
       if(this.backList=== str) return
       this.backList = str
-      const categories = lodash.groupBy(list.items, item => item.categoriesId[0])
+      const categories = lodash.groupBy(list.items, item => item.categoriesId?item.categoriesId[0] : undefined)
       this.categories = Object.keys(categories).map(key => ({label: key, items: categories[key], collapse: false}))      
       console.log(this.categories)
       this.list = list

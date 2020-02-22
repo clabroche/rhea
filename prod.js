@@ -112,7 +112,7 @@ async function pushDockerImage() {
   const remoteSize = +res.stdout
   const res1 = await bashExec('stat -c "%s" ./rheavue.tar')
   const localSize = +res1
-  if(remoteSize !== localSize) {
+  if(remoteSize !== localSize || process.env.FORCE_PUSH) {
     console.log('Push docker image...')
     await PromiseB.map([
       progressFile(),
