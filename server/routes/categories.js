@@ -18,6 +18,16 @@ router.post('/', authentification, async function (req, res, next) {
   res.json(categories)
 })
 
+router.post('/:categoryId/link-items', authentification, async function (req, res, next) {
+  await Categories.linkItems(req.user._id, req.params.categoryId, req.body)
+  res.json(true)
+})
+
+router.delete('/:categoryId/link-items/:itemId', authentification, async function (req, res, next) {
+  await Categories.removeLinkItems(req.user._id, req.params.categoryId, req.params.itemId)
+  res.json(true)
+})
+
 router.delete('/:categoryId', authentification, async function (req, res, next) {
   await Categories.delete(req.user._id, req.params.categoryId)
   res.json(true)

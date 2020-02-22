@@ -1,5 +1,6 @@
 const {mongo} = require('../helpers/mongoConnect')
 const ObjectID = require('mongodb').ObjectID
+const PromiseB = require('bluebird')
 function Category(category) {
   if(!category.ownerId) throw new Error('category should be own from a user')
   /** @type {ObjectID | string} */
@@ -43,8 +44,36 @@ Category.delete = async function (ownerId, categoryId) {
 }
 
 Category.get = async function (ownerId, categoryId) {
-  return  mongo.collection('categories')
+  return mongo.collection('categories')
     .findOne({ ownerId: mongo.getID(ownerId), _id: mongo.getID(categoryId) })
 }
+Category.linkItems = async function (ownerId, categoryId, itemsId) {
+  return PromiseB.map(itemsId, async itemId => {
+    await mongo.collection('categories')
+      .updateOne(
+        { ownerId: mongo.getID(ownerId), _id: mongo.getID(categoryId) },
+        { $addToSet: { itemsId: itemId } }
+      )
+    return mongo.collection('items')
+      .updateOne(
+        { ownerId: mongo.getID(ownerId), _id: mongo.getID(itemId) },
+        { $addToSet: { categoriesId: categoryId } }
+      )
+  })
+}
+
+Category.removeLinkItems = async function (ownerId, categoryId, itemId) {
+  await mongo.collection('categories')
+    .updateOne(
+      { ownerId: mongo.getID(ownerId), _id: mongo.getID(categoryId) },
+      { $pull: { itemsId: itemId } }
+    )
+  return mongo.collection('items')
+    .updateOne(
+      { ownerId: mongo.getID(ownerId), _id: mongo.getID(itemId) },
+      { $pull: { categoriesId: categoryId } }
+    )
+}
+
 
 module.exports = Category
