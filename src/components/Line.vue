@@ -76,6 +76,7 @@ export default {
     margin-top: 10px;
     box-shadow: 0px 0px 4px 1px lightgrey;
     .line-container {
+      background-color: #fff;
       padding: 10px;
       box-sizing: border-box;
       position: relative;
