@@ -79,6 +79,7 @@ export default {
       padding: 10px;
       box-sizing: border-box;
       position: relative;
+      overflow: hidden;
       .progress {
         position: absolute;
         left: 0;
@@ -99,9 +100,11 @@ export default {
         }
         .name {
           color: var(--headerBgColor);
-          font-size: 1.3em;
+          font-size: 1em;
+          white-space: nowrap;
         }
         .description {
+          font-size: 0.8em;
           color: #6c6c6c
         }
       }
