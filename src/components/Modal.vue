@@ -120,6 +120,7 @@ export default {
     .title-modal {
       font-size: 1.5rem;
       padding: 20px;
+      padding-bottom: 0;
       font-weight: bold;
     }
     .body {
