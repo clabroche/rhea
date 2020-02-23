@@ -1,5 +1,7 @@
 <template>
   <div class="root-item">
+     <svg-background :bottom="true" svg="cookie">
+    </svg-background>
     <div class="form">
       <input type="text" v-model="item.name" placeholder="Nom...">
       <input type="text" v-model="item.description" placeholder="Description...">
@@ -11,12 +13,16 @@
 
 <script>
 import Items from '../services/items';
+import SvgBackgroundVue from '../components/SvgBackground.vue';
 export default {
   data() {
     return {
       itemId: null,
       item: {}
     }
+  },
+  components: {
+    svgBackground: SvgBackgroundVue
   },
   async mounted() {
     this.itemId = this.$route.params.itemId 

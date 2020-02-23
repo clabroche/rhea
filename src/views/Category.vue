@@ -1,5 +1,7 @@
 <template>
   <div class="root-category">
+    <svg-background :bottom="true" svg="category">
+    </svg-background>
     <div class="list-container">
       <div class="form">
         <input type="text" v-model="category.name" placeholder="Nom...">
@@ -66,10 +68,12 @@ import ModalVue from '../components/Modal.vue';
 import items from '../services/items';
 import PromiseB from 'bluebird'
 import sort from 'fast-sort'
+import SvgBackgroundVue from '../components/SvgBackground.vue';
 export default {
   components: {
       'bottom-bar': BottomBarVue,
-      modalVue: ModalVue
+      modalVue: ModalVue,
+      svgBackground: SvgBackgroundVue
   },
   data() {
     return {

@@ -1,5 +1,11 @@
 <template>
   <div class="root-lists">
+    <svg-background :bottom="lists && lists.length" svg="list">
+      <br>
+      <div>Hey !</div>
+      <br>
+      Appuies sur le <i class="fas fa-plus"></i> pour ajouter une nouvelle liste
+    </svg-background>
     <div class="lists-container">
       <div v-for="list of lists" :key="list._id" @click="$router.push({name:'list', params: {listId: list._id}})">
         <line-vue
@@ -29,12 +35,14 @@ import ModalVue from '../components/Modal.vue';
 import Lists from '../services/lists.js';
 import LineVue from '../components/Line.vue'
 import OptionsVue from '../components/Options.vue';
+import SvgBackgroundVue from '../components/SvgBackground.vue';
 export default {
   components: {
     'bottom-bar': BottomBarVue,
     'modal-vue': ModalVue,
     'line-vue': LineVue,
-    optionsVue: OptionsVue
+    optionsVue: OptionsVue,
+    svgBackground: SvgBackgroundVue
   }, 
   data() {
     return {
@@ -93,6 +101,5 @@ export default {
     padding: 10px;
     overflow: auto;
   }
-
 }
 </style>

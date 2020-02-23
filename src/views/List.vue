@@ -1,5 +1,11 @@
 <template>
   <div class="list-root">
+    <svg-background :bottom="categories && categories.length" svg="list">
+      <br>
+      <div>On y est presque !</div>
+      <br>
+      Appuies sur le <i class="fas fa-plus"></i> pour ajouter un produit dans cette liste
+    </svg-background>
     <div class="list-container">
       <div v-for="category of categories" :key="category.label">
         <div class="label" @click="category.collapse = !category.collapse">
@@ -60,13 +66,15 @@ import lodash from 'lodash'
 import OptionsVue from '../components/Options.vue';
 import MultiselectVue from '../components/Multiselect.vue'
 import Category from '../services/categories';
+import SvgBackgroundVue from '../components/SvgBackground.vue';
 export default {
   components: {
     multiselect: MultiselectVue,
     bottomBar: BottomBarVue,
     lineVue: LineVue,
     modalVue: ModalVue,
-    optionsVue: OptionsVue
+    optionsVue: OptionsVue,
+    svgBackground: SvgBackgroundVue
   },
   data() {
     return {

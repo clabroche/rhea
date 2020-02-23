@@ -1,5 +1,11 @@
 <template>
   <div class="root-items">
+    <svg-background :bottom="items && items.length" svg="cookie">
+      <br>
+      <div>Hey !</div>
+      <br>
+      Appuies sur le <i class="fas fa-plus"></i> pour ajouter un produit dans cette liste
+    </svg-background>
     <div class="items-container">
       <div v-for="item of items" :key="item._id" @click="$router.push({name:'item', params: {itemId: item._id}})">
         <line-vue
@@ -30,12 +36,14 @@ import ModalVue from '../components/Modal.vue';
 import items from '../services/items.js';
 import LineVue from '../components/Line.vue'
 import OptionsVue from '../components/Options.vue';
+import SvgBackgroundVue from '../components/SvgBackground.vue';
 export default {
   components: {
     'bottom-bar': BottomBarVue,
     'modal-vue': ModalVue,
     'line-vue': LineVue,
-    OptionsVue
+    OptionsVue,
+    svgBackground: SvgBackgroundVue
   }, 
   data() {
     return {
