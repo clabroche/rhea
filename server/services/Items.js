@@ -11,6 +11,8 @@ function Item(item) {
   this.description = item.description || ''
   /** @type {number} */
   this.price = item.price || 0
+  /** @type {ObjectID[] | string[]} */
+  this.categoriesId = item.categoriesId || []
   /** @type {ObjectID | string} */
   this.ownerId = mongo.getID(item.ownerId) || ''
   /** @type {User} */

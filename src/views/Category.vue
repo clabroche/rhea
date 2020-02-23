@@ -28,9 +28,20 @@
         Lier des produits à une catégorie
       </div>
       <div slot="body">
-        <div class="filter-items">
-          <i class="fas fa-search"></i>
-          <input type="text" v-model="filterItemsInPopup" placeholder="Chercher un produit">
+        <div class="filter-container">
+          <div class="filter-items">
+            <i class="fas fa-search"></i>
+            <input type="text" v-model="filterItemsInPopup" placeholder="Chercher un produit">
+          </div>
+           <div class="checkbox-container">
+            <input type="checkbox"  v-model="onlyNotCategorize">
+            <label @click="onlyNotCategorize = !onlyNotCategorize">
+              <span></span>
+            </label>
+          </div>
+        </div>
+        <div v-if="onlyNotCategorize" class="only-not-categorize">
+          Seul les produits sans catégorie sont affichés
         </div>
         <div class="items">
           <div class="item" v-for="item of allItemsMinusItemInCategory" :key="item._id">
@@ -68,12 +79,21 @@ export default {
       itemsSelected: [],
       itemsForCategory: [],
       filterItems: '',
-      filterItemsInPopup: ''
+      filterItemsInPopup: '',
+      onlyNotCategorize: false,
     }
   },
   computed: {
     allItemsMinusItemInCategory() {
-      return sort(this.allItems.filter(item => item.name.includes(this.filterItemsInPopup) && !this.itemsForCategory.map(it => it._id).includes(item._id))).asc('name')
+      const itemFilter = item => {
+        const isNotFiltered = item.name.includes(this.filterItemsInPopup) && !this.itemsForCategory.map(it => it._id).includes(item._id)
+        if(isNotFiltered && this.onlyNotCategorize) {
+          console.log(item)
+          return !item.categoriesId || !item.categoriesId.length
+        }
+        return isNotFiltered
+      } 
+      return sort(this.allItems.filter(itemFilter)).asc('name')
     },
     filteredItems() {
       return sort(this.itemsForCategory.filter(item => item.name.includes(this.filterItems))).asc('name')
@@ -181,6 +201,12 @@ export default {
       background-color: var(--headerBgColor);
     }
   }
+  .filter-container {
+    display: flex;
+    .checkbox-container {
+      width: auto;
+    }
+  }
   .filter-items {
     width: 95%;
     margin: auto;
@@ -199,7 +225,9 @@ export default {
     }
   }
 
-
+  .only-not-categorize {
+    font-size: 0.8em;
+  }
   .checkbox-container {
     display: flex;
     width: 100%;
