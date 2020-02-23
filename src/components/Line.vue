@@ -83,7 +83,7 @@ export default {
       .progress {
         position: absolute;
         left: 0;
-        top: -4px;
+        top: 0px;
         height: 4px;
         background-color: red;
         transition: 300ms;
