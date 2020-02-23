@@ -12,7 +12,7 @@
           Produits
         </li>
         <li @click="$router.push({name: 'categories'}); sidebar.open = false">
-          <i class="fas fa-cookie"></i>
+          <i class="fas fa-th"></i>
           Categories
         </li>
       </ul>
