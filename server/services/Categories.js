@@ -52,12 +52,12 @@ Category.linkItems = async function (ownerId, categoryId, itemsId) {
     await mongo.collection('categories')
       .updateOne(
         { ownerId: mongo.getID(ownerId), _id: mongo.getID(categoryId) },
-        { $addToSet: { itemsId: itemId } }
+        { $addToSet: { itemsId: mongo.getID(itemId) } }
       )
     return mongo.collection('items')
       .updateOne(
         { ownerId: mongo.getID(ownerId), _id: mongo.getID(itemId) },
-        { $addToSet: { categoriesId: categoryId } }
+        { $addToSet: { categoriesId: mongo.getID(categoryId) } }
       )
   })
 }
@@ -66,12 +66,12 @@ Category.removeLinkItems = async function (ownerId, categoryId, itemId) {
   await mongo.collection('categories')
     .updateOne(
       { ownerId: mongo.getID(ownerId), _id: mongo.getID(categoryId) },
-      { $pull: { itemsId: itemId } }
+      { $pull: { itemsId: mongo.getID(itemId) } }
     )
   return mongo.collection('items')
     .updateOne(
       { ownerId: mongo.getID(ownerId), _id: mongo.getID(itemId) },
-      { $pull: { categoriesId: categoryId } }
+      { $pull: { categoriesId: mongo.getID(categoryId) } }
     )
 }
 

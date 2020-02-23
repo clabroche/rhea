@@ -1,6 +1,8 @@
 const {mongo} = require('../helpers/mongoConnect')
 const ObjectID = require('mongodb').ObjectID
 const Users = require('./Users')
+const Categories = require('./Categories')
+const PromiseB = require('bluebird')
 function Item(item) {
   if(!item.ownerId) throw new Error('item should be own from a user')
   /** @type {ObjectID | string} */
@@ -48,7 +50,13 @@ Item.getItem = async function(id) {
   return item ? new Item(item) : null
 }
 Item.delete = async function(id) {
-  const item = await mongo
+  const item = await mongo.collection('items').findOne({_id: mongo.getID(id)})
+  if(item.categoriesId) {
+    await PromiseB.map(item.categoriesId, categoryId => {
+      return Categories.removeLinkItems(item.ownerId, categoryId, item._id)
+    })
+  }
+  await mongo
     .collection('items')
     .deleteOne({_id: mongo.getID(id)})
   return item
