@@ -11,6 +11,7 @@
         <line-vue
           :additionalAction="true"
           :name="item.name"
+          :additionalCenter="getCategoriesForItem(item)"
           :description="item.description"
           @action="openOptions(item)"/>
       </div>
@@ -37,6 +38,7 @@ import items from '../services/items.js';
 import LineVue from '../components/Line.vue'
 import OptionsVue from '../components/Options.vue';
 import SvgBackgroundVue from '../components/SvgBackground.vue';
+import Category from '../services/categories';
 export default {
   components: {
     'bottom-bar': BottomBarVue,
@@ -52,11 +54,14 @@ export default {
         name: '',
         description: ''
       },
+      categories: {},
       selectedItem: null
     }
   },
   async mounted() {
     await this.getAllItems()
+    const categories = await Category.getCategories() 
+    categories.forEach(categ => this.categories[categ._id] = categ)
     this.$refs.scrollElement.scrollTop = this.$root.scroll.listItems
     this.interval = setInterval(async () => {
         this.getAllItems()
@@ -68,6 +73,9 @@ export default {
   methods: {
     setPosition() {
       this.$root.scroll.listItems = this.$refs.scrollElement.scrollTop
+    },
+    getCategoriesForItem(item) {
+      return item.categoriesId.map(categoryId => this.categories[categoryId] ?  ' ' +this.categories[categoryId].name : '').join(', ')
     },
     async getAllItems() {
       this.items = await items.getAll()
