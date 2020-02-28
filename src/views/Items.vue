@@ -6,7 +6,7 @@
       <br>
       Appuies sur le <i class="fas fa-plus"></i> pour ajouter un produit dans cette liste
     </svg-background>
-    <div class="items-container">
+    <div class="items-container" @scroll="setPosition" ref="scrollElement">
       <div v-for="item of items" :key="item._id" @click="$router.push({name:'item', params: {itemId: item._id}})">
         <line-vue
           :additionalAction="true"
@@ -56,15 +56,19 @@ export default {
     }
   },
   async mounted() {
-    this.getAllItems()
+    await this.getAllItems()
+    this.$refs.scrollElement.scrollTop = this.$root.scroll.listItems
     this.interval = setInterval(async () => {
-      this.getAllItems()
-    }, 500);
+        this.getAllItems()
+      }, 500);
   },
   beforeDestroy() {
     clearInterval(this.interval)
   },
   methods: {
+    setPosition() {
+      this.$root.scroll.listItems = this.$refs.scrollElement.scrollTop
+    },
     async getAllItems() {
       this.items = await items.getAll()
     },

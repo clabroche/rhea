@@ -58,6 +58,7 @@ export default {
     }
   },
   created() {
+    this.$root.scroll = {}
     httpError.subscribe(err => {
       if(err.response.status === 403) {
         this.$router.push({name: 'login'})
