@@ -96,12 +96,9 @@ export default {
         display: flex;
         flex-direction: column; 
         justify-content: center;
-        input {
-          
-        }
         .name {
           color: var(--headerBgColor);
-          font-size: 1em;
+          font-size: 1.1em;
           white-space: nowrap;
         }
         .description {
@@ -117,6 +114,11 @@ export default {
       height: 30px;;
       width: 100%;
       background-color: #efefef;
+      .additional-center {
+        padding: 0 10px;
+        color: #85888a;
+        font-size: 0.9em;
+      }
       .additional-right, .additional-left {
         height: 100%;
         width: 50px;
