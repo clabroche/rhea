@@ -9,7 +9,7 @@
     <div class="list-container" ref="scrollElement" @scroll="setPosition">
       <div v-for="category of sortedCategories" :key="category.label">
         <div class="label" @click="category.collapse = !category.collapse">
-          <span>{{category.label !== 'undefined' && allCategoriesById[category.label]? allCategoriesById[category.label].name : 'Autres'}}</span>
+          <span>{{category.label}}</span>
           <i class="fas" :class="category.collapse ? 'fa-chevron-down' : 'fa-chevron-up'"></i>
         </div>
         <div v-if="!category.collapse">
@@ -89,10 +89,7 @@ export default {
   },
   computed: {
     sortedCategories() {
-      return sort(this.categories).asc(cat => {
-        const _cat = this.allCategoriesById[cat.label]
-        return _cat ? _cat.name : 'Autres'
-      })
+      return sort(this.categories).asc('label')
     },
     getTotalPrice() {
       return this.list.items.reduce((price, item) => {
@@ -101,9 +98,9 @@ export default {
     }
   },
   async mounted() {
+    (await Category.getCategories()).map(cat => this.$set(this.allCategoriesById, cat._id, cat))
     await this.getList()
     this.$refs.scrollElement.scrollTop = this.$root.scroll.listItemsProducts
-    ;(await Category.getCategories()).map(cat => this.$set(this.allCategoriesById, cat._id, cat))
     this.interval = setInterval(async () => {
       this.getList()
     }, 500);
@@ -121,7 +118,11 @@ export default {
       if(this.backList=== str) return
       this.backList = str
       const categories = lodash.groupBy(list.items, item => item.categoriesId?item.categoriesId[0] : undefined)
-      this.categories = Object.keys(categories).map(key => ({label: key, items: categories[key], collapse: false}))
+      this.categories = Object.keys(categories).map(key => {
+        const categ = this.allCategoriesById[key]
+        const label = categ ? categ.name : 'Autres'
+        return {_id: key, label ,items: categories[key], collapse: false}
+      })
       console.log(this.categories)
       this.list = list
     },
