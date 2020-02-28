@@ -6,7 +6,7 @@
       <br>
       Appuies sur le <i class="fas fa-plus"></i> pour ajouter une catégorie
     </svg-background>
-    <div class="categories-container">
+    <div class="categories-container" ref="scrollElement" @scroll="setPosition">
       <div v-for="category of categories" :key="category._id" @click="$router.push({name:'category', params: {categoryId: category._id}})">
         <line-vue
           :additionalAction="true"
@@ -54,6 +54,7 @@ export default {
   },
   async mounted() {
     await this.getCategories()
+    this.$refs.scrollElement.scrollTop = this.$root.scroll.listCategories
     this.interval = setInterval(async () => {
       await this.getCategories()
     }, 500);
@@ -62,6 +63,9 @@ export default {
     clearInterval(this.interval)
   },
   methods: {
+    setPosition() {
+      this.$root.scroll.listCategories = this.$refs.scrollElement.scrollTop
+    },
     async openOptions(category) {
       this.$refs.options.open(category.name)
       this.selectedCategory = category

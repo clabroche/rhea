@@ -6,7 +6,7 @@
       <br>
       Appuies sur le <i class="fas fa-plus"></i> pour ajouter un produit dans cette liste
     </svg-background>
-    <div class="list-container">
+    <div class="list-container" ref="scrollElement" @scroll="setPosition">
       <div v-for="category of categories" :key="category.label">
         <div class="label" @click="category.collapse = !category.collapse">
           <span>{{category.label !== 'undefined' && allCategoriesById[category.label]? allCategoriesById[category.label].name : 'Autres'}}</span>
@@ -95,6 +95,7 @@ export default {
   },
   async mounted() {
     await this.getList()
+    this.$refs.scrollElement.scrollTop = this.$root.scroll.listItemsProducts
     ;(await Category.getCategories()).map(cat => this.$set(this.allCategoriesById, cat._id, cat))
     this.interval = setInterval(async () => {
       this.getList()
@@ -104,6 +105,9 @@ export default {
     clearInterval(this.interval)
   },
   methods: {
+    setPosition() {
+      this.$root.scroll.listItemsProducts = this.$refs.scrollElement.scrollTop
+    },
     async getList() {
       const list = await lists.getList(this.$route.params.listId)
       const str = JSON.stringify(list)
