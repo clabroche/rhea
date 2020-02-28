@@ -7,11 +7,13 @@
       Appuies sur le <i class="fas fa-plus"></i> pour ajouter une nouvelle liste
     </svg-background>
     <div class="lists-container">
-      <div v-for="list of lists" :key="list._id" @click="$router.push({name:'list', params: {listId: list._id}})">
+      <div v-for="list of sortedLists" :key="list._id" @click="$router.push({name:'list', params: {listId: list._id}})">
         <line-vue
           :additionalAction="true"
           :name="list.name"
           :description="list.description" 
+          :additionalLeft="list.confs.length"
+          :additionalCenter="dateFromObjectId(list._id)"
           @action="openOptions(list)"
         />
       </div>
@@ -36,6 +38,8 @@ import Lists from '../services/lists.js';
 import LineVue from '../components/Line.vue'
 import OptionsVue from '../components/Options.vue';
 import SvgBackgroundVue from '../components/SvgBackground.vue';
+import sort from 'fast-sort'
+import dayjs from 'dayjs'
 export default {
   components: {
     'bottom-bar': BottomBarVue,
@@ -54,6 +58,11 @@ export default {
       }
     }
   },
+  computed: {
+    sortedLists() {
+      return sort(this.lists).desc('_id')
+    }
+  },
   async mounted() {
     await this.getLists()
     this.interval = setInterval(async () => {
@@ -64,6 +73,10 @@ export default {
     clearInterval(this.interval)
   },
   methods: {
+    dateFromObjectId (objectId) {
+      const date = dayjs(new Date(parseInt(objectId.substring(0, 8), 16) * 1000))
+      return date.format('DD/MM/YYYY')
+    },
     async openOptions(list) {
       this.$refs.options.open(list.name)
       this.selectedList = list
