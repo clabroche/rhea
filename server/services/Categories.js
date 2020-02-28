@@ -9,6 +9,8 @@ function Category(category) {
   this.name = category.name || ''
   /** @type {Items} */
   this.items = category.items || null
+  /** @type {ObjectID[] | string[]} */
+  this.itemsId = category.itemsId || []
 }
 Category.all = async function (userId) {
   const categories = await mongo.collection('categories')
