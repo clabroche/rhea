@@ -9,6 +9,7 @@
     <div class="categories-container" ref="scrollElement" @scroll="setPosition">
       <div v-for="category of categories" :key="category._id" @click="$router.push({name:'category', params: {categoryId: category._id}})">
         <line-vue
+          :additionalLeft="category.itemsId.length"
           :additionalAction="true"
           :name="category.name"
           :description="category.description" 
