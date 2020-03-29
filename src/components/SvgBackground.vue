@@ -20,6 +20,7 @@ export default {
         list: require('@/assets/list.svg'),
         cookie: require('@/assets/cookie.svg'),
         category: require('@/assets/category.svg'),
+        recipe: require('@/assets/recipe.svg'),
       }
     }
   },

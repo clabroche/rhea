@@ -24,7 +24,7 @@
         </div>
       </div>
     </div>
-    <bottom-bar :text="(itemsForRecipe ? itemsForRecipe.length : 0) + ' listes au total'" @action="linkItem" />
+    <bottom-bar :text="(itemsForRecipe ? itemsForRecipe.length : 0) + ' produits au total'" @action="linkItem" />
     <modal-vue ref="linkModal">
       <div slot="header">
         Lier des produits à une recette
@@ -90,9 +90,11 @@ export default {
   computed: {
     allItemsMinusItemInRecipe() {
       const itemFilter = item => {
-        const isNotFiltered = item.name.includes(this.filterItemsInPopup) && !this.itemsForRecipe.map(it => it._id).includes(item._id)
+        let isNotFiltered = true
+        if(item.name && this.filterItemsInPopup) {
+          isNotFiltered = item.name.toUpperCase().includes(this.filterItemsInPopup.toUpperCase()) && !this.itemsForRecipe.map(it => it._id).includes(item._id)
+        }
         if(isNotFiltered && this.onlyNotCategorize) {
-          console.log(item)
           return !item.recipesId || !item.recipesId.length
         }
         return isNotFiltered

@@ -90,7 +90,10 @@ export default {
   computed: {
     allItemsMinusItemInCategory() {
       const itemFilter = item => {
-        const isNotFiltered = item.name.includes(this.filterItemsInPopup) && !this.itemsForCategory.map(it => it._id).includes(item._id)
+        let isNotFiltered = true
+        if(item.name && this.filterItemsInPopup) {
+          isNotFiltered = item.name.toUpperCase().includes(this.filterItemsInPopup.toUpperCase()) && !this.itemsForCategory.map(it => it._id).includes(item._id)
+        }
         if(isNotFiltered && this.onlyNotCategorize) {
           console.log(item)
           return !item.categoriesId || !item.categoriesId.length
