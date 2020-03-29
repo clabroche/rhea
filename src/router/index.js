@@ -7,6 +7,8 @@ import Items from '../views/Items.vue'
 import Login from '../views/Login.vue'
 import Categories from '../views/Categories.vue'
 import Category from '../views/Category.vue'
+import Recipes from '../views/Recipes.vue'
+import Recipe from '../views/Recipe.vue'
 
 Vue.use(VueRouter)
 
@@ -38,6 +40,14 @@ const routes = [
     path: '/categories/:categoryId',
     name: 'category',
     component: Category
+  }, {
+    path: '/recipes',
+    name: 'recipes',
+    component: Recipes
+  }, {
+    path: '/recipes/:recipeId',
+    name: 'category',
+    component: Recipe
   }, {
     path: '/login',
     name: 'login',

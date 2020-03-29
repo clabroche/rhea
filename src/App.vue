@@ -15,6 +15,10 @@
           <i class="fas fa-th"></i>
           Categories
         </li>
+        <li @click="$router.push({name: 'recipes'}); sidebar.open = false">
+          <i class="fas fa-th"></i>
+          Recettes
+        </li>
       </ul>
       <ul>
         <a :href="androidURL">
