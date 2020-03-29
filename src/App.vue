@@ -15,6 +15,10 @@
           <i class="fas fa-th"></i>
           Categories
         </li>
+        <li @click="$router.push({name: 'inventory'}); sidebar.open = false">
+          <i class="fas fa-database"></i>
+          Inventaire
+        </li>
         <li @click="$router.push({name: 'recipes'}); sidebar.open = false">
           <i class="fas fa-clipboard-list"></i>
           Recettes

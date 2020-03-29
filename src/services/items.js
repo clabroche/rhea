@@ -1,7 +1,6 @@
 import API from './API'
 import Auth from './Auth'
 export default {
-  books: [],
   async getItem(itemToGet) {
     const {data: item} = await API.get('/items/' + itemToGet._id, {
       headers: {

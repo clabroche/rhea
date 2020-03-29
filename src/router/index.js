@@ -9,6 +9,7 @@ import Categories from '../views/Categories.vue'
 import Category from '../views/Category.vue'
 import Recipes from '../views/Recipes.vue'
 import Recipe from '../views/Recipe.vue'
+import Inventory from '../views/Inventory.vue'
 
 Vue.use(VueRouter)
 
@@ -48,6 +49,10 @@ const routes = [
     path: '/recipes/:recipeId',
     name: 'recipe',
     component: Recipe
+  }, {
+    path: '/inventory',
+    name: 'inventory',
+    component: Inventory
   }, {
     path: '/login',
     name: 'login',
