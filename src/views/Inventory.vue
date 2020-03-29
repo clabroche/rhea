@@ -79,7 +79,7 @@ export default {
       return item.categoriesId.map(categoryId => this.categories[categoryId] ?  ' ' +this.categories[categoryId].name : '').join(', ')
     },
     async getAllItems() {
-      this.items = await inventory.getAll()
+      this.items = await inventory.getItems()
     },
     update() {
       this.itemToCreate = this.selectedItem
