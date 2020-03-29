@@ -46,7 +46,7 @@ const routes = [
     component: Recipes
   }, {
     path: '/recipes/:recipeId',
-    name: 'category',
+    name: 'recipe',
     component: Recipe
   }, {
     path: '/login',
