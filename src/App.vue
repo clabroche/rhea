@@ -16,7 +16,7 @@
           Categories
         </li>
         <li @click="$router.push({name: 'recipes'}); sidebar.open = false">
-          <i class="fas fa-th"></i>
+          <i class="fas fa-clipboard-list"></i>
           Recettes
         </li>
       </ul>
@@ -214,7 +214,11 @@ ul {
       }
     }
     i {
-      margin-right: 10px
+      margin-right: 10px;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      width: 20px;
     }
   }
 }
