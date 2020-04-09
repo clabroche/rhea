@@ -16,7 +16,7 @@ jobs:
     - name: Publish to Registry
       uses: elgohr/Publish-Docker-Github-Action@master
       with:
-        name: clabroche/docker-registry
+        name: clabroche/docker-registry/master
         username: ${{ secrets.DOCKER_HUB_USER }}
         password: ${{ secrets.DOCKER_HUB_PASSWORD }}
         tags: "latest,${{ env.RELEASE_VERSION }}"
