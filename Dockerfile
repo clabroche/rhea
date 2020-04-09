@@ -1,4 +1,4 @@
-FROM alpine:3.8 as builder
+FROM alpine:3.11 as builder
 RUN apk --no-cache add gcc g++ make python nodejs npm
 WORKDIR /rhea
 COPY ./server .
