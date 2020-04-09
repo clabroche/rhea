@@ -19,3 +19,4 @@ jobs:
         name: clabroche/docker-registry/master
         username: ${{ secrets.DOCKER_HUB_USER }}
         password: ${{ secrets.DOCKER_HUB_PASSWORD }}
+        registry: docker.pkg.github.com
