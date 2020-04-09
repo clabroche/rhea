@@ -19,6 +19,3 @@ jobs:
         name: clabroche/docker-registry/master
         username: ${{ secrets.DOCKER_HUB_USER }}
         password: ${{ secrets.DOCKER_HUB_PASSWORD }}
-        tags: "latest,${{ env.RELEASE_VERSION }}"
-        tag_names: true
-        registry: docker.pkg.github.com
