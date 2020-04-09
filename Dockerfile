@@ -4,7 +4,7 @@ WORKDIR /rhea
 COPY ./server .
 RUN rm -rf .git && rm -rf node_modules && npm i --production
 
-FROM alpine:3.8
+FROM alpine:3.11
 RUN apk --no-cache add nodejs
 WORKDIR /rhea
 COPY --from=builder /rhea .
