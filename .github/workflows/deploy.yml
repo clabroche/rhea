@@ -1,10 +1,10 @@
 name: Publish to Registry
 on:    
-  release:
-      types: [published]
   push:
     branches:
       - master
+    tags:
+      - '*'
 jobs:
   update:
     runs-on: ubuntu-latest
@@ -45,7 +45,7 @@ jobs:
 
     - name: Move signed apk
       run: mv ${SIGNED_RELEASE_FILE} server/public/rhea.apk
-      
+
     - name: Publish to Registry
       uses: elgohr/Publish-Docker-Github-Action@master
       with:
