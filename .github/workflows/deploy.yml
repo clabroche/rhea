@@ -1,8 +1,6 @@
 name: Publish to Registry
 on:    
   push:
-    branches:
-      - master
     tags:
       - '*'
 jobs:
