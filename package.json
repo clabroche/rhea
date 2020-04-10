@@ -14,6 +14,7 @@
     "capacitor-update": "vue-cli-service capacitor-update",
     "capacitor:build": "cd android && ./build.sh",
     "capacitor:serve": "vue-cli-service capacitor:serve",
+    "capacitor:android:generate:keystore": "keytool -genkey -v -keystore my-release-key.keystore -alias rhea -keyalg RSA -keysize 2048 -validity 1000000 && keytool -importkeystore -srckeystore my-release-key.keystore -destkeystore my-release-key.keystore -deststoretype pkcs12",
     "client": "vue-cli-service serve ",
     "server": "cd server && nodemon bin/www"
   },

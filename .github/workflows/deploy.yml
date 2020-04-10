@@ -14,14 +14,38 @@ jobs:
       with:
         cordova-version: 8
 
+
+    - name: Checkout
     - uses: actions/checkout@master
+
     - name: Get release version
       id: get_version
       run: echo ::set-env name=RELEASE_VERSION::$(echo ${GITHUB_REF:10})
+
     - name: Install dependencies
       run: npm ci
+
     - name: Build dependencies
       run: npm run build
+
+    - name: Sync capacitor
+      run: npx cap sync
+
+    - name: Build apk
+      run: cd android && ./gradlew assembleRelease
+
+    - name: Android apksigner
+    - uses: r0adkll/sign-android-release@v1
+      with:
+        releaseDirectory: android/app/build/outputs/apk/release
+        signingKeyBase64: ${{ secrets.SIGN_APK }}
+        alias: ${{ secrets.KEY_STORE_ALIAS }}
+        keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
+        keyPassword: ${{ secrets.KEY_PASSWORD }}
+
+    - name: Move signed apk
+    - run: mv ${SIGNED_RELEASE_FILE} server/public/rhea.apk
+
     - name: Publish to Registry
       uses: elgohr/Publish-Docker-Github-Action@master
       with:

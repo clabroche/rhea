@@ -25,3 +25,6 @@ server/public/my-library.apk
 prod-infos.json
 
 rheavue.tar
+
+my-release-key.keystore
+my-release-key.keystore.old
