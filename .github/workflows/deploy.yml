@@ -16,7 +16,7 @@ jobs:
 
 
     - name: Checkout
-    - uses: actions/checkout@master
+      uses: actions/checkout@master
 
     - name: Get release version
       id: get_version
@@ -35,7 +35,7 @@ jobs:
       run: cd android && ./gradlew assembleRelease
 
     - name: Android apksigner
-    - uses: r0adkll/sign-android-release@v1
+      uses: r0adkll/sign-android-release@v1
       with:
         releaseDirectory: android/app/build/outputs/apk/release
         signingKeyBase64: ${{ secrets.SIGN_APK }}
@@ -44,7 +44,7 @@ jobs:
         keyPassword: ${{ secrets.KEY_PASSWORD }}
 
     - name: Move signed apk
-    - run: mv ${SIGNED_RELEASE_FILE} server/public/rhea.apk
+      run: mv ${SIGNED_RELEASE_FILE} server/public/rhea.apk
 
     - name: Publish to Registry
       uses: elgohr/Publish-Docker-Github-Action@master
