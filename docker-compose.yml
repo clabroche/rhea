@@ -9,7 +9,8 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - /etc/localtime:/etc/localtime:ro
       - /etc/timezone:/etc/timezone:ro
-    command: --interval 3600 --label-enable
+      - ~/.docker/config.json:/config.json
+    command: --interval 10 --label-enable
 
   rhea:
     image: docker.pkg.github.com/clabroche/docker-registry/rhea:latest

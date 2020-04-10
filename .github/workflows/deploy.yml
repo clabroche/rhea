@@ -45,7 +45,7 @@ jobs:
 
     - name: Move signed apk
       run: mv ${SIGNED_RELEASE_FILE} server/public/rhea.apk
-
+      
     - name: Publish to Registry
       uses: elgohr/Publish-Docker-Github-Action@master
       with:
@@ -53,3 +53,5 @@ jobs:
         username: ${{ secrets.DOCKER_HUB_USER }}
         password: ${{ secrets.DOCKER_HUB_PASSWORD }}
         registry: docker.pkg.github.com
+        tags: "latest,${{ env.RELEASE_VERSION }}"
+  

@@ -25,5 +25,6 @@ npm run test
 npm run lint
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+### Deployment
+
+Upload docker-compose on server, change db password and log-in docker to github account
