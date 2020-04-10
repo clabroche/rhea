@@ -9,6 +9,11 @@ jobs:
   update:
     runs-on: ubuntu-latest
     steps:
+    - name: Use coturiv/setup-ionic
+      uses: coturiv/setup-ionic@v1
+      with:
+        cordova-version: 8
+
     - uses: actions/checkout@master
     - name: Get release version
       id: get_version

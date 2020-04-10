@@ -2,7 +2,7 @@
 version: "2"
 services:
     rhea:
-        image: rhea
+        image: docker.pkg.github.com/clabroche/docker-registry/rhea:latest
         hostname: rhea
         environment:
           PORT: 9845
