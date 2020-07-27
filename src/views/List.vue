@@ -28,7 +28,7 @@
         </div>
       </div>
       </div>
-    <bottom-bar v-if="list._id" @action="createItem" :text="list.items.length + ' produits pour un montant de ' + getTotalPrice + '€'"/>
+    <bottom-bar v-if="list._id" :actions="[{icon: 'fas fa-plus', cb: createItem}]" :text="list.items.length + ' produits pour un montant de ' + getTotalPrice + '€'"/>
     <modal-vue ref="createModal" height="auto">
       <div slot="body" class="createModal">
         <multiselect :options="allItems" customKey="_id" customLabel="name" :single="true" placeholder="Choisir un produit..." @input="selectItem"/>

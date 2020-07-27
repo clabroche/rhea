@@ -17,7 +17,7 @@
         />
       </div>
     </div>
-    <bottom-bar :text="recipes.length + ' recettes au total'" @action="createRecipe" />
+    <bottom-bar :text="recipes.length + ' recettes au total'" :actions="[{icon: 'fas fa-plus', cb: createRecipe}]"/>
     <modal-vue ref="createModal">
       <div slot="body">
         <input type="text" v-model="recipeToCreate.name" placeholder="Nom...">

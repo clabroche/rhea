@@ -24,7 +24,7 @@
         </div>
       </div>
     </div>
-    <bottom-bar :text="(itemsForRecipe ? itemsForRecipe.length : 0) + ' produits au total'" @action="linkItem" />
+    <bottom-bar :text="(itemsForRecipe ? itemsForRecipe.length : 0) + ' produits au total'" :actions="[{icon: 'fas fa-plus', cb: linkItem}]"/>
     <modal-vue ref="linkModal">
       <div slot="header">
         Lier des produits à une recette

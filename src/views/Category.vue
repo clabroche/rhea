@@ -24,7 +24,7 @@
         </div>
       </div>
     </div>
-    <bottom-bar :text="(itemsForCategory ? itemsForCategory.length : 0) + ' listes au total'" @action="linkItem" />
+    <bottom-bar :text="(itemsForCategory ? itemsForCategory.length : 0) + ' listes au total'" :actions="[{icon: 'fas fa-plus', cb: linkItem}]" />
     <modal-vue ref="linkModal">
       <div slot="header">
         Lier des produits à une catégorie

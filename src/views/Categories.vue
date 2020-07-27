@@ -17,7 +17,7 @@
         />
       </div>
     </div>
-    <bottom-bar :text="categories.length + ' catégories au total'" @action="createCategory" />
+    <bottom-bar :text="categories.length + ' catégories au total'" :actions="[{icon: 'fas fa-plus', cb: createCategory}]" />
     <modal-vue ref="createModal">
       <div slot="body">
         <input type="text" v-model="categoryToCreate.name" placeholder="Nom...">

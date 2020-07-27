@@ -16,7 +16,7 @@
           @action="openOptions(item)"/>
       </div>
     </div>
-    <bottom-bar :text="items.length + ' itemes au total'" @action="createItem" />
+    <bottom-bar :text="items.length + ' items au total'" :actions="[{icon: 'fas fa-plus', cb: createItem}]"/>
     <modal-vue ref="createModal">
       <div slot="body">
         <input type="text" v-model="itemToCreate.name" placeholder="Nom...">

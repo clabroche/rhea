@@ -18,7 +18,7 @@
         />
       </div>
     </div>
-    <bottom-bar :text="lists.length + ' listes au total'" @action="createList" />
+    <bottom-bar :text="lists.length + ' listes au total'" :actions="[{icon: 'fas fa-plus', cb: createList}]"/>
     <modal-vue ref="createModal">
       <div slot="body">
         <input type="text" v-model="listToCreate.name" placeholder="Nom...">
