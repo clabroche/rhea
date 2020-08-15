@@ -4,7 +4,7 @@
       <br>
       <div>Hey !</div>
       <br>
-      Appuies sur le <i class="fas fa-plus"></i> pour ajouter une nouvelle liste
+      Appuies sur le <i class="fas fa-plus" aria-hidden="true"></i> pour ajouter une nouvelle liste
     </svg-background>
     <div class="lists-container">
       <div v-for="list of sortedLists" :key="list._id" @click="$router.push({name:'list', params: {listId: list._id}})">

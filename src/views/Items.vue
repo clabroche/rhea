@@ -4,7 +4,7 @@
       <br>
       <div>Hey !</div>
       <br>
-      Appuies sur le <i class="fas fa-plus"></i> pour ajouter un produit dans cette liste
+      Appuies sur le <i class="fas fa-plus" aria-hidden="true"></i> pour ajouter un produit dans cette liste
     </svg-background>
     <div class="items-container" @scroll="setPosition" ref="scrollElement">
       <div v-for="item of items" :key="item._id" @click="$router.push({name:'item', params: {itemId: item._id}})">

@@ -15,7 +15,7 @@
         <div class="item" v-for="category of filteredCategories" :key="category._id">
           <div>{{category.name}}</div>
           <div class="actions">
-            <div class="delete" @click="deleteCategory(category._id)"><i class="fas fa-trash"></i></div>
+            <div class="delete" @click="deleteCategory(category._id)"><i class="fas fa-trash" aria-hidden="true"></i></div>
           </div>
         </div>
       </div>

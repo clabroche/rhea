@@ -8,7 +8,7 @@
         <div class="label">
           {{getLabel(itemValue)}}
         </div><!--
-  --><div class="delete" @click.stop="deleteTag(itemValue)" ><i class="fas fa-trash"></i></div>
+  --><div class="delete" @click.stop="deleteTag(itemValue)" ><i class="fas fa-trash" aria-hidden="true"></i></div>
       </div>
     </div>
     <transition name="fade">

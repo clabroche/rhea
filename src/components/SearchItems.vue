@@ -2,7 +2,7 @@
   <div>
      <div class="filter-container">
       <div class="filter-items">
-        <i class="fas fa-search"></i>
+        <i class="fas fa-search" aria-hidden="true"></i>
         <input type="text" v-model="filterItemsInPopup" placeholder="Chercher un produit">
       </div>
         <div class="checkbox-container">

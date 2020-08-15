@@ -4,7 +4,7 @@
       <br>
       <div>Hey !</div>
       <br>
-      Appuies sur le <i class="fas fa-plus"></i> pour ajouter une recette
+      Appuies sur le <i class="fas fa-plus" aria-hidden="true"></i> pour ajouter une recette
     </svg-background>
     <div class="recipes-container" ref="scrollElement" @scroll="setPosition">
       <div v-for="recipe of recipes" :key="recipe._id" @click="$router.push({name:'recipe', params: {recipeId: recipe._id}})">

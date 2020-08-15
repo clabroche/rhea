@@ -4,7 +4,7 @@
       <br>
       <div>Hey !</div>
       <br>
-      Appuies sur le <i class="fas fa-plus"></i> pour ajouter une catégorie
+      Appuies sur le <i class="fas fa-plus" aria-hidden="true"></i> pour ajouter une catégorie
     </svg-background>
     <div class="categories-container" ref="scrollElement" @scroll="setPosition">
       <div v-for="category of categories" :key="category._id" @click="$router.push({name:'category', params: {categoryId: category._id}})">

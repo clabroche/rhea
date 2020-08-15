@@ -25,7 +25,7 @@
         {{additionalCenter}}
       </div>
       <div class="additional-right" v-if="additionalAction" @click.stop="$emit('action')">
-        <i class="fas" :class="'fa-'+ additionalActionIcon"></i>
+        <i class="fas" :class="'fa-'+ additionalActionIcon" aria-hidden="true"></i>
       </div>
     </div>
   </div>

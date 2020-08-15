@@ -11,14 +11,14 @@
       <div class="items-container">
         <h2>Les produits de cette catégorie</h2>
         <div class="filter-items">
-          <i class="fas fa-search"></i>
+          <i class="fas fa-search" aria-hidden="true"></i>
           <input type="text" v-model="filterItems" placeholder="Chercher un produit">
         </div>
         <div class="items-list">
           <div class="item" v-for="item of filteredItems" :key="item._id">
             <div>{{item.name}}</div>
             <div class="actions">
-              <div class="delete" @click="deleteLink(item._id)"><i class="fas fa-trash"></i></div>
+              <div class="delete" @click="deleteLink(item._id)"><i class="fas fa-trash" aria-hidden="true"></i></div>
             </div>
           </div>
         </div>
@@ -32,7 +32,7 @@
       <div slot="body">
         <div class="filter-container">
           <div class="filter-items">
-            <i class="fas fa-search"></i>
+            <i class="fas fa-search" aria-hidden="true"></i>
             <input type="text" v-model="filterItemsInPopup" placeholder="Chercher un produit">
           </div>
            <div class="checkbox-container">
