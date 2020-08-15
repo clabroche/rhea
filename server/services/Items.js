@@ -23,10 +23,17 @@ function Item(item) {
 Item.prototype.getUser = async function() {
   this.owner = await Users.getUser(this.ownerId)
 }
-Item.getItems = async function(userId) {
+Item.getItems = async function (userId) {
   const items = await mongo.collection('items')
-    .find({ownerId: mongo.getID(userId)})
-    .sort({name: 1})
+    .find({ ownerId: mongo.getID(userId) })
+    .sort({ name: 1 })
+    .toArray()
+  return items.map(item => new Item(item))
+}
+Item.search = async function (userId, search) {
+  const items = await mongo.collection('items')
+    .find({ ownerId: mongo.getID(userId), name: new RegExp(`${search}`, 'gi')})
+    .sort({ name: 1 })
     .toArray()
   return items.map(item => new Item(item))
 }

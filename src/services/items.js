@@ -1,6 +1,5 @@
 import API from './API'
 import Auth from './Auth'
-import { BarcodeScanner } from '@ionic-native/barcode-scanner/index';
 
 export default {
   async getItem(itemToGet) {
@@ -43,8 +42,12 @@ export default {
     })
     return items
   },
-  async scan() {
-    const res = await BarcodeScanner.scan()
-    console.log(res)
+  async getFromBarCode(code) {
+    const {data:res} = await API.post('/items/barcode/' + code, null, {
+      headers: {
+        token: Auth.token
+      },
+    })
+    return { product: res.product, related: res.related}
   },
 }

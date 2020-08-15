@@ -24,6 +24,15 @@
         <input type="number" v-model="itemToCreate.price" placeholder="Prix...">
       </div>
     </modal-vue>
+    <modal-vue ref="confirmProduct">
+      <div slot="body" slot-scope="{data}">
+        <div class="confirm-product" v-if="data">
+          <h2>{{data.product_name}}</h2>
+          <img :src="data.image_url" alt="">
+        </div>
+        <div v-else>Produit non trouvé</div>
+      </div>
+    </modal-vue>
     <options-vue ref="options" :options="[
       {label:  'Modifier', select: update},
       {label:  'Suppression', select: deleteItem},
@@ -39,6 +48,7 @@ import LineVue from '../components/Line.vue'
 import OptionsVue from '../components/Options.vue';
 import SvgBackgroundVue from '../components/SvgBackground.vue';
 import Category from '../services/categories';
+import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 export default {
   components: {
     'bottom-bar': BottomBarVue,
@@ -102,7 +112,24 @@ export default {
         this.selectedItem = null
         this.getAllItems()
       })
-    }
+    },
+    async openCamera() {
+      // Laurier: 3166290200647
+      const { text, cancelled } = await BarcodeScanner.scan()
+      if (!cancelled) {
+        const product = await items.getFromBarCode(text).catch(() => ({product: null}))
+        this.$refs.confirmProduct.open(product).subscribe(res => {
+          if(!res || !product) return
+          items.createItem({
+            name : product.product_name,
+            imageUrl: product.image_url,
+            description : '',
+            price : 0,
+            categoriesId : [ ],
+          })
+        })
+      }
+    },
   }
 }
 </script>
@@ -119,5 +146,12 @@ export default {
     overflow: auto;
   }
 
+}
+
+.confirm-product {
+  text-align: center;
+  img {
+    max-width: 100px;
+  }
 }
 </style>
