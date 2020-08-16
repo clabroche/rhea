@@ -137,7 +137,7 @@ export default {
       content: '';
       position: absolute;
       bottom: -15px;
-      left: calc(50% - (30% /2));
+      left: calc(50% - (30% / 2));
       height: 1px;
       width: 30%;
       background-color: var(--headerBgColor);
