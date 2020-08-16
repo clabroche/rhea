@@ -238,7 +238,6 @@ function wait(ms) {
   opacity: 1;
   overflow: hidden;
   box-sizing: border-box;
-  background-color: #fff;
   border: 1px solid lightgrey;
   border-top: none;
   display: flex;
