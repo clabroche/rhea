@@ -25,9 +25,9 @@
       <div slot="body" slot-scope="{data}" v-if="data && data._id">
         <h2>{{data.name}}</h2>
         <div class="increment-container">
-          <i class="fas fa-minus" @click="data.total--"></i>
+          <i class="fas fa-minus" @click="data.total--" aria-hidden="true"></i>
           {{data.total}}
-          <i class="fas fa-plus" @click="data.total++"></i>
+          <i class="fas fa-plus" @click="data.total++" aria-hidden="true"></i>
         </div>
       </div>
       <div v-else-if="data && data.product" class="confirm-product">

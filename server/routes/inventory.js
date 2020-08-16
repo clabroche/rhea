@@ -22,7 +22,7 @@ router.get('/items/barcode/:code', authentification, async function (req, res, n
   await list.loadItems()
   const item = await Item.getByBarcode(req.user._id, code)
   if (item) {
-    let conf = list.confs.filter(conf => conf._id.toString() === item._id.toString()).pop()
+    let conf = list.confs.filter(config => config._id.toString() === item._id.toString()).pop()
     if(conf) res.json(conf)
     else {
       conf = { _id: mongo.getID(item._id), total: 0 }
