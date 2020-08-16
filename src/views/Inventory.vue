@@ -85,9 +85,9 @@ export default {
     const categories = await Category.getCategories() 
     categories.forEach(categ => this.categories[categ._id] = categ)
     this.$refs.scrollElement.scrollTop = this.$root.scroll.listItems
-    // this.interval = setInterval(async () => {
-    //     this.getAllItems()
-    //   }, 500);
+    this.interval = setInterval(async () => {
+        this.getAllItems()
+      }, 500);
   },
   beforeDestroy() {
     clearInterval(this.interval)
