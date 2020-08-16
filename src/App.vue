@@ -228,11 +228,10 @@ ul {
   }
 }
 input, textarea {
-  font-family: Jost;
+  font-family: Jost, Helvetica, Arial, sans-serif;
 }
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  font-family: Jost;
+  font-family: Jost, Helvetica, Arial, sans-serif;
 
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
