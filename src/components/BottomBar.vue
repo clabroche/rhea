@@ -5,7 +5,7 @@
     </div>
     <div class="actions">
       <div class="action" @click="action.cb()" v-for="(action, i) of actions" :key="'action-' + i">
-        <i :class="'fas fa-'+ action.icon"></i>
+        <i :class="'fas fa-'+ action.icon" aria-hidden="true"></i>
       </div>
     </div>
   </div>
