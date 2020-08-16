@@ -18,7 +18,7 @@
     <div class="items">
       <div class="item" v-for="item of allItemsMinusItemInRecipe" :key="item._id">
         <div class="checkbox-container">
-          <input type="checkbox"  :id="item._id"  :value="item._id">
+          <input type="checkbox"  :id="item._id"  :value="item._id" @input="toggleItem(item)">
           <label :for="item._id">
             <span></span>
             {{item.name}}
@@ -61,6 +61,15 @@ export default {
   },
   async mounted() {
     this.allItems = await items.getAll()
+  },
+  methods: {
+    toggleItem(item) {
+      if(!this.value.includes(item)) {
+        this.value.push(item)
+      } else {
+        this.value.splice(this.value.indexOf(item), 1)
+      }
+    }
   }
 }
 </script>

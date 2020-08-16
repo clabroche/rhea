@@ -167,4 +167,21 @@ export default {
     }
   }
 }
+  .filter-items {
+    width: 95%;
+    margin: auto;
+    i {
+      color: lightgrey;
+      position: absolute;
+      padding: 12px;
+    }
+    input {
+      outline: none;
+      border-radius: 20px;
+      border: 1px solid lightgrey;
+      padding: 5px;
+      height: 30px;
+      text-indent: 25px;
+    }
+  }
 </style>
