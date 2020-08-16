@@ -15,9 +15,17 @@ router.post('/barcode/:code', authentification, async function (req, res, next) 
   if (response.status === 1) {
     const product = response.product
     const related = await Items.search(req.user._id, product.product_name)
-    res.json({ product, related })
+    return res.json({ product, related })
+  } else {
+    const product = {}
+    const { data: page } = await axios.get('https://www.ecosia.org/images?q=3059943019621 france')
+    const $page = cheerio.load(page)
+    const $item = $page('.image-preview-media img')[0].attribs
+    product.image_url = $item['data-src']
+    product.product_name= $item['alt']
+    const related = await Items.search(req.user._id, product.product_name)
+    return res.json({ product, related })
   }
-  res.status(404).send('Product  not found')
 })
 router.get('/barcode/:code', authentification, async function (req, res, next) {
   const code = req.params.code
