@@ -39,7 +39,7 @@ import inventory from '../services/inventory.js';
 import LineVue from '../components/Line.vue'
 import OptionsVue from '../components/Options.vue';
 import SvgBackgroundVue from '../components/SvgBackground.vue';
-import Category from '../services/categories';
+import Category from '../services/Category';
 export default {
   components: {
     'bottom-bar': BottomBarVue,

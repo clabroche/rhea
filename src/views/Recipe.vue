@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import Recipes from '../services/recipes';
+import Recipe from '../services/Recipe';
 import BottomBarVue from '../components/BottomBar.vue';
 import ModalVue from '../components/Modal.vue';
 import items from '../services/items';
@@ -78,24 +78,24 @@ export default {
       await this.getRecipe()
     },
     async getRecipe() {
-      this.recipe = await Recipes.get(this.recipeId)
+      this.recipe = await Recipe.get(this.recipeId)
       if(this.recipe.itemsId) {
         this.itemsForRecipe = await PromiseB.map(this.recipe.itemsId, itemId => items.get(itemId))
       }
     },
     async update() {
-      await Recipes.createRecipe(this.recipe)
+      await Recipe.createRecipe(this.recipe)
       await this.getRecipe()
     },
     async linkItem() {
       this.$refs.linkModal.open().subscribe(async res => {
         if(!res) return 
-        await Recipes.linkItems(this.recipeId, this.itemsSelected)
+        await Recipe.linkItems(this.recipeId, this.itemsSelected)
         this.reload()
       })
     },
     async deleteLink(itemId) {
-      await Recipes.deleteLink(this.recipeId, itemId)
+      await Recipe.deleteLink(this.recipeId, itemId)
       return this.reload()
     }
   }

@@ -27,7 +27,7 @@
 import Items from '../services/items';
 import SvgBackgroundVue from '../components/SvgBackground.vue';
 import MultiselectVue from '../components/Multiselect.vue';
-import Category from '../services/categories';
+import Category from '../services/Category';
 export default {
   data() {
     return {

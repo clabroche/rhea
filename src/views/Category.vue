@@ -62,7 +62,7 @@
 </template>
 
 <script>
-import Categories from '../services/categories';
+import Category from '../services/Category';
 import BottomBarVue from '../components/BottomBar.vue';
 import ModalVue from '../components/Modal.vue';
 import items from '../services/items';
@@ -119,25 +119,25 @@ export default {
       this.allItems = await items.getAll()
     },
     async getCategory() {
-      this.category = await Categories.get(this.categoryId)
+      this.category = await Category.get(this.categoryId)
       if(this.category.itemsId) {
         this.itemsForCategory = await PromiseB.map(this.category.itemsId, itemId => items.get(itemId))
       }
     },
     async update() {
-      await Categories.createCategory(this.category)
+      await Category.createCategory(this.category)
       await this.getCategory()
     },
     async linkItem() {
       this.$refs.linkModal.open().subscribe(async res => {
         if(!res) return 
-        await Categories.linkItems(this.categoryId, this.itemsSelected)
+        await Category.linkItems(this.categoryId, this.itemsSelected)
         this.itemsSelected = []
         this.reload()
       })
     },
     async deleteLink(itemId) {
-      await Categories.deleteLink(this.categoryId, itemId)
+      await Category.deleteLink(this.categoryId, itemId)
       return this.reload()
     }
   }

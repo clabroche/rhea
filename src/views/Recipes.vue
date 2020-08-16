@@ -32,7 +32,7 @@
 <script>
 import BottomBarVue from '../components/BottomBar.vue';
 import ModalVue from '../components/Modal.vue';
-import Recipes from '../services/recipes.js';
+import Recipe from '../services/Recipe';
 import LineVue from '../components/Line.vue'
 import OptionsVue from '../components/Options.vue';
 import SvgBackgroundVue from '../components/SvgBackground.vue';
@@ -72,17 +72,17 @@ export default {
       this.selectedRecipe = recipe
     },
     async deleteRecipe() {
-      await Recipes.deleteRecipe(this.selectedRecipe._id) 
+      await Recipe.deleteRecipe(this.selectedRecipe._id) 
       this.selecteRecipe = null
       return this.getRecipes()
     },
     async getRecipes() {
-      this.recipes = await Recipes.getRecipes()
+      this.recipes = await Recipe.getRecipes()
     },
     createRecipe() {
       this.$refs.createModal.open().subscribe(async res => {
         if(!res) return 
-        await Recipes.createRecipe(this.recipeToCreate)
+        await Recipe.createRecipe(this.recipeToCreate)
         this.recipeToCreate = {name: ''}
       })
     }

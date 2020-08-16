@@ -32,7 +32,7 @@
 <script>
 import BottomBarVue from '../components/BottomBar.vue';
 import ModalVue from '../components/Modal.vue';
-import Categories from '../services/categories.js';
+import Category from '../services/Category.js';
 import LineVue from '../components/Line.vue'
 import OptionsVue from '../components/Options.vue';
 import SvgBackgroundVue from '../components/SvgBackground.vue';
@@ -72,17 +72,17 @@ export default {
       this.selectedCategory = category
     },
     async deleteCategory() {
-      await Categories.deleteCategory(this.selectedCategory._id) 
+      await Category.deleteCategory(this.selectedCategory._id) 
       this.selecteCategory = null
       return this.getCategories()
     },
     async getCategories() {
-      this.categories = await Categories.getCategories()
+      this.categories = await Category.getCategories()
     },
     createCategory() {
       this.$refs.createModal.open().subscribe(async res => {
         if(!res) return 
-        await Categories.createCategory(this.categoryToCreate)
+        await Category.createCategory(this.categoryToCreate)
         this.categoryToCreate = {name: ''}
       })
     }

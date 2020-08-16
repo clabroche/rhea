@@ -65,7 +65,7 @@ import ModalVue from '../components/Modal.vue';
 import lodash from 'lodash'
 import OptionsVue from '../components/Options.vue';
 import MultiselectVue from '../components/Multiselect.vue'
-import Category from '../services/categories';
+import Category from '../services/Category';
 import SvgBackgroundVue from '../components/SvgBackground.vue';
 import sort from 'fast-sort'
 export default {
