@@ -39,8 +39,13 @@
 
     <modal-vue ref="createItemModal" validateString="Oui" cancelString="Non">
       <div  slot="body" slot-scope="{data}"  v-if="data && data.product" class="confirm-product">
-        <h2>{{data.product.product_name}}</h2>
-        <img :src="data.product.image_url" alt="">
+        Lier à un item existant
+        <multiselect :options="allItems" :value="selectedItem ? [selectedItem] : []" customKey="_id" customLabel="name" :single="true" placeholder="Choisir un produit..." @input="selectedItem = $event[0]"/>
+        <div v-if="!selectedItem">
+          ou créer un nouvel item
+          <input type="text" v-model="data.product.product_name" >
+          <img :src="data.product.image_url" alt="">
+        </div>
         <div>
           Produit inexistant, le créer ?
         </div>
@@ -97,7 +102,6 @@ export default {
       // Laurier: 3166290200647
       const { text, cancelled } = await BarcodeScanner.scan()
       if (!cancelled) {
-        // const text = "3166290200647"
         return items
           .getFromBarCodeInInventory(text)
           .then(item => this.openItem(item))
@@ -106,23 +110,32 @@ export default {
     },
     async createItemInDb(barcode) {
       const item = await items.createFromBarCode(barcode).catch(() => ({product: null}))
+      const itemsId = this.allItems.map(item => item._id)
+      this.selectedItem = item.related.filter(item => itemsId.includes(item._id)).pop()
       this.$refs.createItemModal.open(item).subscribe(async res => {
         if(!res || !item.product.product_name) return
-        const itemFromDb = await items.createItem({
-          name : item.product.product_name,
-          imageUrl: item.product.image_url,
-          barcode,
-          description : '',
-          price : 0,
-          categoriesId : [ ],
-        })
+          let itemFromDb = null
+          if(this.selectedItem) {
+            this.selectedItem.imageUrl = item.product.image_url
+            this.selectedItem.barcode = barcode
+            itemFromDb = await items.createItem(this.selectedItem)
+            this.selectedItem = null
+          } else {
+            itemFromDb = await items.createItem({
+              name : item.product.product_name,
+              imageUrl: item.product.image_url,
+              barcode,
+              description : '',
+              price : 0,
+              categoriesId : [ ],
+            })
+          }
         await inventory.addItem(itemFromDb._id)
         itemFromDb.total = 0
         this.openItem(itemFromDb)
       })
     },
     openItem(item) {
-      console.log(item)
       this.$refs.updateModal.open(item).subscribe(async res=> {
         if(!res) return
         await inventory.updateTotal(item._id, item.total)

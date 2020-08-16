@@ -56,7 +56,6 @@ Item.updateOrCreate = async function(itemToCreate, userId) {
   itemToCreate.ownerId = mongo.getID(userId)
   const item = new Item(itemToCreate)
   await item.fetchByName()
-  console.log(item)
   delete item.owner
   if(item._id) 
     await mongo

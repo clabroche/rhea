@@ -27,8 +27,13 @@
     <modal-vue ref="confirmProduct">
       <div slot="body" slot-scope="{data}">
         <div class="confirm-product" v-if="data && data.product">
-          <h2>{{data.product.product_name}}</h2>
-          <img :src="data.product.image_url" alt="">
+          Lier à un item existant
+          <multiselect :options="items" :value="selectedItem ? [selectedItem] : []" customKey="_id" customLabel="name" :single="true" placeholder="Choisir un produit..." @input="selectedItem = $event[0]"/>
+          <div v-if="!selectedItem">
+            ou créer un nouvel item
+            <input type="text" v-model="data.product.product_name" >
+            <img :src="data.product.image_url" alt="">
+          </div>
         </div>
         <div v-else>Produit non trouvé</div>
       </div>
@@ -47,7 +52,9 @@ import items from '../services/items.js';
 import LineVue from '../components/Line.vue'
 import OptionsVue from '../components/Options.vue';
 import SvgBackgroundVue from '../components/SvgBackground.vue';
+import MultiselectVue from '../components/Multiselect.vue';
 import Category from '../services/Category';
+
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 export default {
   components: {
@@ -55,6 +62,7 @@ export default {
     'modal-vue': ModalVue,
     'line-vue': LineVue,
     OptionsVue,
+    multiselect: MultiselectVue,
     svgBackground: SvgBackgroundVue
   }, 
   data() {
@@ -118,16 +126,27 @@ export default {
       const { text, cancelled } = await BarcodeScanner.scan()
       if (!cancelled) {
         const data = await items.createFromBarCode(text).catch(() => ({product: null}))
+        console.log(data.related)
+        const itemsId = this.items.map(item => item._id)
+        this.selectedItem = data.related.filter(item => itemsId.includes(item._id)).pop()
+        console.log(this.selectedItem)
         this.$refs.confirmProduct.open(data).subscribe(res => {
           if(!res || !data.product) return
-          items.createItem({
-            name : data.product.product_name,
-            imageUrl: data.product.image_url,
-            barcode: text,
-            description : '',
-            price : 0,
-            categoriesId : [ ],
-          })
+          if(this.selectedItem) {
+            this.selectedItem.imageUrl = data.product.image_url
+            this.selectedItem.barcode = text
+            items.createItem(this.selectedItem)
+            this.selectedItem = null
+          } else {
+            items.createItem({
+              name : data.product.product_name,
+              imageUrl: data.product.image_url,
+              barcode: text,
+              description : '',
+              price : 0,
+              categoriesId : [ ],
+            })
+          }
         })
       }
     },

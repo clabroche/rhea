@@ -82,7 +82,6 @@ Inventory.prototype.revertConfFromItems = function() {
       total: item.total
     }))
   }
-  console.log(this)
 }
 Inventory.prototype.update = async function() {
   const listToUpdate = new Inventory(lodash.cloneDeep(this))

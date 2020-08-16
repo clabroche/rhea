@@ -100,7 +100,6 @@ List.prototype.revertConfFromItems = function() {
       total: item.total
     }))
   }
-  console.log(this)
 }
 List.prototype.update = async function() {
   const listToUpdate = new List(lodash.cloneDeep(this))

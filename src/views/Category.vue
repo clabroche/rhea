@@ -95,7 +95,6 @@ export default {
           isNotFiltered = item.name.toUpperCase().includes(this.filterItemsInPopup.toUpperCase()) && !this.itemsForCategory.map(it => it._id).includes(item._id)
         }
         if(isNotFiltered && this.onlyNotCategorize) {
-          console.log(item)
           return !item.categoriesId || !item.categoriesId.length
         }
         return isNotFiltered

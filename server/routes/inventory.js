@@ -33,7 +33,6 @@ router.get('/items/barcode/:code', authentification, async function (req, res, n
   res.status(404).send('Product  not found')
 })
 router.put('/items/:itemId/total', authentification, async function (req, res, next) {
-  console.log(req.body)
   const list = await Inventory.updateTotal(req.user._id, req.params.itemId, req.body.total)
   res.json(list)
 })

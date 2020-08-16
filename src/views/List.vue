@@ -123,7 +123,6 @@ export default {
         const label = categ ? categ.name : 'Autres'
         return {_id: key, label ,items: categories[key], collapse: false}
       })
-      console.log(this.categories)
       this.list = list
     },
     selectItem(items) {

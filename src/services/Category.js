@@ -24,7 +24,6 @@ Category.get = async function (categoryId) {
   const { data: category } = await API.get('/categories/'+categoryId, {
     headers: { token: Auth.token },
   })
-  console.log(category)
   return category
 }
 Category.createCategory = async function (categoryToCreate) {
