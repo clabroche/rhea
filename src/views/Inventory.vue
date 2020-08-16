@@ -59,7 +59,7 @@ import LineVue from '../components/Line.vue'
 import SvgBackgroundVue from '../components/SvgBackground.vue';
 import Category from '../services/Category';
 import MultiselectVue from '../components/Multiselect.vue';
-// import { BarcodeScanner } from '@ionic-native/barcode-scanner';
+import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 export default {
   components: {
     'bottom-bar': BottomBarVue,
@@ -95,14 +95,14 @@ export default {
   methods: {
     async openCamera() {
       // Laurier: 3166290200647
-      // const { text, cancelled } = await BarcodeScanner.scan()
-      // if (!cancelled) {
-        const text = "3166290200647"
+      const { text, cancelled } = await BarcodeScanner.scan()
+      if (!cancelled) {
+        // const text = "3166290200647"
         return items
           .getFromBarCodeInInventory(text)
           .then(item => this.openItem(item))
           .catch(() => this.createItemInDb(text))
-      // }
+      }
     },
     async createItemInDb(barcode) {
       const item = await items.createFromBarCode(barcode).catch(() => ({product: null}))
