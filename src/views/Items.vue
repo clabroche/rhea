@@ -26,9 +26,9 @@
     </modal-vue>
     <modal-vue ref="confirmProduct">
       <div slot="body" slot-scope="{data}">
-        <div class="confirm-product" v-if="data">
-          <h2>{{data.product_name}}</h2>
-          <img :src="data.image_url" alt="">
+        <div class="confirm-product" v-if="data && data.product">
+          <h2>{{data.product.product_name}}</h2>
+          <img :src="data.product.image_url" alt="">
         </div>
         <div v-else>Produit non trouvé</div>
       </div>
@@ -117,12 +117,13 @@ export default {
       // Laurier: 3166290200647
       const { text, cancelled } = await BarcodeScanner.scan()
       if (!cancelled) {
-        const product = await items.getFromBarCode(text).catch(() => ({product: null}))
-        this.$refs.confirmProduct.open(product).subscribe(res => {
-          if(!res || !product) return
+        const data = await items.createFromBarCode(text).catch(() => ({product: null}))
+        this.$refs.confirmProduct.open(data).subscribe(res => {
+          if(!res || !data.product) return
           items.createItem({
-            name : product.product_name,
-            imageUrl: product.image_url,
+            name : data.product.product_name,
+            imageUrl: data.product.image_url,
+            barcode: text,
             description : '',
             price : 0,
             categoriesId : [ ],

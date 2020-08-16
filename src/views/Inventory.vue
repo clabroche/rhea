@@ -9,15 +9,13 @@
     <div class="items-container" @scroll="setPosition" ref="scrollElement">
       <div v-for="item of items" :key="item._id" @click="openItem(item)">
         <line-vue
-          :additionalAction="true"
           :additionalLeft="item.total"
           :name="item.name"
           :additionalCenter="getCategoriesForItem(item)"
-          :description="item.description"
-          @action="openOptions(item)"/>
+          :description="item.description"/>
       </div>
     </div>
-    <bottom-bar :text="items.length + ' items au total'" :actions="[{icon: 'fas fa-plus', cb: createItem}]"/>
+    <bottom-bar :text="items.length + ' items au total'" :actions="[{icon: 'fas fa-barcode', cb: openCamera}, {icon: 'fas fa-plus', cb: createItem}]"/>
     <modal-vue ref="createModal">
       <div slot="body">
         <multiselect :options="allItems" customKey="_id" customLabel="name" :single="true" placeholder="Choisir un produit..." @input="selectedItem = $event[0]"/>
@@ -32,11 +30,23 @@
           <i class="fas fa-plus" @click="data.total++"></i>
         </div>
       </div>
+      <div v-else-if="data && data.product" class="confirm-product">
+        <h2>{{data.product.product_name}}</h2>
+        <img :src="data.product.image_url" alt="">
+      </div>
+      <div v-else>Produit non trouvé</div>
     </modal-vue>
-    <options-vue ref="options" :options="[
-      {label:  'Modifier', select: update},
-      {label:  'Suppression', select: deleteItem},
-    ]"/>
+
+    <modal-vue ref="createItemModal" validateString="Oui" cancelString="Non">
+      <div  slot="body" slot-scope="{data}"  v-if="data && data.product" class="confirm-product">
+        <h2>{{data.product.product_name}}</h2>
+        <img :src="data.product.image_url" alt="">
+        <div>
+          Produit inexistant, le créer ?
+        </div>
+      </div>
+      <div v-else>Produit non trouvé</div>
+    </modal-vue>
   </div>
 </template>
 
@@ -46,17 +56,16 @@ import ModalVue from '../components/Modal.vue';
 import items from '../services/items.js';
 import inventory from '../services/inventory.js';
 import LineVue from '../components/Line.vue'
-import OptionsVue from '../components/Options.vue';
 import SvgBackgroundVue from '../components/SvgBackground.vue';
 import Category from '../services/Category';
 import MultiselectVue from '../components/Multiselect.vue';
+// import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 export default {
   components: {
     'bottom-bar': BottomBarVue,
     'modal-vue': ModalVue,
     'line-vue': LineVue,
     multiselect: MultiselectVue,
-    OptionsVue,
     svgBackground: SvgBackgroundVue
   }, 
   data() {
@@ -84,7 +93,36 @@ export default {
     clearInterval(this.interval)
   },
   methods: {
+    async openCamera() {
+      // Laurier: 3166290200647
+      // const { text, cancelled } = await BarcodeScanner.scan()
+      // if (!cancelled) {
+        const text = "3166290200647"
+        return items
+          .getFromBarCodeInInventory(text)
+          .then(item => this.openItem(item))
+          .catch(() => this.createItemInDb(text))
+      // }
+    },
+    async createItemInDb(barcode) {
+      const item = await items.createFromBarCode(barcode).catch(() => ({product: null}))
+      this.$refs.createItemModal.open(item).subscribe(async res => {
+        if(!res || !item.product.product_name) return
+        const itemFromDb = await items.createItem({
+          name : item.product.product_name,
+          imageUrl: item.product.image_url,
+          barcode,
+          description : '',
+          price : 0,
+          categoriesId : [ ],
+        })
+        await inventory.addItem(itemFromDb._id)
+        itemFromDb.total = 0
+        this.openItem(itemFromDb)
+      })
+    },
     openItem(item) {
+      console.log(item)
       this.$refs.updateModal.open(item).subscribe(async res=> {
         if(!res) return
         await inventory.updateTotal(item._id, item.total)
@@ -101,22 +139,8 @@ export default {
       this.allItems = await items.getAll() 
       this.items = await inventory.getItems()
     },
-    update() {
-      this.itemToCreate = this.selectedItem
-      this.createItem()
-    },
-    async deleteItem() {
-      await inventory.remove(this.selectedItem._id)
-      this.selectedItem = null
-      this.getAllItems()
-    },
-    openOptions(item) {
-      this.$refs.options.open(item.name)
-      this.selectedItem = item
-    },
     createItem() {
       this.$refs.createModal.open().subscribe(async res => {
-        console.log(this.selectedItem)
         if(!res || !this.selectedItem._id) return 
         await inventory.addItem(this.selectedItem._id)
         this.selectedItem = null
@@ -152,6 +176,16 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
+  }
+}
+
+h2 {
+  margin-top: 0;
+}
+.confirm-product {
+  text-align: center;
+  img {
+    max-width: 100px;
   }
 }
 </style>

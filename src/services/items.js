@@ -42,12 +42,28 @@ export default {
     })
     return items
   },
-  async getFromBarCode(code) {
-    const {data:res} = await API.post('/items/barcode/' + code, null, {
+  async createFromBarCode(code) {
+    const { data: res } = await API.post('/items/barcode/' + code, null, {
       headers: {
         token: Auth.token
       },
     })
-    return { product: res.product, related: res.related}
+    return { product: res.product, related: res.related }
+  },
+  async getFromBarCode(code) {
+    const { data: res } = await API.get('/items/barcode/' + code, {
+      headers: {
+        token: Auth.token
+      },
+    })
+    return res
+  },
+  async getFromBarCodeInInventory(code) {
+    const { data: res } = await API.get('/inventory/items/barcode/' + code, {
+      headers: {
+        token: Auth.token
+      },
+    })
+    return res
   },
 }

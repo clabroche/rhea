@@ -12,11 +12,17 @@ router.get('/', authentification, async function (req, res, next) {
 router.post('/barcode/:code', authentification, async function (req, res, next) {
   const code = req.params.code
   const { data: response } = await axios.get(`https://world.openfoodfacts.org/api/v0/product//${code}.json`)
-  if(response.status === 1) {
+  if (response.status === 1) {
     const product = response.product
-    const related = Items.search(req.user._id, product.product_name)
-    res.json({product, related})
+    const related = await Items.search(req.user._id, product.product_name)
+    res.json({ product, related })
   }
+  res.status(404).send('Product  not found')
+})
+router.get('/barcode/:code', authentification, async function (req, res, next) {
+  const code = req.params.code
+  const item = await Items.getByBarcode(req.user._id, code)
+  if(item) return res.json(item)
   res.status(404).send('Product  not found')
 })
 router.get('/:id', authentification, async function(req, res, next) {
