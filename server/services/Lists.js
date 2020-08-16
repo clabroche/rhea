@@ -47,7 +47,7 @@ List.getList = async function (listId) {
 /** @param {string} listId */
 List.increment = async function (listId, itemId, amount) {
   const list = await this.getList(listId)
-  const conf = list.confs.filter(conf => conf._id.toString() === itemId.toString()).pop()
+  const conf = list.confs.filter(config => config._id.toString() === itemId.toString()).pop()
   conf.selected = +amount
   if (conf.selected > conf.total) conf.selected = 0
   await list.update()
@@ -55,7 +55,7 @@ List.increment = async function (listId, itemId, amount) {
 }
 List.quantity = async function (listId, itemId, amount) {
   const list = await this.getList(listId)
-  const conf = list.confs.filter(conf => conf._id.toString() === itemId.toString()).pop()
+  const conf = list.confs.filter(config => config._id.toString() === itemId.toString()).pop()
   conf.total = +amount
   if(conf.total < conf.selected) conf.selected = conf.total
   await list.update()
