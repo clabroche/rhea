@@ -3,7 +3,6 @@
     <div ref="input" class="input" @click.stop="open()">
       <div v-if="!value.length && !isOpen" class="placeholder">{{placeholder}}</div>
       <div v-if="!value.length && isOpen" class="placeholder">Choisir une entrée ci-dessous...</div>
-      <!-- <spinner class="spinner" :size="20" v-if="opening"></spinner> -->
       <div v-for="itemValue in value" :key="getKey(itemValue)" class="item-container">
         <div class="label">
           {{getLabel(itemValue)}}
