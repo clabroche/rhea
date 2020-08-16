@@ -1,15 +1,16 @@
 <template>
   <div class="root-items">
-    <svg-background :bottom="items && items.length" svg="cookie">
+    <svg-background :bottom="items && items.length" svg="inventory">
       <br>
       <div>Hey !</div>
       <br>
-      Appuies sur le <i class="fas fa-plus" aria-hidden="true"></i> pour ajouter un produit dans cette liste
+      Appuies sur le <i class="fas fa-plus" aria-hidden="true"></i> pour ajouter un produit dans ton inventaire
     </svg-background>
     <div class="items-container" @scroll="setPosition" ref="scrollElement">
-      <div v-for="item of items" :key="item._id" @click="$router.push({name:'item', params: {itemId: item._id}})">
+      <div v-for="item of items" :key="item._id" @click="openItem(item)">
         <line-vue
           :additionalAction="true"
+          :additionalLeft="item.total"
           :name="item.name"
           :additionalCenter="getCategoriesForItem(item)"
           :description="item.description"
@@ -19,9 +20,17 @@
     <bottom-bar :text="items.length + ' items au total'" :actions="[{icon: 'fas fa-plus', cb: createItem}]"/>
     <modal-vue ref="createModal">
       <div slot="body">
-        <input type="text" v-model="itemToCreate.name" placeholder="Nom...">
-        <input type="text" v-model="itemToCreate.description" placeholder="Description...">
-        <input type="number" v-model="itemToCreate.price" placeholder="Prix...">
+        <multiselect :options="allItems" customKey="_id" customLabel="name" :single="true" placeholder="Choisir un produit..." @input="selectedItem = $event[0]"/>
+      </div>
+    </modal-vue>
+    <modal-vue ref="updateModal">
+      <div slot="body" slot-scope="{data}" v-if="data && data._id">
+        <h2>{{data.name}}</h2>
+        <div class="increment-container">
+          <i class="fas fa-minus" @click="data.total--"></i>
+          {{data.total}}
+          <i class="fas fa-plus" @click="data.total++"></i>
+        </div>
       </div>
     </modal-vue>
     <options-vue ref="options" :options="[
@@ -40,17 +49,20 @@ import LineVue from '../components/Line.vue'
 import OptionsVue from '../components/Options.vue';
 import SvgBackgroundVue from '../components/SvgBackground.vue';
 import Category from '../services/Category';
+import MultiselectVue from '../components/Multiselect.vue';
 export default {
   components: {
     'bottom-bar': BottomBarVue,
     'modal-vue': ModalVue,
     'line-vue': LineVue,
+    multiselect: MultiselectVue,
     OptionsVue,
     svgBackground: SvgBackgroundVue
   }, 
   data() {
     return {
       items: [],
+      allItems: [],
       itemToCreate: {
         name: '',
         description: ''
@@ -64,14 +76,21 @@ export default {
     const categories = await Category.getCategories() 
     categories.forEach(categ => this.categories[categ._id] = categ)
     this.$refs.scrollElement.scrollTop = this.$root.scroll.listItems
-    this.interval = setInterval(async () => {
-        this.getAllItems()
-      }, 500);
+    // this.interval = setInterval(async () => {
+    //     this.getAllItems()
+    //   }, 500);
   },
   beforeDestroy() {
     clearInterval(this.interval)
   },
   methods: {
+    openItem(item) {
+      this.$refs.updateModal.open(item).subscribe(async res=> {
+        if(!res) return
+        await inventory.updateTotal(item._id, item.total)
+        await this.getAllItems()
+      }) 
+    },
     setPosition() {
       this.$root.scroll.listItems = this.$refs.scrollElement.scrollTop
     },
@@ -79,6 +98,7 @@ export default {
       return item.categoriesId.map(categoryId => this.categories[categoryId] ?  ' ' +this.categories[categoryId].name : '').join(', ')
     },
     async getAllItems() {
+      this.allItems = await items.getAll() 
       this.items = await inventory.getItems()
     },
     update() {
@@ -86,8 +106,7 @@ export default {
       this.createItem()
     },
     async deleteItem() {
-      await items.remove(this.selectedItem._id)
-      this.itemToCreate = {}
+      await inventory.remove(this.selectedItem._id)
       this.selectedItem = null
       this.getAllItems()
     },
@@ -97,9 +116,9 @@ export default {
     },
     createItem() {
       this.$refs.createModal.open().subscribe(async res => {
-        if(!res) return 
-        await items.createItem(this.itemToCreate)
-        this.itemToCreate = {}
+        console.log(this.selectedItem)
+        if(!res || !this.selectedItem._id) return 
+        await inventory.addItem(this.selectedItem._id)
         this.selectedItem = null
         this.getAllItems()
       })
@@ -119,6 +138,20 @@ export default {
     padding: 10px;
     overflow: auto;
   }
-
+}
+.increment-container {
+  width: 150px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  i {
+    background-color: var(--headerBgColorAccent);
+    color: var(--headerTextColorAccent);
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 }
 </style>

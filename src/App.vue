@@ -96,6 +96,7 @@ export default {
   --headerBgColor: #466c80;
   --headerBgColorAccent: #2f5466;
   --headerTextColor: white;
+  --headerTextColorAccent: white;
   --headerFontWeight: bold;
   --headerIconTextColor: #ffffff;
   --contentBorderWidth: 1px;

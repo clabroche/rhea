@@ -21,6 +21,7 @@ export default {
         cookie: require('@/assets/cookie.svg'),
         category: require('@/assets/category.svg'),
         recipe: require('@/assets/recipe.svg'),
+        inventory: require('@/assets/inventory.svg'),
       }
     }
   },
