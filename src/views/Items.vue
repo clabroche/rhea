@@ -126,10 +126,8 @@ export default {
       const { text, cancelled } = await BarcodeScanner.scan()
       if (!cancelled) {
         const data = await items.createFromBarCode(text).catch(() => ({product: null}))
-        console.log(data.related)
         const itemsId = this.items.map(item => item._id)
         this.selectedItem = data.related.filter(item => itemsId.includes(item._id)).pop()
-        console.log(this.selectedItem)
         this.$refs.confirmProduct.open(data).subscribe(res => {
           if(!res || !data.product) return
           if(this.selectedItem) {
