@@ -23,6 +23,10 @@
           <i class="fas fa-clipboard-list" aria-hidden="true"></i>
           Recettes
         </li>
+        <li @click="$router.push({name: 'calendar'}); sidebar.open = false">
+          <i class="fas fa-calendar-alt" aria-hidden="true"></i>
+          Calendrier
+        </li>
       </ul>
       <ul>
         <a :href="androidURL">

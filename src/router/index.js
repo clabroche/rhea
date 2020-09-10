@@ -10,6 +10,7 @@ import Category from '../views/Category.vue'
 import Recipes from '../views/Recipes.vue'
 import Recipe from '../views/Recipe.vue'
 import Inventory from '../views/Inventory.vue'
+import Calendar from '../views/Calendar.vue'
 
 Vue.use(VueRouter)
 
@@ -60,8 +61,12 @@ const routes = [
   }, {
     path: '/register',
     name: 'register',
-    props: {register: true},
+    props: { register: true },
     component: Login
+  }, {
+    path: '/calendar',
+    name: 'calendar',
+    component: Calendar
   },
 ]
 

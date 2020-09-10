@@ -34,7 +34,8 @@ export default {
     'headerFontSize',
     'noCancel',
     'noValidate',
-    'colored'
+    'colored',
+    'disabled'
   ],
   data() {
     return {
@@ -54,7 +55,9 @@ export default {
       this.close(null)
     },
     validate() {
-      this.close(this.value || true)
+      if(!this.disabled) {
+        this.close(this.value || true)
+      }
     },
     close(data) {
       this.isOpen = false
