@@ -35,7 +35,7 @@ import 'vue-cal/dist/vuecal.css'
 import 'vue-cal/dist/i18n/fr'
 import Recipes from '../services/Recipe'
 import PromiseB from 'bluebird'
-import Events from '../services/Events'
+import Events from '../services/EventsCalendar'
 import MultiselectVue from '../components/Multiselect.vue'
 moment.locale('fr')
 export default {
@@ -67,7 +67,7 @@ export default {
       const today = moment();
       const from_date = today.startOf('week');
       const events = []
-      Array(7).fill(null).map((_, i) => {
+      Array(7).fill(null).forEach((_, i) => {
         const $date = from_date.clone().add(i, 'days').set({hours: 12})
         events.push({
           recipeId: this.allRecipes[Math.floor(Math.random() * this.allRecipes.length)]._id,

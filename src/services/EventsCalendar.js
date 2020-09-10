@@ -2,11 +2,11 @@ import API from './API'
 import Auth from './Auth'
 /**
  * 
- * @param {EventsCalendat} event 
+ * @param {EventsCalendar} event 
  */
 // @ts-ignore
 // eslint-disable-next-line no-unused-vars
-function EventsCalendat(event = {}) {
+function EventsCalendar(event = {}) {
   this._id = event._id || null
   this.title = event.title || ""
   this.recipeId = event.recipeId || ""
@@ -18,27 +18,27 @@ function EventsCalendat(event = {}) {
 }
 
 
-EventsCalendat.getEvents = async function () {
+EventsCalendar.getEvents = async function () {
   const { data: events } = await API.get('/events/', {
     headers: { token: Auth.token },
   })
-  return events.map(event => new EventsCalendat(event))
+  return events.map(event => new EventsCalendar(event))
 } 
-EventsCalendat.get = async function (eventId) {
+EventsCalendar.get = async function (eventId) {
   if(!eventId) throw new Error('eventId param missing')
   const { data: event } = await API.get('/events/'+eventId, {
     headers: { token: Auth.token },
   })
-  return new EventsCalendat(event)
+  return new EventsCalendar(event)
 }
-EventsCalendat.createEvent = async function (eventToCreate) {
+EventsCalendar.createEvent = async function (eventToCreate) {
   if (!eventToCreate) throw new Error('eventToCreate param missing')
   await API.post('/events', eventToCreate, {
     headers: { token: Auth.token },
   })
 }
 
-EventsCalendat.deleteEvent = async function (eventId) {
+EventsCalendar.deleteEvent = async function (eventId) {
   if (!eventId) throw new Error('eventId param missing')
   await API.delete('/events/' + eventId, {
     headers: { token: Auth.token },
@@ -46,4 +46,4 @@ EventsCalendat.deleteEvent = async function (eventId) {
 } 
 
 
-export default EventsCalendat
+export default EventsCalendar

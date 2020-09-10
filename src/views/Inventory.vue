@@ -110,26 +110,28 @@ export default {
     },
     async createItemInDb(barcode) {
       const item = await items.createFromBarCode(barcode).catch(() => ({product: null}))
-      const itemsId = this.allItems.map(item => item._id)
-      this.selectedItem = item.related.filter(item => itemsId.includes(item._id)).pop()
+      const itemsId = this.allItems.map(_item => _item._id)
+      this.selectedItem = item.related.filter(_item => itemsId.includes(_item._id)).pop()
       this.$refs.createItemModal.open(item).subscribe(async res => {
-        if(!res || !item.product.product_name) return
-          let itemFromDb = null
-          if(this.selectedItem) {
-            this.selectedItem.imageUrl = item.product.image_url
-            this.selectedItem.barcode = barcode
-            itemFromDb = await items.createItem(this.selectedItem)
-            this.selectedItem = null
-          } else {
-            itemFromDb = await items.createItem({
-              name : item.product.product_name,
-              imageUrl: item.product.image_url,
-              barcode,
-              description : '',
-              price : 0,
-              categoriesId : [ ],
-            })
-          }
+        if(!res || !item.product.product_name) {
+          return
+        }
+        let itemFromDb = null
+        if(this.selectedItem) {
+          this.selectedItem.imageUrl = item.product.image_url
+          this.selectedItem.barcode = barcode
+          itemFromDb = await items.createItem(this.selectedItem)
+          this.selectedItem = null
+        } else {
+          itemFromDb = await items.createItem({
+            name : item.product.product_name,
+            imageUrl: item.product.image_url,
+            barcode,
+            description : '',
+            price : 0,
+            categoriesId : [ ],
+          })
+        }
         await inventory.addItem(itemFromDb._id)
         itemFromDb.total = 0
         this.openItem(itemFromDb)
