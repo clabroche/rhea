@@ -79,7 +79,7 @@ export default {
     this.$root.scroll = {}
     httpError.subscribe(err => {
       if(err.response && err.response.status === 403) {
-        notif.next('deldkeld', 'ldkdlkzd')
+        notif.next('error', 'Vous n\'êtes pas authentifié.')
         this.$router.push({name: 'login'})
       } 
       console.error(err)

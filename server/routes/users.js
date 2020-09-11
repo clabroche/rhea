@@ -1,7 +1,7 @@
 var express = require('express');
 var bcrypt = require('bcrypt');
 var router = express.Router();
-const uuid = require('uuid/v4')
+const {v4: uuid} = require('uuid')
 const {mongo} = require('../helpers/mongoConnect')
 const authMiddleWare = require('../middleware/auth')
 /* GET home page. */

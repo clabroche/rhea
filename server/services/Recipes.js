@@ -7,6 +7,10 @@ function Recipe(recipe) {
   this._id = mongo.getID(recipe._id)
   /** @type {string} */
   this.name = recipe.name || ''
+  /** @type {number} */
+  this.score = recipe.score || 0
+  /** @type {number} */
+  this.healthy = recipe.healthy || 0
   /** @type {Items} */
   this.items = recipe.items || null
   /** @type {ObjectID[] | string[]} */
@@ -25,6 +29,8 @@ Recipe.create = async function (ownerId, recipe) {
   await mongo.collection('recipes')
     .insertOne({
       name: recipe.name,
+      score: recipe.score,
+      healthy: recipe.healthy,
       ownerId: mongo.getID(ownerId)
     })
 }
@@ -35,6 +41,8 @@ Recipe.update = async function (ownerId, recipe) {
     }, {
       $set: {
         name: recipe.name,
+        score: recipe.score,
+        healthy: recipe.healthy,
         ownerId: mongo.getID(ownerId)
       }
     }, { upsert: true }

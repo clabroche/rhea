@@ -20,7 +20,7 @@
 
 <script>
 import Subject from '../services/CustomObservable'
-import uuid from 'uuid/v4'
+import { v4 as uuid } from 'uuid';
 export default {
   props: [
     'value',

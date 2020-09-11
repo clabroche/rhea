@@ -4,7 +4,18 @@
     </svg-background>
     <div class="list-container">
       <div class="form">
-        <input type="text" v-model="recipe.name" placeholder="Nom...">
+        <input class="name" type="text" v-model="recipe.name" placeholder="Nom...">
+        <div class="line">
+          <div class="field">
+            <label>Goût</label>
+            <vue-stars class="stars" v-model="recipe.score" name="score" shadowColor="none"/>
+          </div>
+          <div class="field">
+            <label>Santé</label>
+            <vue-stars class="stars" v-model="recipe.healthy" name="healthy" shadowColor="none"/>
+          </div>
+
+        </div>
         <button @click="update">Sauvegarder</button>
       </div>
 
@@ -45,12 +56,16 @@ import PromiseB from 'bluebird'
 import SvgBackgroundVue from '../components/SvgBackground.vue';
 import SearchItemsVue from '../components/SearchItems.vue';
 import sort from 'fast-sort'
+import notification from '../services/notification'
+import { VueStars } from "vue-stars"
+
 export default {
   components: {
       'bottom-bar': BottomBarVue,
       modalVue: ModalVue,
       svgBackground: SvgBackgroundVue,
-      searchItems: SearchItemsVue
+      searchItems: SearchItemsVue,
+      VueStars
   },
   data() {
     return {
@@ -85,6 +100,8 @@ export default {
     },
     async update() {
       await Recipe.createRecipe(this.recipe)
+        .then(() => notification.next('success', 'La recette est mise à jour.'))
+        .catch(() => notification.next('error', 'La recette n\'à pas pu être mise à jour.'))
       await this.getRecipe()
     },
     async linkItem() {
@@ -115,6 +132,33 @@ export default {
   }
   .form {
     margin: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    .name {
+      width: auto;
+      margin: auto;
+      border: none;
+      text-align: center;
+      font-size: 1.2em;
+      font-weight: bold;
+
+    }
+    .line {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      width: 100%;
+    }
+    .field {
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      .stars {
+        font-size: 1.2em;
+      }
+    }
   }
   .items {
     height: 55vh;

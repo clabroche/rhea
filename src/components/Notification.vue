@@ -1,7 +1,7 @@
 <template>
   <div class="root-notification">
-    <div v-for="notif of notifs" :key="notif.id" class="notif" :class="type">
-
+    <div v-for="notif of notifs" :key="notif.id" class="notif" :class="notif.type">
+      {{notif.msg}}
     </div>
   </div>
 </template>
@@ -18,10 +18,14 @@ export default {
   mounted() {
     event.subscribe((type, msg) => {
       const notif = {
-        id: uuid.v4(),
+        id: uuid(),
         type, msg
       }
       this.notifs.push(notif)
+      setTimeout(() => {
+        const index = this.notifs.indexOf(notif)
+        if(index>-1) this.notifs.splice(index, 1)
+      }, 5000);
     })
   }
 }
