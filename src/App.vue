@@ -44,6 +44,7 @@
     <div class="app-content">
       <router-view/>
     </div>
+    <notification></notification>
   </div>
 </template>
 
@@ -52,12 +53,17 @@ import Header from './services/Header'
 import sidebar from './services/sidebar'
 import Auth from './services/Auth'
 import httpError from './services/HTTPError'
+import NotificationVue from './components/Notification'
+import notif from './services/notification'
 export default {
+  components: {
+    notification: NotificationVue
+  },
   data() {
     return {
       Header,
       sidebar,
-      Auth
+      Auth,
     }
   },
   computed: {
@@ -69,6 +75,7 @@ export default {
     this.$root.scroll = {}
     httpError.subscribe(err => {
       if(err.response.status === 403) {
+        notif.next('deldkeld', 'ldkdlkzd')
         this.$router.push({name: 'login'})
       } 
     })
