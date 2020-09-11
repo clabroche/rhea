@@ -3,8 +3,10 @@
     <div class="left">
       {{text}}
     </div>
-    <div class="action" @click="$emit('action')">
-      <i class="fas fa-plus"></i>
+    <div class="actions">
+      <div class="action" @click="action.cb()" v-for="(action, i) of actions" :key="'action-' + i">
+        <i :class="'fas fa-'+ action.icon" aria-hidden="true"></i>
+      </div>
     </div>
   </div>
 </template>
@@ -12,7 +14,8 @@
 <script>
 export default {
   props: {
-    text: {default: ''}
+    text: {default: ''},
+    actions: {default: () => ({})}
   }
 }
 </script>
@@ -30,14 +33,19 @@ export default {
     display: flex;
     align-items: center;
   }
-  .action {
-    width: 45px;
+
+  .actions {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 20px;
-    background-color: var(--headerBgColor);
-    color: var(--headerTextColor)
+    .action {
+      width: 45px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 20px;
+      background-color: var(--headerBgColor);
+      color: var(--headerTextColor);
+      border-right: 1px solid var(--headerBgColorAccent);
+    }
   }
 }
 </style>

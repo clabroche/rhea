@@ -7,7 +7,7 @@ const stack = [
     spawnCmd: 'npm',
     spawnArgs: ['run', 'server'],
     spawnOptions: {
-      cwd:  '/home/coco/Projects/rhea',
+      cwd:  __dirname,
       env: Object.assign({
         PORT: '9847',
         mongoDbURL:`mongodb://root:123456@localhost:27017/${BASE}?authSource=admin`
@@ -19,7 +19,7 @@ const stack = [
     spawnCmd: 'npm',
     spawnArgs: ['run', 'client'],
     spawnOptions: {
-      cwd: '/home/coco/Projects/rhea',
+      cwd: __dirname,
       env: Object.assign({
         VUE_APP_SERVER_URL: 'http://localhost',
         VUE_APP_SERVER_PORT: 9847,
@@ -32,7 +32,7 @@ const stack = [
     spawnCmd: 'npm',
     spawnArgs: ['run', 'capacitor:serve -- --android'],
     spawnOptions: {
-      cwd: '/home/coco/Projects/rhea',
+      cwd: __dirname,
       env: Object.assign({
         VUE_APP_SERVER_URL: 'http://localhost',
         VUE_APP_SERVER_PORT: 9847,

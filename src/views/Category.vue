@@ -11,20 +11,20 @@
       <div class="items-container">
         <h2>Les produits de cette catégorie</h2>
         <div class="filter-items">
-          <i class="fas fa-search"></i>
+          <i class="fas fa-search" aria-hidden="true"></i>
           <input type="text" v-model="filterItems" placeholder="Chercher un produit">
         </div>
         <div class="items-list">
           <div class="item" v-for="item of filteredItems" :key="item._id">
             <div>{{item.name}}</div>
             <div class="actions">
-              <div class="delete" @click="deleteLink(item._id)"><i class="fas fa-trash"></i></div>
+              <div class="delete" @click="deleteLink(item._id)"><i class="fas fa-trash" aria-hidden="true"></i></div>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <bottom-bar :text="(itemsForCategory ? itemsForCategory.length : 0) + ' listes au total'" @action="linkItem" />
+    <bottom-bar :text="(itemsForCategory ? itemsForCategory.length : 0) + ' listes au total'" :actions="[{icon: 'fas fa-plus', cb: linkItem}]" />
     <modal-vue ref="linkModal">
       <div slot="header">
         Lier des produits à une catégorie
@@ -32,7 +32,7 @@
       <div slot="body">
         <div class="filter-container">
           <div class="filter-items">
-            <i class="fas fa-search"></i>
+            <i class="fas fa-search" aria-hidden="true"></i>
             <input type="text" v-model="filterItemsInPopup" placeholder="Chercher un produit">
           </div>
            <div class="checkbox-container">
@@ -62,7 +62,7 @@
 </template>
 
 <script>
-import Categories from '../services/categories';
+import Category from '../services/Category';
 import BottomBarVue from '../components/BottomBar.vue';
 import ModalVue from '../components/Modal.vue';
 import items from '../services/items';
@@ -95,7 +95,6 @@ export default {
           isNotFiltered = item.name.toUpperCase().includes(this.filterItemsInPopup.toUpperCase()) && !this.itemsForCategory.map(it => it._id).includes(item._id)
         }
         if(isNotFiltered && this.onlyNotCategorize) {
-          console.log(item)
           return !item.categoriesId || !item.categoriesId.length
         }
         return isNotFiltered
@@ -119,25 +118,25 @@ export default {
       this.allItems = await items.getAll()
     },
     async getCategory() {
-      this.category = await Categories.get(this.categoryId)
+      this.category = await Category.get(this.categoryId)
       if(this.category.itemsId) {
         this.itemsForCategory = await PromiseB.map(this.category.itemsId, itemId => items.get(itemId))
       }
     },
     async update() {
-      await Categories.createCategory(this.category)
+      await Category.createCategory(this.category)
       await this.getCategory()
     },
     async linkItem() {
       this.$refs.linkModal.open().subscribe(async res => {
         if(!res) return 
-        await Categories.linkItems(this.categoryId, this.itemsSelected)
+        await Category.linkItems(this.categoryId, this.itemsSelected)
         this.itemsSelected = []
         this.reload()
       })
     },
     async deleteLink(itemId) {
-      await Categories.deleteLink(this.categoryId, itemId)
+      await Category.deleteLink(this.categoryId, itemId)
       return this.reload()
     }
   }
@@ -202,7 +201,7 @@ export default {
       content: '';
       position: absolute;
       bottom: -15px;
-      left: calc(50% - (30% /2));
+      left: calc(50% - (30% / 2));
       height: 1px;
       width: 30%;
       background-color: var(--headerBgColor);

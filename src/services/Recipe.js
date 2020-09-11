@@ -24,7 +24,6 @@ Recipe.get = async function (recipeId) {
   const { data: recipe } = await API.get('/recipes/'+recipeId, {
     headers: { token: Auth.token },
   })
-  console.log(recipe)
   return recipe
 }
 Recipe.createRecipe = async function (recipeToCreate) {

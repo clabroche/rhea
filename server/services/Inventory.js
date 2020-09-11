@@ -5,15 +5,11 @@ const lodash = require('lodash')
 const Items = require('./Items')
 /**
  * 
- * @param {List} list 
+ * @param {Inventory} list 
  */
-function List(list) {
+function Inventory(list) {
   /** @type {ObjectID | string} */
   this._id = mongo.getID(list._id)
-  /** @type {string} */
-  this.name = list.name || ''
-  /** @type {string} */
-  this.description = list.description || ''
   /** @type {ObjectID | string} */
   this.ownerId = mongo.getID(list.ownerId) || ''
   /** @type {User} */
@@ -23,7 +19,7 @@ function List(list) {
   /** @type {Conf[]} */
   this.confs = list.confs || []
 }
-List.prototype.loadItems = async function() {
+Inventory.prototype.loadItems = async function() {
   this.items = await PromiseB.map(this.confs, async (itemConf, i) => {
     const item = await Items.getItem(itemConf._id)
     if(!item) { // If item doesn't exist, remove it from array
@@ -34,65 +30,51 @@ List.prototype.loadItems = async function() {
   }).filter(a => a) // Remove undefined items
 }
 /** @param {string} listId */
-List.getList = async function (listId) {
-  const list = await mongo
-    .collection('lists')
-    .findOne({ _id: mongo.getID(listId) })
+Inventory.getList = async function (ownerId) {
+  let list = await mongo
+    .collection('inventory')
+    .findOne({ ownerId: mongo.getID(ownerId) })
+  if(!list) list = await this.createList(ownerId)
   list.confs = await PromiseB.map(list.confs, async conf => {
     const item = await mongo.collection('items').findOne({ _id: mongo.getID(conf._id) })
     return Object.assign(conf, item)
   })
-  return new List(list)
+  return new Inventory(list)
 }
-/** @param {string} listId */
-List.increment = async function (listId, itemId, amount) {
-  const list = await this.getList(listId)
+Inventory.updateTotal = async function (ownerId, itemId, amount) {
+  let list = await this.getList(ownerId)
   const conf = list.confs.filter(config => config._id.toString() === itemId.toString()).pop()
-  conf.selected = +amount
-  if (conf.selected > conf.total) conf.selected = 0
-  await list.update()
+  conf.total = amount
+  if(conf.total <= 0) {
+    list = await this.deleteItem(ownerId, conf._id)
+  } else {
+    await list.update()
+  }
   return list
-}
-List.quantity = async function (listId, itemId, amount) {
-  const list = await this.getList(listId)
-  const conf = list.confs.filter(config => config._id.toString() === itemId.toString()).pop()
-  conf.total = +amount
-  if(conf.total < conf.selected) conf.selected = conf.total
-  await list.update()
-  return list
-}
-/** @param {string} userId */
-List.getListsFromUser = async function(userId) {
-  const lists = await mongo
-    .collection('lists')
-    .find({ownerId: userId})
-    .toArray()
-  return lists.map(list => new List(list))
 }
 /** @param {Conf} conf*/
-List.prototype.addConf = async function(conf) {
+Inventory.prototype.addConf = async function(conf) {
   conf._id = mongo.getID(conf._id)
   this.confs.push(conf)
   this.removeConfDuplicata()
   await this.update()
 }
 /** 
- * @param {List} listToCreate
+ * @param {Inventory} listToCreate
  * @param {string} userId
  */
-List.createList = async function(listToCreate, userId) {
-  listToCreate.ownerId = userId
-  listToCreate = new List(listToCreate)
-  delete listToCreate.items
+Inventory.createList = async function (ownerId) {
+  const inventory = new Inventory({ ownerId: mongo.getID(ownerId) })
+  delete inventory.items
   await mongo
-    .collection('lists')
-    .insertOne(listToCreate)
-  return listToCreate
+    .collection('inventory')
+    .insertOne(inventory)
+  return inventory
 }
-List.prototype.removeConfDuplicata = function() {
+Inventory.prototype.removeConfDuplicata = function() {
   this.confs = lodash.uniqBy(this.confs, item => mongo.getID(item._id).toString())
 }
-List.prototype.revertConfFromItems = function() {
+Inventory.prototype.revertConfFromItems = function() {
   if(this.items.length) {
     this.confs = this.items.map(item => ({
       _id: mongo.getID(item._id),
@@ -101,26 +83,26 @@ List.prototype.revertConfFromItems = function() {
     }))
   }
 }
-List.prototype.update = async function() {
-  const listToUpdate = new List(lodash.cloneDeep(this))
+Inventory.prototype.update = async function() {
+  const listToUpdate = new Inventory(lodash.cloneDeep(this))
   delete listToUpdate._id
   delete listToUpdate.items
-  await mongo.collection('lists')
+  await mongo.collection('inventory')
     .updateOne({_id: this._id}, {$set: listToUpdate})
   return listToUpdate
 }
-List.deleteItem = async function (listId, itemId) {
-  const list = await List.getList(listId)
+Inventory.deleteItem = async function (ownerId, itemId) {
+  const list = await Inventory.getList(ownerId)
   list.confs = list.confs.filter(conf => mongo.getID(conf._id).toString() !== mongo.getID(itemId).toString())
   await list.update()
   return list
 }
-List.delete = async function (listId) {
-  await mongo.collection('lists').deleteOne({_id: ObjectID(listId)})
+Inventory.delete = async function (listId) {
+  await mongo.collection('inventory').deleteOne({_id: ObjectID(listId)})
   return listId
 }
 
-module.exports = List
+module.exports = Inventory
 
 
 

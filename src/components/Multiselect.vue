@@ -3,12 +3,11 @@
     <div ref="input" class="input" @click.stop="open()">
       <div v-if="!value.length && !isOpen" class="placeholder">{{placeholder}}</div>
       <div v-if="!value.length && isOpen" class="placeholder">Choisir une entrée ci-dessous...</div>
-      <!-- <spinner class="spinner" :size="20" v-if="opening"></spinner> -->
       <div v-for="itemValue in value" :key="getKey(itemValue)" class="item-container">
         <div class="label">
           {{getLabel(itemValue)}}
         </div><!--
-  --><div class="delete" @click.stop="deleteTag(itemValue)" ><i class="fas fa-trash"></i></div>
+  --><div class="delete" @click.stop="deleteTag(itemValue)" ><i class="fas fa-trash" aria-hidden="true"></i></div>
       </div>
     </div>
     <transition name="fade">
@@ -238,7 +237,6 @@ function wait(ms) {
   opacity: 1;
   overflow: hidden;
   box-sizing: border-box;
-  background-color: #fff;
   border: 1px solid lightgrey;
   border-top: none;
   display: flex;

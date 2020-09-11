@@ -1,5 +1,6 @@
 import API from './API'
 import Auth from './Auth'
+
 export default {
   async getItem(itemToGet) {
     const {data: item} = await API.get('/items/' + itemToGet._id, {
@@ -18,7 +19,7 @@ export default {
     return item
   },
   async getAll() {
-    const {data: items} = await API.get('/items', {
+    const { data: items } = await API.get('/items', {
       headers: {
         token: Auth.token
       },
@@ -40,5 +41,29 @@ export default {
       },
     })
     return items
+  },
+  async createFromBarCode(code) {
+    const { data: res } = await API.post('/items/barcode/' + code, null, {
+      headers: {
+        token: Auth.token
+      },
+    })
+    return { product: res.product, related: res.related }
+  },
+  async getFromBarCode(code) {
+    const { data: res } = await API.get('/items/barcode/' + code, {
+      headers: {
+        token: Auth.token
+      },
+    })
+    return res
+  },
+  async getFromBarCodeInInventory(code) {
+    const { data: res } = await API.get('/inventory/items/barcode/' + code, {
+      headers: {
+        token: Auth.token
+      },
+    })
+    return res
   },
 }

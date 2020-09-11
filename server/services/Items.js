@@ -13,6 +13,8 @@ function Item(item) {
   this.description = item.description || ''
   /** @type {number} */
   this.price = item.price || 0
+  /** @type {number} */
+  this.barcode = Number.isNaN(+item.barcode) ? 0 : +item.barcode
   /** @type {ObjectID[] | string[]} */
   this.categoriesId = item.categoriesId || []
   /** @type {ObjectID | string} */
@@ -23,25 +25,46 @@ function Item(item) {
 Item.prototype.getUser = async function() {
   this.owner = await Users.getUser(this.ownerId)
 }
-Item.getItems = async function(userId) {
+Item.getItems = async function (userId) {
   const items = await mongo.collection('items')
-    .find({ownerId: mongo.getID(userId)})
-    .sort({name: 1})
+    .find({ ownerId: mongo.getID(userId) })
+    .sort({ name: 1 })
     .toArray()
   return items.map(item => new Item(item))
 }
+Item.prototype.fetchByName = async function () {
+  if(!this._id) {
+    const item = await mongo.collection('items')
+      .findOne({ name: this.name })
+    if(item) this._id = item._id
+  }
+  return this
+}
+Item.search = async function (userId, search) {
+  const items = await mongo.collection('items')
+    .find({ ownerId: mongo.getID(userId), name: new RegExp(`${search}`, 'gi') })
+    .sort({ name: 1 })
+    .toArray()
+  return items.map(item => new Item(item))
+}
+Item.getByBarcode = async function (userId, barcode) {
+  const item = await mongo.collection('items')
+    .findOne({ ownerId: mongo.getID(userId), barcode: +barcode})
+  return item ? new Item(item) : null
+}
 Item.updateOrCreate = async function(itemToCreate, userId) {
   itemToCreate.ownerId = mongo.getID(userId)
-  itemToCreate = new Item(itemToCreate)
-  delete itemToCreate.owner
-  if(itemToCreate._id) 
+  const item = new Item(itemToCreate)
+  await item.fetchByName()
+  delete item.owner
+  if(item._id) 
     await mongo
       .collection('items')
-      .updateOne({_id: mongo.getID(itemToCreate._id)}, {$set: itemToCreate})  
+      .updateOne({_id: mongo.getID(item._id)}, {$set: item})  
   else await mongo
       .collection('items')
-      .insertOne(itemToCreate)
-  return itemToCreate
+      .insertOne(item)
+  return item
 }
 Item.getItem = async function(id) {
   const item = await mongo

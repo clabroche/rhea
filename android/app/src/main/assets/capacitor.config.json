@@ -1,1 +1,1 @@
-{"appId":"com.coco.rhea","appName":"Rhea","bundledWebRuntime":false,"webDir":"./server/public"}
+{"appId":"com.coco.rhea","appName":"Rhea","bundledWebRuntime":false,"webDir":"./server/public","server":{"url":"http://192.168.1.56:8080"}}

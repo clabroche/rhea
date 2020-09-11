@@ -4,7 +4,7 @@
       <br>
       <div>Hey !</div>
       <br>
-      Appuies sur le <i class="fas fa-plus"></i> pour ajouter un produit dans cette liste
+      Appuies sur le <i class="fas fa-plus" aria-hidden="true"></i> pour ajouter un produit dans cette liste
     </svg-background>
     <div class="items-container" @scroll="setPosition" ref="scrollElement">
       <div v-for="item of items" :key="item._id" @click="$router.push({name:'item', params: {itemId: item._id}})">
@@ -16,12 +16,26 @@
           @action="openOptions(item)"/>
       </div>
     </div>
-    <bottom-bar :text="items.length + ' itemes au total'" @action="createItem" />
+    <bottom-bar :text="items.length + ' items au total'" :actions="[{icon: 'fas fa-barcode', cb: openCamera}, {icon: 'fas fa-plus', cb: createItem}]" />
     <modal-vue ref="createModal">
       <div slot="body">
         <input type="text" v-model="itemToCreate.name" placeholder="Nom...">
         <input type="text" v-model="itemToCreate.description" placeholder="Description...">
         <input type="number" v-model="itemToCreate.price" placeholder="Prix...">
+      </div>
+    </modal-vue>
+    <modal-vue ref="confirmProduct">
+      <div slot="body" slot-scope="{data}">
+        <div class="confirm-product" v-if="data && data.product">
+          Lier à un item existant
+          <multiselect :options="items" :value="selectedItem ? [selectedItem] : []" customKey="_id" customLabel="name" :single="true" placeholder="Choisir un produit..." @input="selectedItem = $event[0]"/>
+          <div v-if="!selectedItem">
+            ou créer un nouvel item
+            <input type="text" v-model="data.product.product_name" >
+            <img :src="data.product.image_url" alt="">
+          </div>
+        </div>
+        <div v-else>Produit non trouvé</div>
       </div>
     </modal-vue>
     <options-vue ref="options" :options="[
@@ -38,13 +52,17 @@ import items from '../services/items.js';
 import LineVue from '../components/Line.vue'
 import OptionsVue from '../components/Options.vue';
 import SvgBackgroundVue from '../components/SvgBackground.vue';
-import Category from '../services/categories';
+import MultiselectVue from '../components/Multiselect.vue';
+import Category from '../services/Category';
+
+import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 export default {
   components: {
     'bottom-bar': BottomBarVue,
     'modal-vue': ModalVue,
     'line-vue': LineVue,
     OptionsVue,
+    multiselect: MultiselectVue,
     svgBackground: SvgBackgroundVue
   }, 
   data() {
@@ -102,7 +120,34 @@ export default {
         this.selectedItem = null
         this.getAllItems()
       })
-    }
+    },
+    async openCamera() {
+      // Laurier: 3166290200647
+      const { text, cancelled } = await BarcodeScanner.scan()
+      if (!cancelled) {
+        const data = await items.createFromBarCode(text).catch(() => ({product: null}))
+        const itemsId = this.items.map(item => item._id)
+        this.selectedItem = data.related.filter(item => itemsId.includes(item._id)).pop()
+        this.$refs.confirmProduct.open(data).subscribe(res => {
+          if(!res || !data.product) return
+          if(this.selectedItem) {
+            this.selectedItem.imageUrl = data.product.image_url
+            this.selectedItem.barcode = text
+            items.createItem(this.selectedItem)
+            this.selectedItem = null
+          } else {
+            items.createItem({
+              name : data.product.product_name,
+              imageUrl: data.product.image_url,
+              barcode: text,
+              description : '',
+              price : 0,
+              categoriesId : [ ],
+            })
+          }
+        })
+      }
+    },
   }
 }
 </script>
@@ -119,5 +164,12 @@ export default {
     overflow: auto;
   }
 
+}
+
+.confirm-product {
+  text-align: center;
+  img {
+    max-width: 100px;
+  }
 }
 </style>

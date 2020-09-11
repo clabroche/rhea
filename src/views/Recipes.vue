@@ -4,7 +4,7 @@
       <br>
       <div>Hey !</div>
       <br>
-      Appuies sur le <i class="fas fa-plus"></i> pour ajouter une recette
+      Appuies sur le <i class="fas fa-plus" aria-hidden="true"></i> pour ajouter une recette
     </svg-background>
     <div class="recipes-container" ref="scrollElement" @scroll="setPosition">
       <div v-for="recipe of recipes" :key="recipe._id" @click="$router.push({name:'recipe', params: {recipeId: recipe._id}})">
@@ -17,7 +17,7 @@
         />
       </div>
     </div>
-    <bottom-bar :text="recipes.length + ' recettes au total'" @action="createRecipe" />
+    <bottom-bar :text="recipes.length + ' recettes au total'" :actions="[{icon: 'fas fa-plus', cb: createRecipe}]"/>
     <modal-vue ref="createModal">
       <div slot="body">
         <input type="text" v-model="recipeToCreate.name" placeholder="Nom...">
@@ -32,7 +32,7 @@
 <script>
 import BottomBarVue from '../components/BottomBar.vue';
 import ModalVue from '../components/Modal.vue';
-import Recipes from '../services/recipes.js';
+import Recipe from '../services/Recipe';
 import LineVue from '../components/Line.vue'
 import OptionsVue from '../components/Options.vue';
 import SvgBackgroundVue from '../components/SvgBackground.vue';
@@ -72,17 +72,17 @@ export default {
       this.selectedRecipe = recipe
     },
     async deleteRecipe() {
-      await Recipes.deleteRecipe(this.selectedRecipe._id) 
+      await Recipe.deleteRecipe(this.selectedRecipe._id) 
       this.selecteRecipe = null
       return this.getRecipes()
     },
     async getRecipes() {
-      this.recipes = await Recipes.getRecipes()
+      this.recipes = await Recipe.getRecipes()
     },
     createRecipe() {
       this.$refs.createModal.open().subscribe(async res => {
         if(!res) return 
-        await Recipes.createRecipe(this.recipeToCreate)
+        await Recipe.createRecipe(this.recipeToCreate)
         this.recipeToCreate = {name: ''}
       })
     }

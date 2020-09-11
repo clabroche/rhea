@@ -15,7 +15,7 @@
         <div class="item" v-for="category of filteredCategories" :key="category._id">
           <div>{{category.name}}</div>
           <div class="actions">
-            <div class="delete" @click="deleteCategory(category._id)"><i class="fas fa-trash"></i></div>
+            <div class="delete" @click="deleteCategory(category._id)"><i class="fas fa-trash" aria-hidden="true"></i></div>
           </div>
         </div>
       </div>
@@ -27,7 +27,7 @@
 import Items from '../services/items';
 import SvgBackgroundVue from '../components/SvgBackground.vue';
 import MultiselectVue from '../components/Multiselect.vue';
-import Category from '../services/categories';
+import Category from '../services/Category';
 export default {
   data() {
     return {
@@ -137,7 +137,7 @@ export default {
       content: '';
       position: absolute;
       bottom: -15px;
-      left: calc(50% - (30% /2));
+      left: calc(50% - (30% / 2));
       height: 1px;
       width: 30%;
       background-color: var(--headerBgColor);

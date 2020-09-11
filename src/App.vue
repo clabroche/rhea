@@ -4,41 +4,45 @@
     <div class="sidebar" :class="{open: sidebar.open}">
       <ul>
         <li @click="$router.push({name: 'lists'}); sidebar.open = false">
-          <i class="fas fa-list"></i>
+          <i class="fas fa-list" aria-hidden="true"></i>
           Listes
         </li>
         <li @click="$router.push({name: 'items'}); sidebar.open = false">
-          <i class="fas fa-cookie"></i>
+          <i class="fas fa-cookie" aria-hidden="true"></i>
           Produits
         </li>
         <li @click="$router.push({name: 'categories'}); sidebar.open = false">
-          <i class="fas fa-th"></i>
+          <i class="fas fa-th" aria-hidden="true"></i>
           Categories
         </li>
         <li @click="$router.push({name: 'inventory'}); sidebar.open = false">
-          <i class="fas fa-database"></i>
+          <i class="fas fa-database" aria-hidden="true"></i>
           Inventaire
         </li>
         <li @click="$router.push({name: 'recipes'}); sidebar.open = false">
-          <i class="fas fa-clipboard-list"></i>
+          <i class="fas fa-clipboard-list" aria-hidden="true"></i>
           Recettes
+        </li>
+        <li @click="$router.push({name: 'calendar'}); sidebar.open = false">
+          <i class="fas fa-calendar-alt" aria-hidden="true"></i>
+          Calendrier
         </li>
       </ul>
       <ul>
         <a :href="androidURL">
           <li>
-            <i class="fab fa-android"></i>
+            <i class="fab fa-android" aria-hidden="true"></i>
             Télécharger
           </li>
         </a>
         <li @click="disconnect">
-          <i class="fas fa-plug"></i>
+          <i class="fas fa-plug" aria-hidden="true"></i>
           Déconnection
         </li>
       </ul>
     </div>
     <div id="nav" v-if="$route.name !== 'login'">
-      <div class="trigger" v-if="Auth.user" @click="sidebar.open = true"><i class="fas fa-list"></i></div>
+      <div class="trigger" v-if="Auth.user" @click="sidebar.open = true"><i class="fas fa-list" aria-hidden="true"></i></div>
       {{Header.title}}
     </div>
     <div class="app-content">
@@ -74,10 +78,11 @@ export default {
   created() {
     this.$root.scroll = {}
     httpError.subscribe(err => {
-      if(err.response.status === 403) {
+      if(err.response && err.response.status === 403) {
         notif.next('deldkeld', 'ldkdlkzd')
         this.$router.push({name: 'login'})
       } 
+      console.error(err)
     })
   },
   methods: {
@@ -102,6 +107,7 @@ export default {
   --headerBgColor: #466c80;
   --headerBgColorAccent: #2f5466;
   --headerTextColor: white;
+  --headerTextColorAccent: white;
   --headerFontWeight: bold;
   --headerIconTextColor: #ffffff;
   --contentBorderWidth: 1px;
@@ -234,11 +240,10 @@ ul {
   }
 }
 input, textarea {
-  font-family: Jost;
+  font-family: Jost, Helvetica, Arial, sans-serif;
 }
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  font-family: Jost;
+  font-family: Jost, Helvetica, Arial, sans-serif;
 
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

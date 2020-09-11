@@ -25,7 +25,7 @@
         {{additionalCenter}}
       </div>
       <div class="additional-right" v-if="additionalAction" @click.stop="$emit('action')">
-        <i class="fas" :class="'fa-'+ additionalActionIcon"></i>
+        <i class="fas" :class="'fa-'+ additionalActionIcon" aria-hidden="true"></i>
       </div>
     </div>
   </div>
@@ -180,9 +180,11 @@ input[type='checkbox'] + label:hover, input[type='checkbox']:focus + label{
   color: #fff;
 }
 input[type='checkbox'] + label:hover > span, input[type='checkbox']:focus + label > span{
-  background: rgba(255,255,255,.1);
+  background: rgba(255,255,255, 0.1);
 }
-input[type='checkbox']:checked + label > ins{ height: 100%; }
+input[type='checkbox']:checked + label > ins{
+  height: 100%;
+}
 
 input[type='checkbox']:checked + label > span{
   animation: shrink-bounce 200ms cubic-bezier(.4,.0,.23,1);

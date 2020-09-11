@@ -4,13 +4,13 @@
       <br>
       <div>On y est presque !</div>
       <br>
-      Appuies sur le <i class="fas fa-plus"></i> pour ajouter un produit dans cette liste
+      Appuies sur le <i class="fas fa-plus" aria-hidden="true"></i> pour ajouter un produit dans cette liste
     </svg-background>
     <div class="list-container" ref="scrollElement" @scroll="setPosition">
       <div v-for="category of sortedCategories" :key="category.label">
         <div class="label" @click="category.collapse = !category.collapse">
           <span>{{category.label}}</span>
-          <i class="fas" :class="category.collapse ? 'fa-chevron-down' : 'fa-chevron-up'"></i>
+          <i class="fas" aria-hidden="true" :class="category.collapse ? 'fa-chevron-down' : 'fa-chevron-up'"></i>
         </div>
         <div v-if="!category.collapse">
           <div  v-for="item of category.items" :key="item._id" @click="incrementItem(item)">
@@ -28,7 +28,7 @@
         </div>
       </div>
       </div>
-    <bottom-bar v-if="list._id" @action="createItem" :text="list.items.length + ' produits pour un montant de ' + getTotalPrice + '€'"/>
+    <bottom-bar v-if="list._id" :actions="[{icon: 'fas fa-plus', cb: createItem}]" :text="list.items.length + ' produits pour un montant de ' + getTotalPrice + '€'"/>
     <modal-vue ref="createModal" height="auto">
       <div slot="body" class="createModal">
         <multiselect :options="allItems" customKey="_id" customLabel="name" :single="true" placeholder="Choisir un produit..." @input="selectItem"/>
@@ -65,7 +65,7 @@ import ModalVue from '../components/Modal.vue';
 import lodash from 'lodash'
 import OptionsVue from '../components/Options.vue';
 import MultiselectVue from '../components/Multiselect.vue'
-import Category from '../services/categories';
+import Category from '../services/Category';
 import SvgBackgroundVue from '../components/SvgBackground.vue';
 import sort from 'fast-sort'
 export default {
@@ -123,7 +123,6 @@ export default {
         const label = categ ? categ.name : 'Autres'
         return {_id: key, label ,items: categories[key], collapse: false}
       })
-      console.log(this.categories)
       this.list = list
     },
     selectItem(items) {
