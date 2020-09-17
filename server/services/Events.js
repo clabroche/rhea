@@ -70,7 +70,6 @@ Event.update = async function (ownerId, event) {
     )
 }
 Event.delete = async function (ownerId, eventId) {
-  console.log('remove', ownerId, eventId)
   await mongo.collection('events')
     .remove({ ownerId: mongo.getID(ownerId), _id: mongo.getID(eventId) })
 }
