@@ -25,6 +25,7 @@
       </template>
     </vue-cal>
     <button v-if="currentView === 'week'" @click="generateWeekMeal">Générer mes repas de la semaine</button>
+    <button v-if="currentView === 'week'" @click="generateList">Générer une liste de course</button>
   </div>
 </template>
 
@@ -37,7 +38,9 @@ import 'vue-cal/dist/i18n/fr'
 import Recipes from '../services/Recipe'
 import PromiseB from 'bluebird'
 import Events from '../services/EventsCalendar'
+import Inventory from '../services/inventory'
 import MultiselectVue from '../components/Multiselect.vue'
+import lists from '../services/lists'
 moment.locale('fr')
 export default {
   components: {
@@ -81,11 +84,33 @@ export default {
       await Events.deleteEvent(ev._id)
       await this.loadEvents()
     },
+    async generateList() {
+      const inventory = await Inventory.get()
+      const inventoryIds = inventory.items.map(item => item._id)
+      const itemsId = []
+      this.events.forEach(ev => {
+        if(moment(ev.start).isAfter(moment())) {
+          ev.recipes[0].itemsId.forEach(itemId => {
+            if(!itemsId.includes(itemId) && !inventoryIds.includes(itemId)) {
+              itemsId.push(itemId)
+            }
+          }) 
+        }
+      })
+      const list = await lists.createList({name: 'Courses'})
+      await PromiseB.map(itemsId, itemId => {
+        return lists.addItem(list._id, {
+          _id: itemId,
+          selected: 0,
+          total: 1
+        })
+      })
+    },
     async generateWeekMeal() {
       const today = moment();
-      const from_date = today.startOf('week');
+      const from_date = today.startOf('day');
       const events = []
-      Array(7).fill(null).forEach((_, i) => {
+      Array(7 - moment().day() + 1).fill(null).forEach((_, i) => {
         const $date = from_date.clone().add(i, 'days').set({hours: 12})
         events.push({
           recipeId: this.allRecipes[Math.floor(Math.random() * this.allRecipes.length)]._id,
