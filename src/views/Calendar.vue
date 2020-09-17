@@ -17,13 +17,14 @@
       :minCellWidth="120"
       :disable-views="['day', 'years', 'year']"
       :cell-click-hold="false"
+      @view-change="currentView = $event.view"
       @cell-dblclick="click">
       <div slot="no-event"></div>
       <template v-slot:event="{ event }">
         <div>{{ event.title }}</div>
       </template>
     </vue-cal>
-    <button @click="generateWeekMeal">Générer mes repas de la semaine</button>
+    <button v-if="currentView === 'week'" @click="generateWeekMeal">Générer mes repas de la semaine</button>
   </div>
 </template>
 
@@ -49,6 +50,8 @@ export default {
       events: [],
       allRecipes: [],
       moment,
+      /** @type {'month' | 'week'} */
+      currentView: 'week',
       current: {
         start: '',
         end: '',
