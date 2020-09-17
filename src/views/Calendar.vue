@@ -3,7 +3,7 @@
     <modal-vue ref="createModal" :disabled="!current.recipeId">
       <div slot="body">
         {{moment(current.start).calendar() | capitalize}}
-        <multiselect :options="allRecipes" customKey="_id" customLabel="name" :single="true" placeholder="Choisir un produit..." @input="selectItem"/>
+        <multiselect :random="true" :options="allRecipes" customKey="_id" customLabel="name" :single="true" placeholder="Choisir un produit..." @input="selectItem"/>
       </div>
     </modal-vue>
     <vue-cal

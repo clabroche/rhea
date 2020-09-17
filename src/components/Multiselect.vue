@@ -9,6 +9,7 @@
         </div><!--
   --><div class="delete" @click.stop="deleteTag(itemValue)" ><i class="fas fa-trash" aria-hidden="true"></i></div>
       </div>
+      <div class="random" v-if="random" @click.stop="selectRandom"><i class="fas fa-sync-alt"></i></div>
     </div>
     <transition name="fade">
       <div class="container" v-if="isOpen" >
@@ -56,7 +57,8 @@ export default {
     single: { default: false },
     categories: {default: false},
     placeholder: {default: 'Cliquez pour choisir...'},
-    autofocus: {default: false}
+    autofocus: {default: false},
+    random: {default: false}
   },
   components: {
     // spinner: Spinner
@@ -83,6 +85,10 @@ export default {
     }
   },
   methods: {
+    selectRandom() {
+      const random = this.options[Math.floor(Math.random() * this.options.length)]
+      this.select(random)
+    },
     getKey(option) {
       if (this.currentCateg && this.currentCateg.customKey) {
         return option[this.currentCateg.customKey]
@@ -178,6 +184,11 @@ function wait(ms) {
     color: #a1a1a1;
     padding-top: 4px;
   }
+  .random {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+  }
   .item-container {
     border: 1px solid lightgrey;
     display: inline-block;
@@ -194,7 +205,6 @@ function wait(ms) {
     &>div{
       color: white;
       // height 1.2em
-      padding: 5px;
       text-overflow: ellipsis;
       overflow: hidden;
       white-space: nowrap;
