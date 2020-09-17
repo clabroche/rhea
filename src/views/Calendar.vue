@@ -11,16 +11,16 @@
       locale="fr"
       :events="events"
       :time-from="12*60"
-      :time-to="24 * 60"
       :time-step="7*60" 
       :time-cell-height="120"
       :minCellWidth="120"
       :disable-views="['day', 'years', 'year']"
       :cell-click-hold="false"
-      @view-change="currentView = $event.view"
-      @cell-dblclick="click">
+      @cell-click="click"
+      @view-change="currentView = $event.view">
       <div slot="no-event"></div>
-      <template v-slot:event="{ event }">
+      <template v-slot:event="{ event }" class="cell-event" @click="click(event.start)">
+        <div class="delete" @click.stop.prevent="deleteEvent(event)"><i class="fas fa-times" aria-hidden="true"></i></div>
         <div>{{ event.title }}</div>
       </template>
     </vue-cal>
@@ -66,6 +66,10 @@ export default {
     this.loadEvents()
   },
   methods: {
+    async deleteEvent(ev) {
+      await Events.deleteEvent(ev._id)
+      await this.loadEvents()
+    },
     async generateWeekMeal() {
       const today = moment();
       const from_date = today.startOf('week');
@@ -99,6 +103,7 @@ export default {
     },
     click($event) {
       const $start = moment($event)
+      console.log($event)
       $start.set({h: $start.hours() <= 19 && $start.hours() !== 0 ? 12 : 19, minutes: 0, seconds: 0})
 
       this.current = {
@@ -133,4 +138,30 @@ export default {
 .vuecal__flex.vuecal__menu {
   box-shadow: 0 0 10px 0 black;
 }
+.vuecal__event {
+  display: flex;
+  justify-content: center;
+  align-items: center;;
+  position: relative;
+  .delete {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.7em;
+    z-index: 10;
+  }
+}
+.vuecal__cell-events-count {
+  width: 4px;
+  min-width: 0;
+  height: 4px;
+  padding: 0;
+  color: transparent;
+}
+
 </style>
