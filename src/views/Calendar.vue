@@ -17,7 +17,7 @@
       :disable-views="['day', 'years', 'year']"
       :cell-click-hold="false"
       @cell-click="click"
-      @view-change="currentView = $event.view">
+      @view-change="viewChange">
       <div slot="no-event"></div>
       <template v-slot:event="{ event }" class="cell-event" @click="click(event.start)">
         <div class="delete" @click.stop.prevent="deleteEvent(event)"><i class="fas fa-times" aria-hidden="true"></i></div>
@@ -64,8 +64,19 @@ export default {
   async mounted() {
     this.allRecipes = await Recipes.getRecipes()
     this.loadEvents()
+    this.scrollToday()
   },
   methods: {
+    viewChange($event) {
+      this.currentView = $event.view
+      setTimeout(() => {
+        this.scrollToday()
+      }, 500);
+    },
+    scrollToday() {
+      const calendar = document.querySelector('.vuecal .vuecal__cells')
+      calendar.scrollTo({ left: (moment().day() - 1) * 120, behavior: 'smooth' })
+    },
     async deleteEvent(ev) {
       await Events.deleteEvent(ev._id)
       await this.loadEvents()
@@ -102,8 +113,8 @@ export default {
       }
     },
     click($event) {
+      if(this.currentView !== 'week') return 
       const $start = moment($event)
-      console.log($event)
       $start.set({h: $start.hours() <= 19 && $start.hours() !== 0 ? 12 : 19, minutes: 0, seconds: 0})
 
       this.current = {
@@ -120,10 +131,6 @@ export default {
         this.loadEvents()
       })
     },
-    clickEvent($event) {
-      console.log($event)
-
-    }
   }
 }
 </script>
@@ -155,6 +162,9 @@ export default {
     font-size: 0.7em;
     z-index: 10;
   }
+}
+.vuecal__cell-date {
+  height: 50px;
 }
 .vuecal__cell-events-count {
   width: 4px;
