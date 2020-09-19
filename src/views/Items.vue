@@ -173,7 +173,7 @@ export default {
   height: 100%;
   .items-container {
     height:100%;
-    padding: 10px;
+    padding: 0 10px;
     overflow: auto;
   }
 
