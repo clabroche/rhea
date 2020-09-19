@@ -1,7 +1,7 @@
 <template>
   <div class="root-recipe">
-    <svg-background :bottom="true" svg="recipe">
-    </svg-background>
+    <!-- <svg-background :bottom="true" svg="recipe">
+    </svg-background> -->
     <div class="list-container">
       <div class="form">
         <input class="name" type="text" v-model="recipe.name" placeholder="Nom...">
@@ -14,28 +14,24 @@
             <label>Santé</label>
             <vue-stars class="stars" @input="recipe.healthy = $event" :value="recipe.healthy || 0" name="healthy" shadowColor="none"/>
           </div>
-
         </div>
-        <button @click="update">Sauvegarder</button>
       </div>
 
       <div class="items-container">
         <h2>Les produits de cette recette</h2>
-        <div class="filter-items">
-          <i class="fas fa-search" aria-hidden="true"></i>
-          <input type="text" v-model="filterItems" placeholder="Chercher un produit">
-        </div>
         <div class="items-list">
-          <div class="item" v-for="item of filteredItems" :key="item._id">
-            <div>{{item.name}}</div>
+          <div class="item" v-for="item of itemsForRecipe" :key="item._id">
             <div class="actions">
-              <div class="delete" @click="deleteLink(item._id)"><i class="fas fa-trash" aria-hidden="true"></i></div>
+              <div class="delete" @click="deleteLink(item._id)"><i class="fas fa-times" aria-hidden="true"></i></div>
             </div>
+            <input class="item-quantity" :value="item.quantity || 1"/>
+            <div class="item-name">{{item.name}}</div>
           </div>
+          <button class="link-item" @click="linkItem">Ajouter un ingrédient</button>
         </div>
       </div>
     </div>
-    <bottom-bar :text="(itemsForRecipe ? itemsForRecipe.length : 0) + ' produits au total'" :actions="[{icon: 'fas fa-plus', cb: linkItem}]"/>
+    <bottom-bar :text="(itemsForRecipe ? itemsForRecipe.length : 0) + ' produits au total'" :actions="[{icon: 'fas fa-save', cb: update}]"/>
     <modal-vue ref="linkModal">
       <div slot="header">
         Lier des produits à une recette
@@ -53,9 +49,8 @@ import BottomBarVue from '../components/BottomBar.vue';
 import ModalVue from '../components/Modal.vue';
 import items from '../services/items';
 import PromiseB from 'bluebird'
-import SvgBackgroundVue from '../components/SvgBackground.vue';
+// import SvgBackgroundVue from '../components/SvgBackground.vue';
 import SearchItemsVue from '../components/SearchItems.vue';
-import sort from 'fast-sort'
 import notification from '../services/notification'
 import { VueStars } from "vue-stars"
 
@@ -63,7 +58,7 @@ export default {
   components: {
       'bottom-bar': BottomBarVue,
       modalVue: ModalVue,
-      svgBackground: SvgBackgroundVue,
+      // svgBackground: SvgBackgroundVue,
       searchItems: SearchItemsVue,
       VueStars
   },
@@ -73,12 +68,6 @@ export default {
       recipe: {},
       itemsSelected: [],
       itemsForRecipe: [],
-      filterItems: '',
-    }
-  },
-  computed: {
-    filteredItems() {
-      return sort(this.itemsForRecipe.filter(item => item.name.includes(this.filterItems))).asc('name')
     }
   },
   async mounted() {
@@ -108,11 +97,13 @@ export default {
       this.$refs.linkModal.open().subscribe(async res => {
         if(!res) return 
         await Recipe.linkItems(this.recipeId, this.itemsSelected.map(item => item._id))
+        notification.next('success', 'L\'ingrédient a été ajouté à la liste.')
         this.reload()
       })
     },
     async deleteLink(itemId) {
       await Recipe.deleteLink(this.recipeId, itemId)
+      notification.next('success', 'L\'ingrédient a été retiré à la liste.')
       return this.reload()
     }
   }
@@ -138,10 +129,10 @@ export default {
     align-items: center;
     .name {
       width: auto;
-      margin: auto;
       border: none;
       text-align: center;
-      font-size: 1.2em;
+      font-size: 1.4em;
+      margin: 10px auto;
       font-weight: bold;
 
     }
@@ -186,12 +177,28 @@ export default {
       overflow: auto;
       .item {
         display: flex;
-        justify-content: space-between;
-        padding: 20px 15px;
+        padding: 10px 15px;
         box-sizing: border-box;
-        &:nth-child(even) {
-          background-color: rgba(0,0,0,0.1)
+        .item-quantity {
+          width: 30px;
+          margin: 0;
+          margin-right: 10px;
+          border-radius: 4px;
+          background-color: rgba(0,0,0,0.1);
+          text-align: center;
+          padding: 0;
+          border: none;
         }
+        .actions {
+          margin-right: 10px
+        }
+      }
+      .link-item {
+        background-color: transparent;
+        color: darkgrey;
+        border: 1px dashed darkgrey;
+        width: calc(100% - 20px);
+        margin-left: 10px;
       }
     }
   }
@@ -211,21 +218,4 @@ export default {
     }
   }
 }
-  .filter-items {
-    width: 95%;
-    margin: auto;
-    i {
-      color: lightgrey;
-      position: absolute;
-      padding: 12px;
-    }
-    input {
-      outline: none;
-      border-radius: 20px;
-      border: 1px solid lightgrey;
-      padding: 5px;
-      height: 30px;
-      text-indent: 25px;
-    }
-  }
 </style>
