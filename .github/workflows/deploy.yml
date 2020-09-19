@@ -24,7 +24,7 @@ jobs:
       run: npm ci
 
     - name: Inject version
-      run: echo ${{ env.RELEASE_VERSION }} >> ./.env.production && echo ${{ env.RELEASE_VERSION }} > ./server/version
+      run: echo ${env.RELEASE_VERSION} >> ./.env.production && echo ${env.RELEASE_VERSION} > ./server/version
 
     - name: Build dependencies
       run: npm run build
