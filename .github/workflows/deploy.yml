@@ -12,7 +12,7 @@ jobs:
       id: get_version
       run: echo ::set-env name=RELEASE_VERSION::$(echo ${GITHUB_REF:10})
 
-  - name: Inject version in front
+    - name: Inject version in front
       id: get_version
       run: echo ::set-env name=VUE_APP_VERSION::$(echo ${GITHUB_REF:10})
 
