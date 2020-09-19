@@ -6,8 +6,12 @@
       <br>
       Appuies sur le <i class="fas fa-plus" aria-hidden="true"></i> pour ajouter une recette
     </svg-background>
+    <div class="filter-items">
+      <i class="fas fa-search" aria-hidden="true"></i>
+      <input type="text" v-model="filterItems" placeholder="Chercher un produit">
+    </div>
     <div class="recipes-container" ref="scrollElement" @scroll="setPosition">
-      <div v-for="recipe of recipes" :key="recipe._id" @click="$router.push({name:'recipe', params: {recipeId: recipe._id}})">
+      <div v-for="recipe of filteredRecipes" :key="recipe._id" @click="$router.push({name:'recipe', params: {recipeId: recipe._id}})">
         <line-vue
           :additionalLeft="recipe.itemsId.length"
           :additionalAction="true"
@@ -48,9 +52,15 @@ export default {
     return {
       recipes: [],
       selectedRecipe: null,
+      filterItems: '',
       recipeToCreate: {
         name: '',
       }
+    }
+  },
+  computed: {
+    filteredRecipes() {
+      return this.recipes.filter(recipe => recipe.name.toUpperCase().includes(this.filterItems.toUpperCase()))
     }
   },
   async mounted() {
@@ -97,9 +107,27 @@ export default {
   flex-direction: column;
   justify-content: center;
   height: 100%;
+  .filter-items {
+    width: 95%;
+    margin: auto;
+    margin-top: 10px;
+    i {
+      color: lightgrey;
+      position: absolute;
+      padding: 12px;
+    }
+    input {
+      outline: none;
+      border-radius: 20px;
+      border: 1px solid lightgrey;
+      padding: 5px;
+      height: 30px;
+      text-indent: 25px;
+    }
+  }
   .recipes-container {
     height:100%;
-    padding: 10px;
+    padding: 0 10px;
     overflow: auto;
   }
 
