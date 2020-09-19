@@ -6,8 +6,12 @@
       <br>
       Appuies sur le <i class="fas fa-plus" aria-hidden="true"></i> pour ajouter un produit dans ton inventaire
     </svg-background>
+    <div class="filter-items">
+      <i class="fas fa-search" aria-hidden="true"></i>
+      <input type="text" v-model="filterInventory" placeholder="Chercher un produit">
+    </div>
     <div class="items-container" @scroll="setPosition" ref="scrollElement">
-      <div v-for="item of items" :key="item._id" @click="openItem(item)">
+      <div v-for="item of filteredItems" :key="item._id" @click="openItem(item)">
         <line-vue
           :additionalLeft="item.total"
           :name="item.name"
@@ -82,7 +86,13 @@ export default {
         description: ''
       },
       categories: {},
-      selectedItem: null
+      selectedItem: null,
+      filterInventory: ''
+    }
+  },
+  computed: {
+    filteredItems() {
+      return this.items.filter(item => item.name.toUpperCase().includes(this.filterInventory.toUpperCase()))
     }
   },
   async mounted() {
@@ -174,7 +184,7 @@ export default {
   height: 100%;
   .items-container {
     height:100%;
-    padding: 10px;
+    padding: 0 10px;
     overflow: auto;
   }
 }
@@ -201,6 +211,25 @@ h2 {
   text-align: center;
   img {
     max-width: 100px;
+  }
+}
+
+.filter-items {
+  width: 95%;
+  margin: auto;
+  margin-top: 10px;
+  i {
+    color: lightgrey;
+    position: absolute;
+    padding: 12px;
+  }
+  input {
+    outline: none;
+    border-radius: 20px;
+    border: 1px solid lightgrey;
+    padding: 5px;
+    height: 30px;
+    text-indent: 25px;
   }
 }
 </style>

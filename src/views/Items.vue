@@ -6,12 +6,16 @@
       <br>
       Appuies sur le <i class="fas fa-plus" aria-hidden="true"></i> pour ajouter un produit dans cette liste
     </svg-background>
+    <div class="filter-items">
+      <i class="fas fa-search" aria-hidden="true"></i>
+      <input type="text" v-model="filterItems" placeholder="Chercher un produit">
+    </div>
     <div class="items-container" @scroll="setPosition" ref="scrollElement">
-      <div v-for="item of items" :key="item._id" @click="$router.push({name:'item', params: {itemId: item._id}})">
+      <div v-for="item of filteredItems" :key="item._id" @click="$router.push({name:'item', params: {itemId: item._id}})">
         <line-vue
           :additionalAction="true"
           :name="item.name"
-          :additionalCenter="getCategoriesForItem(item)"
+          :additionalCenter="item.price + '€' + getCategoriesForItem(item)"
           :description="item.description"
           @action="openOptions(item)"/>
       </div>
@@ -73,7 +77,13 @@ export default {
         description: ''
       },
       categories: {},
-      selectedItem: null
+      selectedItem: null,
+      filterItems: ''
+    }
+  },
+  computed: {
+    filteredItems() {
+      return this.items.filter(item => item.name.toUpperCase().includes(this.filterItems.toUpperCase()))
     }
   },
   async mounted() {
@@ -93,7 +103,9 @@ export default {
       this.$root.scroll.listItems = this.$refs.scrollElement.scrollTop
     },
     getCategoriesForItem(item) {
-      return item.categoriesId.map(categoryId => this.categories[categoryId] ?  ' ' +this.categories[categoryId].name : '').join(', ')
+      const category = item.categoriesId.map(categoryId => this.categories[categoryId] ?  ' ' +this.categories[categoryId].name : '').join(', ')
+      if(category) return  ' - ' + category
+      return ''
     },
     async getAllItems() {
       this.items = await items.getAll()
@@ -164,6 +176,25 @@ export default {
     overflow: auto;
   }
 
+}
+
+ .filter-items {
+  width: 95%;
+  margin: auto;
+  margin-top: 10px;
+  i {
+    color: lightgrey;
+    position: absolute;
+    padding: 12px;
+  }
+  input {
+    outline: none;
+    border-radius: 20px;
+    border: 1px solid lightgrey;
+    padding: 5px;
+    height: 30px;
+    text-indent: 25px;
+  }
 }
 
 .confirm-product {

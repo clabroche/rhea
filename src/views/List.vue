@@ -6,14 +6,19 @@
       <br>
       Appuies sur le <i class="fas fa-plus" aria-hidden="true"></i> pour ajouter un produit dans cette liste
     </svg-background>
+    <div class="filter-items">
+      <i class="fas fa-search" aria-hidden="true"></i>
+      <input type="text" v-model="filterItems" placeholder="Chercher un produit">
+    </div>
     <div class="list-container" ref="scrollElement" @scroll="setPosition">
-      <div v-for="category of sortedCategories" :key="category.label">
-        <div class="label" @click="category.collapse = !category.collapse">
-          <span>{{category.label}}</span>
-          <i class="fas" aria-hidden="true" :class="category.collapse ? 'fa-chevron-down' : 'fa-chevron-up'"></i>
+      <div>
+        <div class="label" @click="missingcollapse = !missingcollapse">
+          <span>Produit pas encore acheté</span>
+          <i class="fas" aria-hidden="true" :class="missingcollapse ? 'fa-chevron-down' : 'fa-chevron-up'"></i>
         </div>
-        <div v-if="!category.collapse">
-          <div  v-for="item of category.items" :key="item._id" @click="incrementItem(item)">
+        <div v-if="!missingcollapse">
+          <transition-group name="fade">
+           <div  v-for="item of filteredMissingItems" :key="item._id" @click="incrementItem(item)">
             <line-vue
               :checkbox="true"
               :additionalAction="true"
@@ -25,9 +30,34 @@
               @action="openOptions(item)"
               @checkboxClick="checkBoxClick(item, $event)"/>
           </div>
+          </transition-group>
         </div>
       </div>
+      <transition-group name="fade">
+      <div v-for="category of sortedCategories" :key="category.label">
+        <div class="label" @click="category.collapse = !category.collapse">
+          <span>{{category.label}}</span>
+          <i class="fas" aria-hidden="true" :class="category.collapse ? 'fa-chevron-down' : 'fa-chevron-up'"></i>
+        </div>
+        <div v-if="!category.collapse">
+          <transition-group name="fade">
+          <div  v-for="item of filteredItems(category.items)" :key="item._id" @click="incrementItem(item)">
+            <line-vue
+              :checkbox="true"
+              :additionalAction="true"
+              :name="item.name"
+              :description="item.description"
+              :additionalLeft="item.total - item.selected"
+              :additionalCenter="(+item.price || 0).toFixed(2).replace('.', ',') + '€'"
+              :percent="item.selected * 100 / item.total"
+              @action="openOptions(item)"
+              @checkboxClick="checkBoxClick(item, $event)"/>
+          </div>
+          </transition-group>
+        </div>
       </div>
+      </transition-group>
+    </div>
     <bottom-bar v-if="list._id" :actions="[{icon: 'fas fa-plus', cb: createItem}]" :text="list.items.length + ' produits pour un montant de ' + getTotalPrice + '€'"/>
     <modal-vue ref="createModal" height="auto">
       <div slot="body" class="createModal">
@@ -85,11 +115,20 @@ export default {
       selectedItem: {},
       allItems: [],
       allCategoriesById: {},
+      filterItems: '',
+      missingcollapse: true
     }
   },
   computed: {
     sortedCategories() {
-      return sort(this.categories).asc('label')
+      if(!this.missingcollapse) return true
+      return sort(this.categories.filter(cat => this.filteredItems(cat.items).length)).asc('label')
+    },
+    filteredMissingItems() {
+      const categories = sort(this.categories.filter(cat => this.filteredItems(cat.items).length)).asc('label')
+      const items = []
+      categories.forEach(cat => items.push(...cat.items.filter(item => item.total !== item.selected)))
+      return items
     },
     getTotalPrice() {
       return this.list.items.reduce((price, item) => {
@@ -109,6 +148,9 @@ export default {
     clearInterval(this.interval)
   },
   methods: {
+    filteredItems(items) {
+      return items.filter(item => item.name.toUpperCase().includes(this.filterItems.toUpperCase()))
+    },
     setPosition() {
       this.$root.scroll.listItemsProducts = this.$refs.scrollElement.scrollTop
     },
@@ -200,6 +242,24 @@ export default {
     }
   }
 }
+ .filter-items {
+  width: 95%;
+  margin: auto;
+  margin-top: 10px;
+  i {
+    color: lightgrey;
+    position: absolute;
+    padding: 12px;
+  }
+  input {
+    outline: none;
+    border-radius: 20px;
+    border: 1px solid lightgrey;
+    padding: 5px;
+    height: 30px;
+    text-indent: 25px;
+  }
+}
 .createModal {
   label  {
     color: lightgrey;
@@ -208,5 +268,13 @@ export default {
     width: 100%;
     text-align: center;
   }
+}
+.fade-enter-active,.fade-leave-active {
+  transition: all .3s ease;
+}
+.fade-enter, .fade-leave-to
+/* .fade-leave-active below version 2.1.8 */ {
+  transform: translateX(10px);
+  opacity: 0;
 }
 </style>
