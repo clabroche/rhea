@@ -1,6 +1,6 @@
 {
   "name": "rhea",
-  "version": "0.4.8",
+  "version": "0.4.9",
   "private": true,
   "scripts": {
     "serve": "stack-monitor ./stack.js ",
