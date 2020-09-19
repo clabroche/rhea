@@ -1,11 +1,8 @@
 <template>
   <div class="root-category">
-    <svg-background :bottom="true" svg="category">
-    </svg-background>
     <div class="list-container">
       <div class="form">
         <input type="text" v-model="category.name" placeholder="Nom...">
-        <button @click="update">Sauvegarder</button>
       </div>
 
       <div class="items-container">
@@ -24,7 +21,7 @@
         </div>
       </div>
     </div>
-    <bottom-bar :text="(itemsForCategory ? itemsForCategory.length : 0) + ' listes au total'" :actions="[{icon: 'fas fa-plus', cb: linkItem}]" />
+    <bottom-bar :text="(itemsForCategory ? itemsForCategory.length : 0) + ' listes au total'" :actions="[{icon: 'fas fa-plus', cb: linkItem}, {icon: 'fas fa-save', cb: update}]" />
     <modal-vue ref="linkModal">
       <div slot="header">
         Lier des produits à une catégorie
@@ -68,13 +65,11 @@ import ModalVue from '../components/Modal.vue';
 import items from '../services/items';
 import PromiseB from 'bluebird'
 import sort from 'fast-sort'
-import SvgBackgroundVue from '../components/SvgBackground.vue';
 import header from '../services/Header'
 export default {
   components: {
       'bottom-bar': BottomBarVue,
       modalVue: ModalVue,
-      svgBackground: SvgBackgroundVue
   },
   data() {
     return {
@@ -103,7 +98,7 @@ export default {
       return sort(this.allItems.filter(itemFilter)).asc('name')
     },
     filteredItems() {
-      return sort(this.itemsForCategory.filter(item => item.name.includes(this.filterItems))).asc('name')
+      return sort(this.itemsForCategory.filter(item => item.name.toUpperCase().includes(this.filterItems.toUpperCase()))).asc('name')
     }
   },
   async mounted() {
@@ -157,7 +152,13 @@ export default {
     overflow: auto;
   }
   .form {
-    margin: 10px;
+    margin-top: 10px;
+    input {
+      border: none;
+      font-size: 1.2em;
+      font-weight: bold;
+      text-align: center;
+    }
   }
   .items {
     height: 55vh;
@@ -186,23 +187,22 @@ export default {
       .item {
         display: flex;
         justify-content: space-between;
-        padding: 20px 15px;
+        padding: 10px 15px;
         box-sizing: border-box;
-        &:nth-child(even) {
-          background-color: rgba(0,0,0,0.1)
-        }
       }
     }
   }
   h2 {
     margin-top: 0;
     text-align: center;
+    font-size: 1em;
     position: relative;
     box-sizing: border-box;
+    
     &::after {
       content: '';
       position: absolute;
-      bottom: -15px;
+      bottom: -8px;
       left: calc(50% - (30% / 2));
       height: 1px;
       width: 30%;
