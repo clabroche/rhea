@@ -8,11 +8,11 @@
         <div class="line">
           <div class="field">
             <label>Goût</label>
-            <vue-stars class="stars" v-model="recipe.score" name="score" shadowColor="none"/>
+            <vue-stars class="stars" @input="recipe.score = $event" :value="recipe.score || 0" name="score" shadowColor="none"/>
           </div>
           <div class="field">
             <label>Santé</label>
-            <vue-stars class="stars" v-model="recipe.healthy" name="healthy" shadowColor="none"/>
+            <vue-stars class="stars" @input="recipe.healthy = $event" :value="recipe.healthy || 0" name="healthy" shadowColor="none"/>
           </div>
 
         </div>
@@ -41,7 +41,7 @@
         Lier des produits à une recette
       </div>
       <div slot="body">
-        <search-items v-model="itemsSelected"></search-items>
+        <search-items v-model="itemsSelected" :excludedItems="itemsForRecipe"></search-items>
       </div>
     </modal-vue>
   </div>
@@ -107,7 +107,7 @@ export default {
     async linkItem() {
       this.$refs.linkModal.open().subscribe(async res => {
         if(!res) return 
-        await Recipe.linkItems(this.recipeId, this.itemsSelected)
+        await Recipe.linkItems(this.recipeId, this.itemsSelected.map(item => item._id))
         this.reload()
       })
     },

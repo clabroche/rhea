@@ -5,7 +5,7 @@
         <i class="fas fa-search" aria-hidden="true"></i>
         <input type="text" v-model="filterItemsInPopup" placeholder="Chercher un produit">
       </div>
-        <div class="checkbox-container">
+        <div class="checkbox-container" v-if="onlyNotCategorizeActive">
         <input type="checkbox"  v-model="onlyNotCategorize">
         <label @click="onlyNotCategorize = !onlyNotCategorize">
           <span></span>
@@ -34,7 +34,9 @@ import sort from 'fast-sort'
 import items from '../services/items'
 export default {
   props: {
-    value: {default: []}
+    value: {default: () => ([])},
+    excludedItems: {default: () => ([])},
+    onlyNotCategorizeActive: {default: false}
   },
   data() {
     return {
@@ -49,7 +51,7 @@ export default {
       const itemFilter = item => {
         let isNotFiltered = true
         if(item.name && this.filterItemsInPopup) {
-          isNotFiltered = item.name.toUpperCase().includes(this.filterItemsInPopup.toUpperCase()) && !this.itemsForRecipe.map(it => it._id).includes(item._id)
+          isNotFiltered = item.name.toUpperCase().includes(this.filterItemsInPopup.toUpperCase()) && !this.excludedItems.map(it => it._id).includes(item._id)
         }
         if(isNotFiltered && this.onlyNotCategorize) {
           return !item.recipesId || !item.recipesId.length
@@ -99,7 +101,24 @@ export default {
       text-indent: 25px;
     }
   }
-
+  .items {
+    height: 55vh;
+    border-radius: 5px;
+    border: 1px solid lightgrey;
+    overflow: auto;
+    .item {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      input {
+        width: 10px;
+      }
+      &>label {
+        flex-grow: 1;
+        font-size: 1.2em;
+      }
+    }
+  }
   .only-not-categorize {
     font-size: 0.8em;
   }
