@@ -28,9 +28,10 @@ Recipe.get = async function (recipeId) {
 }
 Recipe.createRecipe = async function (recipeToCreate) {
   if (!recipeToCreate) throw new Error('recipeToCreate param missing')
-  await API.post('/recipes', recipeToCreate, {
+  const {data: recipe} = await API.post('/recipes', recipeToCreate, {
     headers: { token: Auth.token },
   })
+  return recipe
 }
 Recipe.linkItems = async function (recipeId, itemsId) {
   if (!recipeId) throw new Error('recipeId param missing')

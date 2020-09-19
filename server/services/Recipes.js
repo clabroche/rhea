@@ -26,13 +26,15 @@ Recipe.all = async function (userId) {
 
 Recipe.create = async function (ownerId, recipe) {
   if(recipe._id) return this.update(ownerId, recipe)
+  const recipeToCreate = {
+    name: recipe.name,
+    score: recipe.score,
+    healthy: recipe.healthy,
+    ownerId: mongo.getID(ownerId)
+  }
   await mongo.collection('recipes')
-    .insertOne({
-      name: recipe.name,
-      score: recipe.score,
-      healthy: recipe.healthy,
-      ownerId: mongo.getID(ownerId)
-    })
+    .insertOne(recipeToCreate)
+  return recipeToCreate
 }
 Recipe.update = async function (ownerId, recipe) {
   await mongo.collection('recipes')

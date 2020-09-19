@@ -82,7 +82,8 @@ export default {
     createRecipe() {
       this.$refs.createModal.open().subscribe(async res => {
         if(!res) return 
-        await Recipe.createRecipe(this.recipeToCreate)
+        const recipe = await Recipe.createRecipe(this.recipeToCreate)
+        this.$router.push({name: 'recipe', params: {recipeId: recipe._id}})
         this.recipeToCreate = {name: ''}
       })
     }
