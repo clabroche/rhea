@@ -15,8 +15,8 @@ jobs:
     - name: Checkout
       uses: actions/checkout@master
 
-    - name: Inject version
-      run: echo $RELEASE_VERSION && echo $RELEASE_VERSION >> ./.env.production && echo $RELEASE_VERSION > ./server/version
+    - name: Inject version in front
+      run: echo $RELEASE_VERSION && echo $RELEASE_VERSION >> ./.env.production
 
     - name: Use coturiv/setup-ionic
       uses: coturiv/setup-ionic@v1
@@ -28,6 +28,9 @@ jobs:
 
     - name: Build dependencies
       run: npm run build
+
+    - name: Inject version in front
+      run: echo $RELEASE_VERSION && echo $RELEASE_VERSION > ./server/version
 
     - name: Sync capacitor
       run: npx cap sync
