@@ -7,5 +7,6 @@ router.use('/inventory', require('./inventory'))
 router.use('/categories', require('./categories'))
 router.use('/recipes', require('./recipes'))
 router.use('/events', require('./events'))
+router.use('/version', require('./version'))
 
 module.exports = router;

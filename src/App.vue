@@ -54,6 +54,16 @@
       <router-view/>
     </div>
     <notification></notification>
+    <div class="version-overlay" v-if="version && version !== currentVersion">
+      <h2>Halte !</h2>
+      Une nouvelle version est disponible au téléchargement 
+      <a :href="androidURL">
+        <div class="download-line">
+          <i class="fab fa-android"></i>
+          Télecharger la version android
+        </div>
+      </a>
+    </div>
   </div>
 </template>
 
@@ -64,6 +74,7 @@ import Auth from './services/Auth'
 import httpError from './services/HTTPError'
 import NotificationVue from './components/Notification'
 import notif from './services/notification'
+import version from './services/version'
 export default {
   components: {
     notification: NotificationVue
@@ -73,6 +84,8 @@ export default {
       Header,
       sidebar,
       Auth,
+      version: '',
+      currentVersion: process.env.VUE_APP_VERSION
     }
   },
   computed: {
@@ -80,7 +93,7 @@ export default {
       return `${process.env.VUE_APP_SERVER_URL}:${process.env.VUE_APP_SERVER_PORT}/rhea.apk`
     }
   },
-  created() {
+  async created() {
     this.$root.scroll = {}
     httpError.subscribe(err => {
       if(err.response && err.response.status === 403) {
@@ -89,6 +102,7 @@ export default {
       } 
       console.error(err)
     })
+    this.version = await version.get()
   },
   methods: {
     disconnect() {
@@ -183,6 +197,29 @@ ul {
 }
 </style>
 <style lang="scss" scoped>
+.version-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #fff;
+  z-index: 1300;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding: 10px;
+  box-sizing: border-box;
+  text-align: center;
+  .download-line {
+    background-color: var(--headerBgColor);
+    color: var(--headerTextColor);
+    padding: 0 5px;
+    border-radius: 4px;
+    margin: 20px 0
+  }
+}
 .overlay {
   z-index: 1300;
   position: absolute;
