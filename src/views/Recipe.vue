@@ -53,6 +53,7 @@ import PromiseB from 'bluebird'
 import SearchItemsVue from '../components/SearchItems.vue';
 import notification from '../services/notification'
 import { VueStars } from "vue-stars"
+import header from '../services/Header'
 
 export default {
   components: {
@@ -83,6 +84,7 @@ export default {
     },
     async getRecipe() {
       this.recipe = await Recipe.get(this.recipeId)
+      header.set('Ma recette', this.recipe.name)
       if(this.recipe.itemsId) {
         this.itemsForRecipe = await PromiseB.map(this.recipe.itemsId, itemId => items.get(itemId))
       }

@@ -69,6 +69,7 @@ import items from '../services/items';
 import PromiseB from 'bluebird'
 import sort from 'fast-sort'
 import SvgBackgroundVue from '../components/SvgBackground.vue';
+import header from '../services/Header'
 export default {
   components: {
       'bottom-bar': BottomBarVue,
@@ -119,6 +120,7 @@ export default {
     },
     async getCategory() {
       this.category = await Category.get(this.categoryId)
+      header.set('Ma catégorie', this.category.name)
       if(this.category.itemsId) {
         this.itemsForCategory = await PromiseB.map(this.category.itemsId, itemId => items.get(itemId))
       }

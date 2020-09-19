@@ -39,6 +39,7 @@ import LineVue from '../components/Line.vue'
 import OptionsVue from '../components/Options.vue';
 import SvgBackgroundVue from '../components/SvgBackground.vue';
 import sort from 'fast-sort'
+import header from '../services/Header'
 import dayjs from 'dayjs'
 export default {
   components: {
@@ -64,6 +65,7 @@ export default {
     }
   },
   async mounted() {
+    header.set('Mes listes')
     await this.getLists()
     this.interval = setInterval(async () => {
       await this.getLists()

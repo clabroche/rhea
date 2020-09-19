@@ -40,6 +40,7 @@ import Category from '../services/Category.js';
 import LineVue from '../components/Line.vue'
 import OptionsVue from '../components/Options.vue';
 import SvgBackgroundVue from '../components/SvgBackground.vue';
+import header from '../services/Header'
 export default {
   components: {
     'bottom-bar': BottomBarVue,
@@ -64,6 +65,7 @@ export default {
     }
   },
   async mounted() {
+    header.set('Catégories')
     await this.getCategories()
     this.$refs.scrollElement.scrollTop = this.$root.scroll.listCategories
     this.interval = setInterval(async () => {

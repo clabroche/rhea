@@ -28,6 +28,7 @@ import Items from '../services/items';
 import SvgBackgroundVue from '../components/SvgBackground.vue';
 import MultiselectVue from '../components/Multiselect.vue';
 import Category from '../services/Category';
+import header from '../services/Header'
 export default {
   data() {
     return {
@@ -69,6 +70,7 @@ export default {
     },
     async getItem() {
       this.item = await Items.get(this.itemId)
+      header.set('Mon produit', this.item.name)
     },
     async update() {
       await Items.createItem(this.item)

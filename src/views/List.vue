@@ -98,6 +98,8 @@ import MultiselectVue from '../components/Multiselect.vue'
 import Category from '../services/Category';
 import SvgBackgroundVue from '../components/SvgBackground.vue';
 import sort from 'fast-sort'
+import header from '../services/Header'
+
 export default {
   components: {
     multiselect: MultiselectVue,
@@ -156,6 +158,8 @@ export default {
     },
     async getList() {
       const list = await lists.getList(this.$route.params.listId)
+      header.set('Ma liste') 
+      header.subtitle = list.name
       const str = JSON.stringify(list)
       if(this.backList=== str) return
       this.backList = str

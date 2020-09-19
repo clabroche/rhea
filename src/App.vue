@@ -43,7 +43,12 @@
     </div>
     <div id="nav" v-if="$route.name !== 'login'">
       <div class="trigger" v-if="Auth.user" @click="sidebar.open = true"><i class="fas fa-list" aria-hidden="true"></i></div>
-      {{Header.title}}
+      <div class="navbar-title">
+        {{Header.title}}
+        <div v-if="Header.subtitle" class="navbar-subtitle">
+          {{Header.subtitle}}
+        </div>
+      </div>
     </div>
     <div class="app-content">
       <router-view/>
@@ -274,6 +279,13 @@ input, textarea {
     left: 0;
     font-size: 1.5em;
     padding: 10px;
+  }
+  .navbar-title{
+    text-align: center;
+  }
+  .navbar-subtitle {
+    font-size: 0.8em;
+    font-weight: 400;
   }
 }
 </style>

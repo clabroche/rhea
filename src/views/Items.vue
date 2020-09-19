@@ -58,7 +58,7 @@ import OptionsVue from '../components/Options.vue';
 import SvgBackgroundVue from '../components/SvgBackground.vue';
 import MultiselectVue from '../components/Multiselect.vue';
 import Category from '../services/Category';
-
+import header from '../services/Header'
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 export default {
   components: {
@@ -87,6 +87,7 @@ export default {
     }
   },
   async mounted() {
+    header.set('Mes produits')
     await this.getAllItems()
     const categories = await Category.getCategories() 
     categories.forEach(categ => this.categories[categ._id] = categ)

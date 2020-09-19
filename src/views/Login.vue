@@ -43,7 +43,7 @@ export default {
   },
   watch: {
     register() {
-      Header.title = this.register ? 'Enregistrement' : 'Connection'
+      Header.set(this.register ? 'Enregistrement' : 'Connection')
     }
   },
   methods: {

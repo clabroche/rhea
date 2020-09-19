@@ -41,6 +41,7 @@ import Events from '../services/EventsCalendar'
 import Inventory from '../services/inventory'
 import MultiselectVue from '../components/Multiselect.vue'
 import lists from '../services/lists'
+import header from '../services/Header'
 moment.locale('fr')
 export default {
   components: {
@@ -65,6 +66,7 @@ export default {
     }
   },
   async mounted() {
+    header.set('Calendrier')
     this.allRecipes = await Recipes.getRecipes()
     this.loadEvents()
     this.scrollToday()
