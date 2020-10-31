@@ -41,6 +41,7 @@ import LineVue from '../components/Line.vue'
 import OptionsVue from '../components/Options.vue';
 import SvgBackgroundVue from '../components/SvgBackground.vue';
 import header from '../services/Header'
+import Socket from '../services/Socket';
 export default {
   components: {
     'bottom-bar': BottomBarVue,
@@ -68,12 +69,16 @@ export default {
     header.set('Catégories')
     await this.getCategories()
     this.$refs.scrollElement.scrollTop = this.$root.scroll.listCategories
-    this.interval = setInterval(async () => {
-      await this.getCategories()
-    }, 500);
+    Socket.socket.on('category:item:add', this.getCategories)
+    Socket.socket.on('category:item:delete', this.getCategories)
+    Socket.socket.on('category:delete', this.getCategories)
+    Socket.socket.on('category:update', this.getCategories)
   },
   beforeDestroy() {
-    clearInterval(this.interval)
+    Socket.socket.off('category:item:add', this.getCategories)
+    Socket.socket.off('category:item:delete', this.getCategories)
+    Socket.socket.off('category:delete', this.getCategories)
+    Socket.socket.off('category:update', this.getCategories)
   },
   methods: {
     setPosition() {

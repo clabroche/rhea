@@ -99,6 +99,7 @@ import Category from '../services/Category';
 import SvgBackgroundVue from '../components/SvgBackground.vue';
 import sort from 'fast-sort'
 import header from '../services/Header'
+import Socket from '../services/Socket';
 
 export default {
   components: {
@@ -142,12 +143,22 @@ export default {
     (await Category.getCategories()).map(cat => this.$set(this.allCategoriesById, cat._id, cat))
     await this.getList()
     this.$refs.scrollElement.scrollTop = this.$root.scroll.listItemsProducts
-    this.interval = setInterval(async () => {
-      this.getList()
-    }, 500);
+    Socket.socket.on('list:item:add', this.getList)
+    Socket.socket.on('list:item:delete', this.getList)
+    Socket.socket.on('list:item:increment', this.getList)
+    Socket.socket.on('list:item:quantity', this.getList)
+    Socket.socket.on('item:barcode', this.getList)
+    Socket.socket.on('item:update', this.getList)
+    Socket.socket.on('item:delete', this.getList)
   },
   beforeDestroy() {
-    clearInterval(this.interval)
+    Socket.socket.off('list:item:add', this.getList)
+    Socket.socket.off('list:item:delete', this.getList)
+    Socket.socket.off('list:item:increment', this.getList)
+    Socket.socket.off('list:item:quantity', this.getList)
+    Socket.socket.off('list:item:barcode', this.getList)
+    Socket.socket.off('list:item:update', this.getList)
+    Socket.socket.off('list:item:delete', this.getList)
   },
   methods: {
     filteredItems(items) {

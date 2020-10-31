@@ -4,6 +4,7 @@ const authentification = require('../middleware/auth')
 const Items = require('../services/Items')
 const axios = require('axios').default
 const cheerio = require('cheerio');
+const ioConnect = require('../helpers/ioConnect');
 
 router.get('/', authentification, async function (req, res, next) {
   const items = await Items.getItems(req.user._id)
@@ -15,6 +16,7 @@ router.post('/barcode/:code', authentification, async function (req, res, next) 
   if (response.status === 1) {
     const product = response.product
     const related = await Items.search(req.user._id, product.product_name)
+    ioConnect.notifyUsers(req.user, 'item:update', product)
     return res.json({ product, related })
   } else {
     const product = {}
@@ -24,6 +26,7 @@ router.post('/barcode/:code', authentification, async function (req, res, next) 
     product.image_url = $item['data-src']
     product.product_name= $item['alt']
     const related = await Items.search(req.user._id, product.product_name)
+    ioConnect.notifyUsers(req.user, 'item:update', product)
     return res.json({ product, related })
   }
 })
@@ -40,11 +43,13 @@ router.get('/:id', authentification, async function(req, res, next) {
 
 router.post('/', authentification, async function(req, res, next) {
   const item = await Items.updateOrCreate(req.body, req.user._id)
+  ioConnect.notifyUsers(req.user, 'item:update', item)
   res.json(item)
 })
 
 router.delete('/:id', authentification, async function(req, res, next) {
   const status = await Items.delete(req.params.id)
+  ioConnect.notifyUsers(req.user, 'item:delete')
   res.json(status)
 })
 

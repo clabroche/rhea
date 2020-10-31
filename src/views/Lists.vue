@@ -41,6 +41,7 @@ import SvgBackgroundVue from '../components/SvgBackground.vue';
 import sort from 'fast-sort'
 import header from '../services/Header'
 import dayjs from 'dayjs'
+import Socket from '../services/Socket';
 export default {
   components: {
     'bottom-bar': BottomBarVue,
@@ -67,12 +68,14 @@ export default {
   async mounted() {
     header.set('Mes listes')
     await this.getLists()
-    this.interval = setInterval(async () => {
-      await this.getLists()
-    }, 500);
+    Socket.socket.on('lists:create', this.getLists)
+    Socket.socket.on('lists:delete', this.getLists)
+    Socket.socket.on('lists:update', this.getLists)
   },
   beforeDestroy() {
-    clearInterval(this.interval)
+    Socket.socket.off('lists:create', this.getLists)
+    Socket.socket.off('lists:delete', this.getLists)
+    Socket.socket.off('lists:update', this.getLists)
   },
   methods: {
     dateFromObjectId (objectId) {

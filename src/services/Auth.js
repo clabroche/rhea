@@ -1,5 +1,6 @@
 import API from './API'
 import User from './User'
+import Socket from './Socket'
 function Auth() {
   /**
    * @type {User}
@@ -8,6 +9,7 @@ function Auth() {
   /** @type {String} */
   this.token = localStorage.getItem('token')
   if(this.token) {
+    Socket.connect(this.token)
     this.getUser()
   }
 
@@ -56,6 +58,7 @@ Auth.prototype.login = async function(user) {
   const {data: token} = await API.post('/user/login', user)
   if(token) {
     this.token = token
+    Socket.connect(this.token)
     this.user = await this.getUser()
   }
   localStorage.setItem('token', this.token)
@@ -70,6 +73,7 @@ Auth.prototype.register = async function(user) {
   const {data: token} = await API.post('/user/register', user)
   if(token) {
     this.token = token
+    Socket.connect(this.token)
     this.user = await this.getUser()
   }
   localStorage.setItem('token', this.token)

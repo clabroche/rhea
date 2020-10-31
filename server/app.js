@@ -9,7 +9,16 @@ var indexRouter = require('./routes/index');
 var app = express();
 
 app.use(logger('dev'));
-app.use(require('cors')());
+app.options('*', function(req,res,next) {
+  res.setHeader('Access-Control-Allow-Credentials', 'true')
+  next()
+})
+app.use(require('cors')({
+  allowedHeaders: ['token', 'content-type'],
+  exposedHeaders: 'true',
+  credentials: false,
+  origin: ['http://localhost:8080']
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());

@@ -4,6 +4,7 @@ const authentification = require('../middleware/auth')
 const Inventory = require('../services/Inventory');
 const Item = require('../services/Items');
 const { mongo } = require('../helpers/mongoConnect');
+const ioConnect = require('../helpers/ioConnect');
 
 router.get('/', authentification, async function (req, res, next) {
   const list = await Inventory.getList(req.user._id)
@@ -34,27 +35,32 @@ router.get('/items/barcode/:code', authentification, async function (req, res, n
 })
 router.put('/items/:itemId/total', authentification, async function (req, res, next) {
   const list = await Inventory.updateTotal(req.user._id, req.params.itemId, req.body.total)
+  ioConnect.notifyUsers(req.user, 'inventory:update', list)
   res.json(list)
 })
 
 router.post('/', authentification, async function(req, res, next) {
   const list = await Inventory.createList(req.user._id)
+  ioConnect.notifyUsers(req.user, 'inventory:update', list)
   res.json(list)
 })
 
 router.post('/items', authentification, async function(req, res, next) {
   const list = await Inventory.getList(req.user._id)
   await list.addConf(req.body)
+  ioConnect.notifyUsers(req.user, 'inventory:item:add', list)
   res.json(list)
 })
 router.delete('/items/:itemId', authentification, async function (req, res, next) {
   const list = await Inventory.deleteItem(req.params.itemId)
+  ioConnect.notifyUsers(req.user, 'inventory:item:delete', list)
   res.json(list)
 })
 
 router.put('/items/:itemId/quantity/:amount', authentification, async function (req, res, next) {
   const { itemId, amount } = req.params
   await Inventory.quantity(itemId, amount)
+  ioConnect.notifyUsers(req.user, 'inventory:item:quantity')
   res.json(true)
 })
 

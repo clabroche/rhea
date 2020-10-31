@@ -70,6 +70,7 @@ import Category from '../services/Category';
 import MultiselectVue from '../components/Multiselect.vue';
 import header from '../services/Header'
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
+import Socket from '../services/Socket';
 export default {
   components: {
     'bottom-bar': BottomBarVue,
@@ -102,12 +103,16 @@ export default {
     const categories = await Category.getCategories() 
     categories.forEach(categ => this.categories[categ._id] = categ)
     this.$refs.scrollElement.scrollTop = this.$root.scroll.listItems
-    this.interval = setInterval(async () => {
-        this.getAllItems()
-      }, 500);
+    Socket.socket.on('inventory:update', this.getAllItems)
+    Socket.socket.on('inventory:item:add', this.getAllItems)
+    Socket.socket.on('inventory:item:delete', this.getAllItems)
+    Socket.socket.on('inventory:item:quantity', this.getAllItems)
   },
   beforeDestroy() {
-    clearInterval(this.interval)
+    Socket.socket.off('category:item:add', this.getAllItems)
+    Socket.socket.off('inventory:item:add', this.getAllItems)
+    Socket.socket.off('inventory:item:delete', this.getAllItems)
+    Socket.socket.off('inventory:item:quantity', this.getAllItems)
   },
   methods: {
     async openCamera() {

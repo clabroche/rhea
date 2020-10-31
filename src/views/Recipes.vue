@@ -41,6 +41,7 @@ import LineVue from '../components/Line.vue'
 import OptionsVue from '../components/Options.vue';
 import SvgBackgroundVue from '../components/SvgBackground.vue';
 import header from '../services/Header'
+import Socket from '../services/Socket';
 export default {
   components: {
     'bottom-bar': BottomBarVue,
@@ -68,12 +69,16 @@ export default {
     header.set('Mes recettes')
     await this.getRecipes()
     this.$refs.scrollElement.scrollTop = this.$root.scroll.listRecipes
-    this.interval = setInterval(async () => {
-      await this.getRecipes()
-    }, 500);
+    Socket.socket.on('recipes:update', this.getRecipes)
+    Socket.socket.on('recipes:item:add', this.getRecipes)
+    Socket.socket.on('recipes:item:delete', this.getRecipes)
+    Socket.socket.on('recipes:delete', this.getRecipes)
   },
   beforeDestroy() {
-    clearInterval(this.interval)
+    Socket.socket.off('recipes:update', this.getRecipes)
+    Socket.socket.off('recipes:item:add', this.getRecipes)
+    Socket.socket.off('recipes:item:delete', this.getRecipes)
+    Socket.socket.off('recipes:delete', this.getRecipes)
   },
   methods: {
     setPosition() {
