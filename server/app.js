@@ -17,7 +17,13 @@ app.use(require('cors')({
   allowedHeaders: ['token', 'content-type'],
   exposedHeaders: 'true',
   credentials: false,
-  origin: ['http://localhost:8080', '*']
+  origin: [
+    'capacitor://localhost',
+    'ionic://localhost',
+    'http://localhost',
+    'http://localhost:8080',
+    'http://localhost:8100'
+  ]
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
