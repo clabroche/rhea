@@ -17,7 +17,7 @@ app.use(require('cors')({
   allowedHeaders: ['token', 'content-type'],
   exposedHeaders: 'true',
   credentials: false,
-  origin: ['http://localhost:8080']
+  origin: ['http://localhost:8080', '*']
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
