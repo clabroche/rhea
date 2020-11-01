@@ -59,7 +59,7 @@
       Une nouvelle version est disponible au téléchargement 
       <a :href="androidURL">
         <div class="download-line">
-          <i class="fab fa-android"></i>
+          <i class="fab fa-android" aria-hidden="true"></i>
           Télecharger la version android
         </div>
       </a>

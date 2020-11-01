@@ -163,7 +163,6 @@ export default {
 </script>
 
 <style lang="scss">
-/* Green-theme. */
 .vuecal__title-bar {background-color: var(--headerBgColor)}
 .vuecal__title {color: var(--headerTextColor)}
 .vuecal__view-btn.vuecal__view-btn--active {

@@ -9,7 +9,7 @@
         </div><!--
   --><div class="delete" @click.stop="deleteTag(itemValue)" ><i class="fas fa-trash" aria-hidden="true"></i></div>
       </div>
-      <div class="random" v-if="random" @click.stop="selectRandom"><i class="fas fa-sync-alt"></i></div>
+      <div class="random" v-if="random" @click.stop="selectRandom"><i class="fas fa-sync-alt" aria-hidden="true"></i></div>
     </div>
     <transition name="fade">
       <div class="container" v-if="isOpen" >

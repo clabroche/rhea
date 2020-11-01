@@ -1,3 +1,3 @@
 import Obs from './CustomObservable'
-const obs = new Obs()
-export default obs
+const notification = new Obs()
+export default notification

@@ -1,7 +1,5 @@
 <template>
   <div class="root-recipe">
-    <!-- <svg-background :bottom="true" svg="recipe">
-    </svg-background> -->
     <div class="list-container">
       <div class="form">
         <input class="name" type="text" v-model="recipe.name" placeholder="Nom...">
@@ -49,7 +47,6 @@ import BottomBarVue from '../components/BottomBar.vue';
 import ModalVue from '../components/Modal.vue';
 import items from '../services/items';
 import PromiseB from 'bluebird'
-// import SvgBackgroundVue from '../components/SvgBackground.vue';
 import SearchItemsVue from '../components/SearchItems.vue';
 import notification from '../services/notification'
 import { VueStars } from "vue-stars"
@@ -59,7 +56,6 @@ export default {
   components: {
       'bottom-bar': BottomBarVue,
       modalVue: ModalVue,
-      // svgBackground: SvgBackgroundVue,
       searchItems: SearchItemsVue,
       VueStars
   },
