@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Inject version in front
-      run: echo ${GITHUB_REF:10} && echo ${GITHUB_REF:10} > ./.env.production
+      run: echo ${GITHUB_REF:10} && 
 
     - name: Checkout
       uses: actions/checkout@master
@@ -22,7 +22,7 @@ jobs:
       run: npm ci
 
     - name: Build dependencies
-      run: npm run build
+      run: echo VUE_APP_VERSION=${GITHUB_REF:10} >> ./.env.production && npm run build
 
     - name: Inject version in front
       run: echo ${GITHUB_REF:10} && echo ${GITHUB_REF:10} > ./server/version
