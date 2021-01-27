@@ -6,7 +6,7 @@ const puppeteer = require('puppeteer')
 /** @type {import('puppeteer').Browser} */
 let browser
 ;(async () => {
-  browser = await puppeteer.launch({ headless: true })
+  browser = await puppeteer.launch({ headless: true, executablePath: '/usr/bin/chromium-browser', args: ['--no-sandbox']})
 })()
 
 
@@ -65,19 +65,19 @@ Item.prototype.fetchByName = async function () {
   }
   return this
 }
-setTimeout(async () => {
-  console.log('Enrich images')
-  const count = await mongo.collection('items').find().count()
-  const items = await mongo.collection('items').find().toArray()
-  let i = 0
-  await PromiseB.map(items, async _item => {
-    i++
-    console.log(`sync: ${i}/${count}`)
-    await Item.updateOrCreate(_item, _item.ownerId)
-      .catch(console.error)
-    }, {concurrency: 9})
-    console.log('End')
-}, 2000);
+// setTimeout(async () => {
+//   console.log('Enrich images')
+//   const count = await mongo.collection('items').find().count()
+//   const items = await mongo.collection('items').find().toArray()
+//   let i = 0
+//   await PromiseB.map(items, async _item => {
+//     i++
+//     console.log(`sync: ${i}/${count}`)
+//     await Item.updateOrCreate(_item, _item.ownerId)
+//       .catch(console.error)
+//     }, {concurrency: 9})
+//     console.log('End')
+// }, 2000);
 /** Enrich item with api */
 Item.prototype.enrich = async function (force = false) {
   if(force || !this.images.length) {
