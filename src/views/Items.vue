@@ -15,6 +15,7 @@
         <line-vue
           :additionalAction="true"
           :name="item.name"
+          :image="item.image"
           :additionalCenter="item.price + '€' + getCategoriesForItem(item)"
           :description="item.description"
           @action="openOptions(item)"/>

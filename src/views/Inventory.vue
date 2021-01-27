@@ -15,6 +15,7 @@
         <line-vue
           :additionalLeft="item.total"
           :name="item.name"
+          :image="item.image"
           :additionalCenter="getCategoriesForItem(item)"
           :description="item.description"/>
       </div>

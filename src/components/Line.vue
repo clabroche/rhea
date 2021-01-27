@@ -16,6 +16,9 @@
           {{description}}
         </div>
       </div>
+      <div v-if="image" class="image">
+        <img :src="image" alt="">
+      </div>
     </div>
     <div class="bottom-line">
       <div class="additional-left" v-if="additionalLeft !== null">
@@ -35,6 +38,7 @@
 export default {
   props: {
     name: {default: ''},
+    image: {default: ''},
     percent: {default: 0},
     description: {default: ''},
     checkbox: {default: false},
@@ -81,6 +85,13 @@ export default {
       box-sizing: border-box;
       position: relative;
       overflow: hidden;
+      .image {
+        height: calc(100% + 20px);
+        img {
+          height: 100%;
+          object-fit: contain;
+        }
+      }
       .progress {
         position: absolute;
         left: 0;
@@ -96,6 +107,7 @@ export default {
         display: flex;
         flex-direction: column; 
         justify-content: center;
+        flex-grow: 1;
         .name {
           color: var(--headerBgColor);
           font-size: 1.1em;

@@ -72,6 +72,7 @@ List.getListsFromUser = async function(userId) {
 /** @param {Conf} conf*/
 List.prototype.addConf = async function(conf) {
   conf._id = mongo.getID(conf._id)
+  await mongo.collection('items').updateOne({ _id: mongo.getID(conf._id) }, { $inc: { nbAdd: 1}})
   this.confs.push(conf)
   this.removeConfDuplicata()
   await this.update()

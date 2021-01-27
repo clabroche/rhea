@@ -1,11 +1,18 @@
 const {mongo} = require('../helpers/mongoConnect')
-const ObjectID = require('mongodb').ObjectID
 const Users = require('./Users')
 const Categories = require('./Categories')
 const PromiseB = require('bluebird')
+const puppeteer = require('puppeteer')
+/** @type {import('puppeteer').Browser} */
+let browser
+;(async () => {
+  browser = await puppeteer.launch({ headless: true })
+})()
+
+
 function Item(item) {
   if(!item.ownerId) throw new Error('item should be own from a user')
-  /** @type {ObjectID | string} */
+  /** @type {import('mongodb').ObjectID | string} */
   this._id = mongo.getID(item._id)
   /** @type {string} */
   this.name = item.name || ''
@@ -15,12 +22,16 @@ function Item(item) {
   this.price = item.price || 0
   /** @type {number} */
   this.barcode = Number.isNaN(+item.barcode) ? 0 : +item.barcode
-  /** @type {ObjectID[] | string[]} */
+  /** @type {import('mongodb').ObjectID[] | string[]} */
   this.categoriesId = item.categoriesId || []
-  /** @type {ObjectID | string} */
+  /** @type {import('mongodb').ObjectID | string} */
   this.ownerId = mongo.getID(item.ownerId) || ''
   /** @type {User} */
   this.owner = item.owner || null
+  /** @type {String[]} */
+  this.images = item.images || []
+  /** @type {String} */
+  this.image = item.image || ''
 }
 Item.prototype.getUser = async function() {
   this.owner = await Users.getUser(this.ownerId)
@@ -32,6 +43,20 @@ Item.getItems = async function (userId) {
     .toArray()
   return items.map(item => new Item(item))
 }
+Item.getPopular = async function (userId) {
+  const items = await mongo.collection('items')
+    .find({ ownerId: mongo.getID(userId) })
+    .sort({ nbAdd: -1 })
+    .toArray()
+  return items.map(item => new Item(item))
+}
+Item.getHistory = async function (userId) {
+  const items = await mongo.collection('items')
+    .find({ ownerId: mongo.getID(userId) })
+    .sort({ _id: -1 })
+    .toArray()
+  return items.map(item => new Item(item))
+}
 Item.prototype.fetchByName = async function () {
   if(!this._id) {
     const item = await mongo.collection('items')
@@ -39,6 +64,37 @@ Item.prototype.fetchByName = async function () {
     if(item) this._id = item._id
   }
   return this
+}
+setTimeout(async () => {
+  console.log('Enrich images')
+  const count = await mongo.collection('items').find().count()
+  const items = await mongo.collection('items').find().toArray()
+  let i = 0
+  await PromiseB.map(items, async _item => {
+    i++
+    console.log(`sync: ${i}/${count}`)
+    await Item.updateOrCreate(_item, _item.ownerId)
+      .catch(console.error)
+    }, {concurrency: 9})
+    console.log('End')
+}, 2000);
+/** Enrich item with api */
+Item.prototype.enrich = async function (force = false) {
+  if(force || !this.images.length) {
+    const url = `https://www.ecosia.org/images?q=${this.name}` 
+    const page = await browser.newPage()
+    await page.goto(url)
+    await page.waitForSelector('.image-result__link', {timeout: 5000})
+    const $images = await page.$$('.image-result__link')
+    this.images = await PromiseB.map($images.slice(0, 10), async $image => {
+      const link = await $image.getProperty('href')
+      return link ? link.jsonValue() : null
+    }).filter(a => a)
+    if(!this.image) {
+      this.image = this.images[0]
+    }
+    await page.close()
+  }
 }
 Item.search = async function (userId, search) {
   const items = await mongo.collection('items')
@@ -52,10 +108,11 @@ Item.getByBarcode = async function (userId, barcode) {
     .findOne({ ownerId: mongo.getID(userId), barcode: +barcode})
   return item ? new Item(item) : null
 }
-Item.updateOrCreate = async function(itemToCreate, userId) {
+Item.updateOrCreate = async function(itemToCreate, userId, forceEnrich) {
   itemToCreate.ownerId = mongo.getID(userId)
   const item = new Item(itemToCreate)
   await item.fetchByName()
+  await item.enrich(forceEnrich)
   delete item.owner
   if(item._id) 
     await mongo

@@ -1,12 +1,20 @@
 <template>
   <div class="root-item">
-     <svg-background :bottom="true" svg="cookie">
+    <svg-background :bottom="true" svg="cookie">
     </svg-background>
-    <div class="form">
-      <input type="text" v-model="item.name" placeholder="Nom...">
-      <input type="text" v-model="item.description" placeholder="Description...">
-      <input type="number" v-model="item.price" placeholder="Prix...">
-      <button @click="update">Sauvegarder</button>
+    <div class="item-infos">
+      <div class="images">
+        <img :src="item.image" alt="">
+        <div class="other-images">
+          <img v-for="image of item.images" :key="image" :src="image" @click="changeImage(item, image)"/>
+        </div>
+      </div>
+      <div class="form">
+        <input type="text" v-model="item.name" placeholder="Nom...">
+        <input type="text" v-model="item.description" placeholder="Description...">
+        <input type="number" v-model="item.price" placeholder="Prix...">
+        <button @click="update">Sauvegarder</button>
+      </div>
     </div>
     <div class="items-container">
       <h2>Ce produit appartient à ces catégories</h2>
@@ -62,6 +70,11 @@ export default {
     clearInterval(this.interval)
   },
   methods: {
+    async changeImage(item, image) {
+      item.image = image
+      await Items.createItem(item)
+      return this.getItem()
+    },
     async addCategories() {
       const categ = this.categoryToAdd[0]
       await Category.linkItems(categ._id, [this.itemId])
@@ -89,8 +102,39 @@ export default {
   display: flex;
   flex-direction: column;
   height: 100%;
-  .form {
-    margin: 10px;
+  .item-infos {
+    margin-top: 15px;
+    display: flex;
+    align-items: center;
+    .images {
+      width: 50%;
+      position: relative;
+      height: 210px;
+      flex-shrink: 0;
+      border-radius: 4px;
+      &>img {
+        object-fit: contain;
+        width: 100%;
+        height: 100%;
+      }
+      .other-images {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        display: flex;
+        overflow: auto;
+        width: 100%;
+        box-shadow: -3px -6px 10px -3px #7c7c7c;
+        background-color: #fff;
+        img {
+          height: 60px;
+          object-fit: contain;
+        }
+      }
+    }
+    .form {
+      margin: 10px;
+    }
   }
   
   .items-container {

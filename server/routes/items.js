@@ -10,6 +10,14 @@ router.get('/', authentification, async function (req, res, next) {
   const items = await Items.getItems(req.user._id)
   res.json(items)
 })
+router.get('/algos/popular', authentification, async function (req, res) {
+  const items = await Items.getPopular(req.user._id)
+  res.json(items)
+})
+router.get('/algos/history', authentification, async function (req, res) {
+  const items = await Items.getHistory(req.user._id)
+  res.json(items)
+})
 router.post('/barcode/:code', authentification, async function (req, res, next) {
   const code = req.params.code
   const { data: response } = await axios.get(`https://world.openfoodfacts.org/api/v0/product//${code}.json`)
@@ -42,7 +50,7 @@ router.get('/:id', authentification, async function(req, res, next) {
 })
 
 router.post('/', authentification, async function(req, res, next) {
-  const item = await Items.updateOrCreate(req.body, req.user._id)
+  const item = await Items.updateOrCreate(req.body, req.user._id, true)
   ioConnect.notifyUsers(req.user, 'item:update', item)
   res.json(item)
 })

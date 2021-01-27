@@ -18,11 +18,12 @@
         </div>
         <div v-if="!missingcollapse">
           <transition-group name="fade">
-           <div  v-for="item of filteredMissingItems" :key="item._id" @click="incrementItem(item)">
+          <div  v-for="item of filteredMissingItems" :key="item._id" @click="incrementItem(item)">
             <line-vue
               :checkbox="true"
               :additionalAction="true"
               :name="item.name"
+              :image="item.image"
               :description="item.description"
               :additionalLeft="item.total - item.selected"
               :additionalCenter="(+item.price || 0).toFixed(2).replace('.', ',') + '€'"

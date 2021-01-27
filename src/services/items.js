@@ -9,6 +9,18 @@ export default {
       }
     })
     return item
+  },
+  async getPopular() {
+    const { data: item } = await API.get('/items/algos/popular', {
+      headers: { token: Auth.token }
+    })
+    return item
+  },  
+  async getHistory() {
+    const { data: item } = await API.get('/items/algos/history', {
+      headers: { token: Auth.token }
+    })
+    return item
   },  
   async createItem(itemToCreate) {
     const {data: item} = await API.post('/items', itemToCreate, {

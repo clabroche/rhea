@@ -3,6 +3,10 @@
     <div class="overlay" :class="{open: sidebar.open}" @click="sidebar.open = false"></div>
     <div class="sidebar" :class="{open: sidebar.open}">
       <ul>
+        <li @click="$router.push({name: 'dashboard'}); sidebar.open = false">
+          <i class="fas fa-home" aria-hidden="true"></i>
+          Accueil
+        </li>
         <li @click="$router.push({name: 'lists'}); sidebar.open = false">
           <i class="fas fa-list" aria-hidden="true"></i>
           Listes

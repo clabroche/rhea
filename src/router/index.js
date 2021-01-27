@@ -11,7 +11,7 @@ import Recipes from '../views/Recipes.vue'
 import Recipe from '../views/Recipe.vue'
 import Inventory from '../views/Inventory.vue'
 import Calendar from '../views/Calendar.vue'
-
+import Dashboard from '../views/Dashboard.vue'
 Vue.use(VueRouter)
 
 const routes = [
@@ -67,6 +67,10 @@ const routes = [
     path: '/calendar',
     name: 'calendar',
     component: Calendar
+  }, {
+    path: '/dashboard',
+    name: 'dashboard',
+    component: Dashboard
   },
 ]
 
