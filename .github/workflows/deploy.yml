@@ -7,9 +7,6 @@ jobs:
   update:
     runs-on: ubuntu-latest
     steps:
-    - name: Inject version in front
-      run: echo ${GITHUB_REF:10} && 
-
     - name: Checkout
       uses: actions/checkout@master
 
