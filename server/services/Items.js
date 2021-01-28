@@ -6,7 +6,11 @@ const puppeteer = require('puppeteer')
 /** @type {import('puppeteer').Browser} */
 let browser
 ;(async () => {
-  browser = await puppeteer.launch({ headless: true, executablePath: '/usr/bin/chromium-browser', args: ['--no-sandbox']})
+  browser = await puppeteer.launch({
+    headless: true,
+    executablePath: '/usr/bin/chromium-browser',
+    args: ['--no-sandbox']
+  })
 })()
 
 
@@ -81,19 +85,25 @@ Item.prototype.fetchByName = async function () {
 /** Enrich item with api */
 Item.prototype.enrich = async function (force = false) {
   if(force || !this.images.length) {
-    const url = `https://www.ecosia.org/images?q=${this.name}` 
+    const url = `https://www.qwant.com/?q=${this.name}&t=images` 
     const page = await browser.newPage()
-    await page.goto(url)
-    await page.waitForSelector('.image-result__link', {timeout: 5000})
-    const $images = await page.$$('.image-result__link')
-    this.images = await PromiseB.map($images.slice(0, 10), async $image => {
-      const link = await $image.getProperty('href')
-      return link ? link.jsonValue() : null
-    }).filter(a => a)
-    if(!this.image) {
-      this.image = this.images[0]
+    try {
+      await page.goto(url)
+      await page.waitForSelector('.result__link', {timeout: 5000})
+      const $images = await page.$$('.result__link')
+      this.images = await PromiseB.map($images.slice(0, 10), async $image => {
+        const link = await $image.getProperty('href')
+        if(!link) return
+        const src = await link.jsonValue()
+        return src
+      }).filter(a => a)
+      console.log(this.images)
+      if(!this.image) {
+        this.image = this.images[0]
+      }
+    } finally {
+      await page.close()
     }
-    await page.close()
   }
 }
 Item.search = async function (userId, search) {

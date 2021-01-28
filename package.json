@@ -28,7 +28,7 @@
     "@ionic-native/core": "^5.28.0",
     "axios": "^0.19.2",
     "capacitor": "^0.5.5",
-    "cheerio": "^1.0.0-rc.3",
+    "cheerio": "^1.0.0-rc.5",
     "core-js": "^3.6.5",
     "dayjs": "^1.8.33",
     "fast-sort": "^1.6.0",
