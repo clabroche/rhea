@@ -20,10 +20,10 @@
     </div>
     <bottom-bar :text="lists.length + ' listes au total'" :actions="[{icon: 'fas fa-plus', cb: createList}]"/>
     <modal-vue ref="createModal">
-      <div slot="body">
+      <template #body>
         <input type="text" v-model="listToCreate.name" placeholder="Nom...">
         <input type="text" v-model="listToCreate.description" placeholder="Description...">
-      </div>
+      </template>
     </modal-vue>
     <options-vue ref="options" :options="[
       {label:  'Suppression', select: deleteList},
@@ -72,7 +72,7 @@ export default {
     Socket.socket.on('lists:delete', this.getLists)
     Socket.socket.on('lists:update', this.getLists)
   },
-  beforeDestroy() {
+  beforeUnmount() {
     Socket.socket.off('lists:create', this.getLists)
     Socket.socket.off('lists:delete', this.getLists)
     Socket.socket.off('lists:update', this.getLists)

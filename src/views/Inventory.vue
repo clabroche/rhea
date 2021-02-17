@@ -22,40 +22,44 @@
     </div>
     <bottom-bar :text="items.length + ' items au total'" :actions="[{icon: 'fas fa-barcode', cb: openCamera}, {icon: 'fas fa-plus', cb: createItem}]"/>
     <modal-vue ref="createModal">
-      <div slot="body">
+      <template #body>
         <multiselect :options="allItems" customKey="_id" customLabel="name" :single="true" placeholder="Choisir un produit..." @input="selectedItem = $event[0]"/>
-      </div>
+      </template>
     </modal-vue>
     <modal-vue ref="updateModal">
-      <div slot="body" slot-scope="{data}" v-if="data && data._id">
-        <h2>{{data.name}}</h2>
-        <div class="increment-container">
-          <i class="fas fa-minus" @click="data.total--" aria-hidden="true"></i>
-          {{data.total}}
-          <i class="fas fa-plus" @click="data.total++" aria-hidden="true"></i>
+      <template #body="{data}">
+        <div  v-if="data && data._id">
+          <h2>{{data.name}}</h2>
+          <div class="increment-container">
+            <i class="fas fa-minus" @click="data.total--" aria-hidden="true"></i>
+            {{data.total}}
+            <i class="fas fa-plus" @click="data.total++" aria-hidden="true"></i>
+          </div>
         </div>
-      </div>
-      <div v-else-if="data && data.product" class="confirm-product">
-        <h2>{{data.product.product_name}}</h2>
-        <img :src="data.product.image_url" alt="">
-      </div>
-      <div v-else>Produit non trouvé</div>
+        <div v-else-if="data && data.product" class="confirm-product">
+          <h2>{{data.product.product_name}}</h2>
+          <img :src="data.product.image_url" alt="">
+        </div>
+        <div v-else>Produit non trouvé</div>
+      </template>
     </modal-vue>
 
     <modal-vue ref="createItemModal" validateString="Oui" cancelString="Non">
-      <div  slot="body" slot-scope="{data}"  v-if="data && data.product" class="confirm-product">
-        Lier à un item existant
-        <multiselect :options="allItems" :value="selectedItem ? [selectedItem] : []" customKey="_id" customLabel="name" :single="true" placeholder="Choisir un produit..." @input="selectedItem = $event[0]"/>
-        <div v-if="!selectedItem">
-          ou créer un nouvel item
-          <input type="text" v-model="data.product.product_name" >
-          <img :src="data.product.image_url" alt="">
+      <template  #body="{data}">
+        <div  v-if="data && data.product" class="confirm-product">
+          Lier à un item existant
+          <multiselect :options="allItems" :value="selectedItem ? [selectedItem] : []" customKey="_id" customLabel="name" :single="true" placeholder="Choisir un produit..." @input="selectedItem = $event[0]"/>
+          <div v-if="!selectedItem">
+            ou créer un nouvel item
+            <input type="text" v-model="data.product.product_name" >
+            <img :src="data.product.image_url" alt="">
+          </div>
+          <div>
+            Produit inexistant, le créer ?
+          </div>
         </div>
-        <div>
-          Produit inexistant, le créer ?
-        </div>
-      </div>
-      <div v-else>Produit non trouvé</div>
+        <div v-else>Produit non trouvé</div>
+      </template>
     </modal-vue>
   </div>
 </template>
@@ -109,7 +113,7 @@ export default {
     Socket.socket.on('inventory:item:delete', this.getAllItems)
     Socket.socket.on('inventory:item:quantity', this.getAllItems)
   },
-  beforeDestroy() {
+  beforeUnmount() {
     Socket.socket.off('category:item:add', this.getAllItems)
     Socket.socket.off('inventory:item:add', this.getAllItems)
     Socket.socket.off('inventory:item:delete', this.getAllItems)

@@ -1,10 +1,10 @@
 <template>
   <div>
     <modal-vue ref="createModal" :disabled="!current.recipeId">
-      <div slot="body">
-        {{moment(current.start).calendar() | capitalize}}
+      <template #body>
+        {{moment(current.start).calendar()}}
         <multiselect :random="true" :options="allRecipes" customKey="_id" customLabel="name" :single="true" placeholder="Choisir un produit..." @input="selectItem"/>
-      </div>
+      </template>
     </modal-vue>
     <vue-cal
       ref="vuecal"
@@ -18,8 +18,8 @@
       :cell-click-hold="false"
       @cell-click="click"
       @view-change="viewChange">
-      <div slot="no-event"></div>
-      <template v-slot:event="{ event }" class="cell-event" @click="click(event.start)">
+      <template #no-event></template>
+      <template #event="{ event }" class="cell-event" @click="click(event.start)">
         <div class="delete" @click.stop.prevent="deleteEvent(event)"><i class="fas fa-times" aria-hidden="true"></i></div>
         <div>{{ event.title }}</div>
       </template>
@@ -132,11 +132,11 @@ export default {
     },
     selectItem(recipes) {
       if(!recipes[0]) {
-        this.$set(this.current, 'recipeId', null)
-        this.$set(this.current, 'title', null)
+        this.current.recipeId =null
+        this.current.title =null
       } else {
-        this.$set(this.current, 'recipeId', recipes[0]._id)
-        this.$set(this.current, 'title', recipes[0].name)
+        this.current.recipeId = recipes[0]._id
+        this.current.title = recipes[0].name
       }
     },
     click($event) {
@@ -149,8 +149,8 @@ export default {
         content: '',
         class: 'blue-event',
       }
-      this.$set(this.current, 'start', $start.format('YYYY-MM-DD HH:mm'))
-      this.$set(this.current, 'end', $start.add(7, 'hours').format('YYYY-MM-DD HH:mm'))
+      this.current.start = $start.format('YYYY-MM-DD HH:mm')
+      this.current.end = $start.add(7, 'hours').format('YYYY-MM-DD HH:mm')
       
       this.$refs.createModal.open().subscribe(async res => {
         if(!res) return

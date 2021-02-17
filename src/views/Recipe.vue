@@ -1,7 +1,7 @@
 <template>
   <div class="root-recipe">
     <div class="list-container">
-      <div class="form">
+      <!-- <div class="form">
         <input class="name" type="text" v-model="recipe.name" placeholder="Nom...">
         <div class="line">
           <div class="field">
@@ -13,7 +13,7 @@
             <vue-stars class="stars" @input="recipe.healthy = $event" :value="recipe.healthy || 0" name="healthy" shadowColor="none"/>
           </div>
         </div>
-      </div>
+      </div> -->
 
       <div class="items-container">
         <h2>Les produits de cette recette</h2>
@@ -31,12 +31,12 @@
     </div>
     <bottom-bar :text="(itemsForRecipe ? itemsForRecipe.length : 0) + ' produits au total'" :actions="[{icon: 'fas fa-save', cb: update}]"/>
     <modal-vue ref="linkModal">
-      <div slot="header">
+      <template #header>
         Lier des produits à une recette
-      </div>
-      <div slot="body">
+      </template>
+      <template #body>
         <search-items v-model="itemsSelected" :excludedItems="itemsForRecipe"></search-items>
-      </div>
+      </template>
     </modal-vue>
   </div>
 </template>
@@ -49,7 +49,6 @@ import items from '../services/items';
 import PromiseB from 'bluebird'
 import SearchItemsVue from '../components/SearchItems.vue';
 import notification from '../services/notification'
-import { VueStars } from "vue-stars"
 import header from '../services/Header'
 
 export default {
@@ -57,7 +56,6 @@ export default {
       'bottom-bar': BottomBarVue,
       modalVue: ModalVue,
       searchItems: SearchItemsVue,
-      VueStars
   },
   data() {
     return {
@@ -71,7 +69,7 @@ export default {
     this.recipeId = this.$route.params.recipeId 
     this.reload()
   },
-  beforeDestroy() {
+  beforeUnmount() {
     clearInterval(this.interval)
   },
   methods: {

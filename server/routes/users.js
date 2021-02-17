@@ -55,8 +55,12 @@ router.post('/login', async function(req, res, next) {
   if(!user) {
     return res.status(404).send('User not Found')
   }
-  await generateToken(req.body)
-  res.json(req.body.token)
+  if (await bcrypt.compare(req.body.password, user.password)) {
+    await generateToken(req.body)
+    res.json(req.body.token)
+  } else {
+    res.status(401).send('Wrong password')
+  }
 });
 router.post('/register', async function(req, res, next) {
   const user = await mongo.collection('users').findOne({email: req.body.email})

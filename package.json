@@ -5,16 +5,16 @@
   "scripts": {
     "serve": "stack-monitor ./stack.js ",
     "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint",
     "build:all": "npm run build && npm run capacitor:build",
     "build:android": "",
-    "lint": "vue-cli-service lint",
     "capacitor-copy": "vue-cli-service capacitor-copy",
     "capacitor-init": "vue-cli-service capacitor-init",
     "capacitor-open": "vue-cli-service capacitor-open",
     "capacitor-update": "vue-cli-service capacitor-update",
+    "capacitor:android:generate:keystore": "keytool -genkey -v -keystore my-release-key.keystore -alias rhea -keyalg RSA -keysize 2048 -validity 1000000 && keytool -importkeystore -srckeystore my-release-key.keystore -destkeystore my-release-key.keystore -deststoretype pkcs12",
     "capacitor:build": "cd android && ./build.sh",
     "capacitor:serve": "vue-cli-service capacitor:serve",
-    "capacitor:android:generate:keystore": "keytool -genkey -v -keystore my-release-key.keystore -alias rhea -keyalg RSA -keysize 2048 -validity 1000000 && keytool -importkeystore -srckeystore my-release-key.keystore -destkeystore my-release-key.keystore -deststoretype pkcs12",
     "client": "vue-cli-service serve ",
     "postinstall": "cd server && npm i",
     "server": "cd server && nodemon --delay 2 bin/www"
@@ -38,11 +38,11 @@
     "phonegap-plugin-barcodescanner": "^8.1.0",
     "socket.io-client": "^2.3.1",
     "uuid": "^7.0.3",
-    "vue": "^2.6.11",
-    "vue-cal": "^3.6.5",
+    "vue": "^3.0.0-beta.1",
+    "vue-cal": "^4.2.0",
     "vue-js-modal": "^1.3.35",
     "vue-line-clamp": "^1.3.2",
-    "vue-router": "^3.4.3",
+    "vue-router": "^4.0.0-alpha.6",
     "vue-stars": "^1.2.2"
   },
   "devDependencies": {
@@ -50,16 +50,17 @@
     "@nklayman/vue-cli-plugin-capacitor": "^0.4.0",
     "@vue/cli-plugin-babel": "^4.5.3",
     "@vue/cli-plugin-eslint": "^4.5.3",
-    "@vue/cli-plugin-router": "^4.5.3",
+    "@vue/cli-plugin-router": "^4.5.11",
     "@vue/cli-service": "^4.5.3",
+    "@vue/compiler-sfc": "^3.0.0-beta.1",
     "babel-eslint": "^10.1.0",
     "eslint": "^5.16.0",
-    "eslint-plugin-vue": "^5.0.0",
+    "eslint-plugin-vue": "^7.0.0-alpha.0",
     "node-sass": "^4.14.1",
     "node-ssh": "^7.0.1",
     "sass-loader": "^8.0.2",
     "vue-cli-plugin-capacitor": "^1.0.0-alpha.1",
-    "vue-template-compiler": "^2.6.11"
+    "vue-cli-plugin-vue-next": "~0.1.4"
   },
   "eslintConfig": {
     "root": true,
@@ -70,7 +71,7 @@
       "no-console": "off"
     },
     "extends": [
-      "plugin:vue/essential",
+      "plugin:vue/vue3-essential",
       "eslint:recommended"
     ],
     "parserOptions": {

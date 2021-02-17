@@ -105,7 +105,7 @@ export default {
     this.categoryId = this.$route.params.categoryId 
     this.reload()
   },
-  beforeDestroy() {
+  beforeUnmount() {
     clearInterval(this.interval)
   },
   methods: {

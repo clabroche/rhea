@@ -1,5 +1,4 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router'
 import Lists from '../views/Lists.vue'
 import List from '../views/List.vue'
 import Item from '../views/Item.vue'
@@ -12,7 +11,6 @@ import Recipe from '../views/Recipe.vue'
 import Inventory from '../views/Inventory.vue'
 import Calendar from '../views/Calendar.vue'
 import Dashboard from '../views/Dashboard.vue'
-Vue.use(VueRouter)
 
 const routes = [
   {
@@ -74,7 +72,10 @@ const routes = [
   },
 ]
 
-const router = new VueRouter({
+
+
+const router = createRouter({
+  history: createWebHashHistory(),
   routes
 })
 

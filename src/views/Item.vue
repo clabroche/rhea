@@ -63,10 +63,10 @@ export default {
     await this.getItem()
     this.categories = await Category.getCategories()
     this.categories.forEach(categ => {
-      this.$set(this.categoriesById, categ._id, categ)
+      this.categoriesById[categ._id] = categ
     })
   },
-  beforeDestroy() {
+  beforeUnmount() {
     clearInterval(this.interval)
   },
   methods: {

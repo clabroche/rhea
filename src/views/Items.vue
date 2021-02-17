@@ -97,7 +97,7 @@ export default {
     Socket.socket.on('item:update', this.getAllItems)
     Socket.socket.on('item:delete', this.getAllItems)
   },
-  beforeDestroy() {
+  beforeUnmount() {
     Socket.socket.off('item:update', this.getAllItems)
     Socket.socket.off('item:delete', this.getAllItems)
   },

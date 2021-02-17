@@ -61,7 +61,7 @@
     </div>
     <bottom-bar v-if="list._id" :actions="[{icon: 'fas fa-plus', cb: createItem}]" :text="list.items.length + ' produits pour un montant de ' + getTotalPrice + '€'"/>
     <modal-vue ref="createModal" height="auto">
-      <div slot="body" class="createModal">
+      <template #body class="createModal">
         <multiselect :options="allItems" customKey="_id" customLabel="name" :single="true" placeholder="Choisir un produit..." @input="selectItem"/>
         <div v-if="!itemToCreate._id">
           <label>ou créé en un</label>
@@ -71,13 +71,13 @@
         </div>
         <label>Choisir une quantitée</label>
         <input type="number" v-model="itemToCreate.total" placeholder="Total...">
-      </div>
+      </template>
     </modal-vue>
     <modal-vue ref="quantityModal" >
-      <div slot="body">
+      <template #body>
         Quantité:
         <input type="number" v-model="selectedItem.total" placeholder="Total...">
-      </div>
+      </template>
     </modal-vue>
     <options-vue ref="options" :options="[
       {label:  'Modification de la quantité', select: updateQuantity},
@@ -141,7 +141,7 @@ export default {
     }
   },
   async mounted() {
-    (await Category.getCategories()).map(cat => this.$set(this.allCategoriesById, cat._id, cat))
+    (await Category.getCategories()).map(cat => this.allCategoriesById[cat._id] = cat)
     await this.getList()
     this.$refs.scrollElement.scrollTop = this.$root.scroll.listItemsProducts
     Socket.socket.on('list:item:add', this.getList)
@@ -152,7 +152,7 @@ export default {
     Socket.socket.on('item:update', this.getList)
     Socket.socket.on('item:delete', this.getList)
   },
-  beforeDestroy() {
+  beforeUnmount() {
     Socket.socket.off('list:item:add', this.getList)
     Socket.socket.off('list:item:delete', this.getList)
     Socket.socket.off('list:item:increment', this.getList)

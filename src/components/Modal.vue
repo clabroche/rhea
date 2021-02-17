@@ -1,21 +1,25 @@
 <template>
-  <modal :name="uuid" height="auto" :width="width || '90%'" :scrollable="noScroll ? !noScroll : true" class="modal" @closed="cancel()">
-    <div id="modal-content" :style="{height: height || 'auto'}">
-      <div class="close-cross" v-if="closeCross" @click="close()">
-        <i class="fas fa-times" aria-hidden="true"></i>
-      </div>
-      <div class="title-modal" v-if="$slots.header" :style="{'font-size': headerFontSize}">
-        <slot name="header"></slot>
-      </div>
-      <div class="body">
-        <slot name="body" :data="data"></slot>
-      </div>
-      <div class="button-box" v-if="!noActions">
-        <div class="notif-button cancel" v-if="!noCancel" @click="cancel()">{{ cancelString || 'Annuler' }}</div>
-        <div class="notif-button validate" :class="{colored}" v-if="!noValidate" @click="validate()">{{ validateString || 'Sauvegarder' }}</div>
+<teleport to="body">
+  <div  v-if="isOpen" class="modal-root" @click="close()">
+    <div :name="uuid" height="auto" :style="{width:width || '90%'}" :scrollable="noScroll ? !noScroll : true" class="modal" @closed="cancel()" @click.stop>
+      <div id="modal-content" :style="{height: height || 'auto'}">
+        <div class="close-cross" v-if="closeCross" @click="close()">
+          <i class="fas fa-times" aria-hidden="true"></i>
+        </div>
+        <div class="title-modal" v-if="$slots.header" :style="{'font-size': headerFontSize}">
+          <slot name="header"></slot>
+        </div>
+        <div class="body">
+          <slot name="body" :data="data"></slot>
+        </div>
+        <div class="button-box" v-if="!noActions">
+          <div class="notif-button cancel" v-if="!noCancel" @click="cancel()">{{ cancelString || 'Annuler' }}</div>
+          <div class="notif-button validate" :class="{colored}" v-if="!noValidate" @click="validate()">{{ validateString || 'Sauvegarder' }}</div>
+        </div>
       </div>
     </div>
-  </modal>
+  </div>
+</teleport>
 </template>
 
 <script>
@@ -63,7 +67,6 @@ export default {
       this.isOpen = false
       if (this.result) {
         this.result.next(data)
-        this.$modal.hide(this.uuid)
         // this.result.unsubscribe()
         this.result = null
       }
@@ -79,18 +82,28 @@ export default {
       this.result.promise = new Promise((resolve) => {
         this.resolve = resolve
       });
-      this.$modal.show(this.uuid)
       return this.result
     }
   }
 }
 </script>
 <style scoped lang="scss">
-.modal {
+.modal-root {
   color: #4A5361;
   z-index: 1299;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: rgba(0,0,0,0.5);
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   #modal-content {
+    background: white;
     height: auto;
+    margin: auto;
     .close-cross {
       position: absolute;
       right: 20px;

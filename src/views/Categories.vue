@@ -74,7 +74,7 @@ export default {
     Socket.socket.on('category:delete', this.getCategories)
     Socket.socket.on('category:update', this.getCategories)
   },
-  beforeDestroy() {
+  beforeUnmount() {
     Socket.socket.off('category:item:add', this.getCategories)
     Socket.socket.off('category:item:delete', this.getCategories)
     Socket.socket.off('category:delete', this.getCategories)

@@ -23,9 +23,9 @@
     </div>
     <bottom-bar :text="recipes.length + ' recettes au total'" :actions="[{icon: 'fas fa-plus', cb: createRecipe}]"/>
     <modal-vue ref="createModal">
-      <div slot="body">
+      <template #body>
         <input type="text" v-model="recipeToCreate.name" placeholder="Nom...">
-      </div>
+      </template>
     </modal-vue>
     <options-vue ref="options" :options="[
       {label:  'Suppression', select: deleteRecipe},
@@ -74,7 +74,7 @@ export default {
     Socket.socket.on('recipes:item:delete', this.getRecipes)
     Socket.socket.on('recipes:delete', this.getRecipes)
   },
-  beforeDestroy() {
+  beforeUnmount() {
     Socket.socket.off('recipes:update', this.getRecipes)
     Socket.socket.off('recipes:item:add', this.getRecipes)
     Socket.socket.off('recipes:item:delete', this.getRecipes)

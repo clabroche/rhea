@@ -1,11 +1,12 @@
 import API from './API'
 import User from './User'
 import Socket from './Socket'
+import { ref } from 'vue'
 function Auth() {
   /**
-   * @type {User}
+   * @type {import('vue').Ref<import('./User').default>}
    */
-  this.user = null
+  this.user = ref(null)
   /** @type {String} */
   this.token = localStorage.getItem('token')
   if(this.token) {
@@ -30,22 +31,23 @@ Auth.prototype.getUser = async function() {
       token: this.token
     }
   })
-  this.user = new User(user)
-  return this.user
+  console.log(this.user)
+  this.user.value = new User(user)
+  return this.user.value
 }
 /**
  * @return {Promise<User>}
  */
 Auth.prototype.save = async function() {
-  await API.post('/user/me', this.user, {
+  await API.post('/user/me', this.user.value, {
     headers: {
       token: this.token
     }
   })
-  return this.user
+  return this.user.value
 }
 Auth.prototype.disconnect = async function() {
-  this.user = null
+  this.user.value = null
   this.token = null
   localStorage.setItem('token', null)
 }
@@ -59,7 +61,7 @@ Auth.prototype.login = async function(user) {
   if(token) {
     this.token = token
     Socket.connect(this.token)
-    this.user = await this.getUser()
+    this.user.value = await this.getUser()
   }
   localStorage.setItem('token', this.token)
   return token
@@ -74,7 +76,7 @@ Auth.prototype.register = async function(user) {
   if(token) {
     this.token = token
     Socket.connect(this.token)
-    this.user = await this.getUser()
+    this.user.value = await this.getUser()
   }
   localStorage.setItem('token', this.token)
   return token
