@@ -134,8 +134,7 @@ export default {
       .additional-right, .additional-left {
         height: 100%;
         width: 50px;
-        background-color: var(--headerBgColor);
-        color: var(--headerTextColor);
+        @include backgroundGradient;
         display: flex;
         justify-content: center;
         align-items: center;

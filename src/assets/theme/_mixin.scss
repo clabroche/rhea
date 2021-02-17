@@ -1,0 +1,6 @@
+@mixin backgroundGradient {
+  background: var(--headerBgColorAccent);  /* fallback for old browsers */
+  background: -webkit-linear-gradient(160deg, var(--headerBgColorAccentGradient), var(--headerBgColorAccent));  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(160deg, var(--headerBgColorAccentGradient), var(--headerBgColorAccent)); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  color: white;
+}

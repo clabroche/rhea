@@ -45,6 +45,8 @@ export default {
       background-color: var(--headerBgColor);
       color: var(--headerTextColor);
       border-right: 1px solid var(--headerBgColorAccent);
+      @include backgroundGradient;
+
     }
   }
 }

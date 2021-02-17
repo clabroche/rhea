@@ -62,7 +62,8 @@ export default {
   --headerBorderWidth: 0px;
   --headerBorderColor: transparent;
   --headerBgColor: #466c80;
-  --headerBgColorAccent: #2f5466;
+  --headerBgColorAccent: #2c3e50;
+  --headerBgColorAccentGradient: #508ab1;
   --headerTextColor: white;
   --headerTextColorAccent: white;
   --headerFontWeight: bold;
@@ -117,6 +118,10 @@ body {
   margin: 0;
   height: 100vh;
   width: 100vw;
+  font-family: Jost, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: #2c3e50;
 }
 ul {
   margin: 0;
@@ -162,11 +167,6 @@ input, textarea {
   font-family: Jost, Helvetica, Arial, sans-serif;
 }
 #app {
-  font-family: Jost, Helvetica, Arial, sans-serif;
-
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  color: #2c3e50;
   display: flex;
   flex-direction: column;
   height: 100vh;

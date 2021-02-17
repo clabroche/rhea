@@ -35,7 +35,7 @@ export default {
   font-weight: bold;
   color: white;
   background-color: var(--headerBgColor);
-  box-shadow: 0px 0px 9px 5px #303030;
+  @include backgroundGradient;
   flex-shrink: 0;
   .trigger {
     position: absolute;

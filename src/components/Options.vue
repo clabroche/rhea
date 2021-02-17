@@ -56,6 +56,7 @@ export default {
     padding: 10px;
     background-color: var(--headerBgColor);
     color: var(--headerTextColor);
+    @include backgroundGradient;
   }
   .options-container {
     background-color: #fff;

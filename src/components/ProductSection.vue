@@ -1,8 +1,8 @@
 <template>
   <div class="product-section-root">
     <modal-vue ref="viewMore" height="auto" :noActions="true">
-      <div slot="header">Liste des produits</div>
-      <div slot="body" class="addToList" slot-scope="{data: items}">
+      <template #header>Liste des produits</template>
+      <template #body="{data: items}" >
         <div v-if="items" class="more-container">
           <div v-for="item of items.slice(0,150)" :key="item._id" class="item">
             <img :src="item.image" alt="" @click="$router.push({name:'item', params: {itemId: item._id}})">
@@ -10,18 +10,18 @@
             <div class="add-list" @click="openAddToList(item)"><i class="fas fa-shopping-cart"></i></div>
           </div>
         </div>
-      </div>
+      </template>
     </modal-vue>
     <modal-vue ref="addToList" height="auto" :noActions="true">
-      <div slot="header">Lists</div>
-      <div slot="body" class="addToList" slot-scope="{data: item}">
+      <template #header>Lists</template>
+      <template #body="{data: item}" >
         <div v-if="item" class="lists">
           <div v-for="list of lists" :key="list._id" @click="addToList(list, item)" class="list">
             {{list.name}}
             <i class="fas fa-chevron-right"></i>
           </div>
         </div>
-      </div>
+      </template>
     </modal-vue>
     <div class="label" v-if="headerText">
       <i :class="headerIcon" aria-hidden="true" v-if="headerIcon"></i>
@@ -136,6 +136,7 @@ export default {
   justify-content: center;
   .item {
     width: 100px;
+    margin-bottom: 10px;
   }
 }
 .item {
@@ -148,6 +149,7 @@ export default {
   .add-list {
     background-color: var(--headerBgColorAccent);
     color: white;
+    @include backgroundGradient;
     text-align: center;
     border-radius: 4px;
     padding: 3px;
