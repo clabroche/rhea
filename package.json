@@ -26,7 +26,7 @@
     "@fortawesome/fontawesome-free": "^5.15.2",
     "@ionic-native/barcode-scanner": "^5.31.1",
     "@ionic-native/core": "^5.31.1",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "capacitor": "^0.5.5",
     "cheerio": "^1.0.0-rc.5",
     "core-js": "^3.8.3",
