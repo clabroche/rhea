@@ -49,6 +49,7 @@
               :name="item.name"
               :description="item.description"
               :additionalLeft="item.total - item.selected"
+              :image="item.image"
               :additionalCenter="(+item.price || 0).toFixed(2).replace('.', ',') + '€'"
               :percent="item.selected * 100 / item.total"
               @action="openOptions(item)"
@@ -101,6 +102,7 @@ import SvgBackgroundVue from '../components/SvgBackground.vue';
 import sort from 'fast-sort'
 import header from '../services/Header'
 import Socket from '../services/Socket';
+import notification from '../services/notification';
 
 export default {
   components: {
@@ -192,6 +194,7 @@ export default {
         if(!res) return 
         await lists.updateQuantity(this.list._id, this.selectedItem._id,  this.selectedItem.total)
         this.selectedItem = {}
+        notification.next('success', `Quantitée modifiée.`)
         return this.getList()
       })
     },
@@ -202,6 +205,7 @@ export default {
     },
     async deleteItem() {
       await lists.deleteItem(this.list._id, this.selectedItem._id) 
+      notification.next('success', `Produit supprimé.`)
       this.selectedItem = {}
       return this.getList()
     },
@@ -221,7 +225,8 @@ export default {
         if(this.itemToCreate._id) { // Is valid item
           this.itemToCreate.selected = 0
           await lists.addItem(this.list._id, this.itemToCreate)
-          this.itemToCreate = {total:1}
+          notification.next('success', `Produit ajouté à la liste.`)
+          this.itemToCreate = {total:1, name: '', description: '', price: 0}
           this.allItems = await Items.getAll()
           return this.getList()
         }
