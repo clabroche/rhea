@@ -10,6 +10,11 @@ let browser
     headless: true,
     executablePath: '/usr/bin/chromium-browser',
     args: ['--no-sandbox']
+  }).catch(() => {
+    return puppeteer.launch({
+      headless: true,
+      args: ['--no-sandbox']
+    })
   })
 })()
 
@@ -122,7 +127,7 @@ Item.updateOrCreate = async function(itemToCreate, userId, forceEnrich) {
   itemToCreate.ownerId = mongo.getID(userId)
   const item = new Item(itemToCreate)
   await item.fetchByName()
-  await item.enrich(forceEnrich)
+  await item.enrich(forceEnrich).catch(() => {})
   delete item.owner
   if(item._id) 
     await mongo
