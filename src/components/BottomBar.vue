@@ -24,8 +24,8 @@ export default {
 <style lang="scss" scoped>
 .root-bottom-bar {
   width: 100%;
-  height: 50px; 
-  border-top: 2px solid var(--headerBgColorAccent);
+  height: 40px; 
+  border-top: 2px solid var(--headerBgColorAccentGradient);
   display: flex;
   justify-content: space-between;
   .left {

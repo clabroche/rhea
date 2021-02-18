@@ -1,8 +1,5 @@
 <template>
-  <div id="svg" v-if="bottom">
-    <img :src="imgPath" alt="" >
-  </div>
-  <div id="svg-no-lists" v-else>
+  <div id="svg-no-lists" v-if="!bottom">
     <img :src="imgPath" alt="" >
     <slot/>
   </div>
