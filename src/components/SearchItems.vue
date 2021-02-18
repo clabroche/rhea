@@ -67,8 +67,10 @@ export default {
   methods: {
     toggleItem(item) {
       if(!this.value.includes(item)) {
+        // eslint-disable-next-line vue/no-mutating-props
         this.value.push(item)
       } else {
+        // eslint-disable-next-line vue/no-mutating-props
         this.value.splice(this.value.indexOf(item), 1)
       }
     }

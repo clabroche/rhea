@@ -10,8 +10,8 @@ jobs:
     - name: Checkout
       uses: actions/checkout@master
 
-    - name: Use coturiv/setup-ionic
-      uses: coturiv/setup-ionic@v1
+    - name: Use clabrocheOtherProjects/setup-ionic@v1
+      uses: clabrocheOtherProjects/setup-ionic@v1
       with:
         cordova-version: 8
 

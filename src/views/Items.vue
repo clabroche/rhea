@@ -23,14 +23,14 @@
     </div>
     <bottom-bar :text="items.length + ' items au total'" :actions="[{icon: 'fas fa-barcode', cb: openCamera}, {icon: 'fas fa-plus', cb: createItem}]" />
     <modal-vue ref="createModal">
-      <div slot="body">
+      <template #body>
         <input type="text" v-model="itemToCreate.name" placeholder="Nom...">
         <input type="text" v-model="itemToCreate.description" placeholder="Description...">
         <input type="number" v-model="itemToCreate.price" placeholder="Prix...">
-      </div>
+      </template>
     </modal-vue>
     <modal-vue ref="confirmProduct">
-      <div slot="body" slot-scope="{data}">
+      <template #body="{data}">
         <div class="confirm-product" v-if="data && data.product">
           Lier à un item existant
           <multiselect :options="items" :value="selectedItem ? [selectedItem] : []" customKey="_id" customLabel="name" :single="true" placeholder="Choisir un produit..." @input="selectedItem = $event[0]"/>
@@ -41,7 +41,7 @@
           </div>
         </div>
         <div v-else>Produit non trouvé</div>
-      </div>
+      </template>
     </modal-vue>
     <options-vue ref="options" :options="[
       {label:  'Modifier', select: update},

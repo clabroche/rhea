@@ -23,9 +23,9 @@
     </div>
     <bottom-bar :text="categories.length + ' catégories au total'" :actions="[{icon: 'fas fa-plus', cb: createCategory}]" />
     <modal-vue ref="createModal">
-      <div slot="body">
+      <template #body>
         <input type="text" v-model="categoryToCreate.name" placeholder="Nom...">
-      </div>
+      </template>
     </modal-vue>
     <options-vue ref="options" :options="[
       {label:  'Suppression', select: deleteCategory},

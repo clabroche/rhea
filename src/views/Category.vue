@@ -23,10 +23,10 @@
     </div>
     <bottom-bar :text="(itemsForCategory ? itemsForCategory.length : 0) + ' listes au total'" :actions="[{icon: 'fas fa-plus', cb: linkItem}, {icon: 'fas fa-save', cb: update}]" />
     <modal-vue ref="linkModal">
-      <div slot="header">
+      <template #header>
         Lier des produits à une catégorie
-      </div>
-      <div slot="body">
+      </template>
+      <template #body>
         <div class="filter-container">
           <div class="filter-items">
             <i class="fas fa-search" aria-hidden="true"></i>
@@ -53,7 +53,7 @@
             </div>
           </div>
         </div>
-      </div>
+      </template>
     </modal-vue>
   </div>
 </template>

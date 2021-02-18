@@ -141,15 +141,18 @@ export default {
       const index = this.filteredOptions.indexOf(value)
       this.filteredOptions.splice(index, 1)
       if (this.single) {
+        // eslint-disable-next-line vue/no-mutating-props
         this.value.length = 0
         this.isOpen = false
       }
+      // eslint-disable-next-line vue/no-mutating-props
       this.value.push(value)
       this.filter()
       this.$emit('input', this.value)
     },
     deleteTag(value) {
       const index = this.value.indexOf(value)
+      // eslint-disable-next-line vue/no-mutating-props
       this.value.splice(index, 1)
       this.filteredOptions.push(value)
       this.filter()
