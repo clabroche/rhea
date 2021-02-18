@@ -37,7 +37,7 @@
           <div v-if="!selectedItem">
             ou créer un nouvel item
             <input type="text" v-model="data.product.product_name" >
-            <img :src="data.product.image_url" alt="">
+            <img loading="lazy"  :src="data.product.image_url" alt="">
           </div>
         </div>
         <div v-else>Produit non trouvé</div>

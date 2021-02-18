@@ -17,7 +17,7 @@
         </div>
       </div>
       <div v-if="image" class="image">
-        <img :src="image" alt="">
+        <img loading="lazy" :src="image" alt="">
       </div>
     </div>
     <div class="bottom-line">
@@ -74,11 +74,12 @@ export default {
 <style lang="scss" scoped>
   .line-root {
     width: 100%;
-    border: 1px solid lightgrey;
     box-sizing: border-box;
     margin-bottom: 10px;
     margin-top: 10px;
     box-shadow: 0px 0px 4px 1px lightgrey;
+    border-radius: 10px;
+    overflow: hidden;
     .line-container {
       background-color: #fff;
       padding: 10px;
@@ -86,9 +87,14 @@ export default {
       position: relative;
       overflow: hidden;
       .image {
-        height: calc(100% + 20px);
+        height: 43px;
+        width: 43px;
+        margin-right: -6px;
+        border-radius: 50%;
+        overflow: hidden;
         img {
           height: 100%;
+          width: 100%;
           object-fit: contain;
         }
       }

@@ -38,7 +38,7 @@
         </div>
         <div v-else-if="data && data.product" class="confirm-product">
           <h2>{{data.product.product_name}}</h2>
-          <img :src="data.product.image_url" alt="">
+          <img loading="lazy" :src="data.product.image_url" alt="">
         </div>
         <div v-else>Produit non trouvé</div>
       </template>
@@ -52,7 +52,7 @@
           <div v-if="!selectedItem">
             ou créer un nouvel item
             <input type="text" v-model="data.product.product_name" >
-            <img :src="data.product.image_url" alt="">
+            <img loading="lazy" :src="data.product.image_url" alt="">
           </div>
           <div>
             Produit inexistant, le créer ?

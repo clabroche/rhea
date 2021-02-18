@@ -4,9 +4,9 @@
     </svg-background>
     <div class="item-infos">
       <div class="images">
-        <img :src="item.image" alt="">
+        <img loading="lazy" :src="item.image" alt="">
         <div class="other-images">
-          <img v-for="image of item.images" :key="image" :src="image" @click="changeImage(item, image)"/>
+          <img loading="lazy" v-for="image of item.images" :key="image" :src="image" @click="changeImage(item, image)"/>
         </div>
       </div>
       <div class="form">

@@ -5,7 +5,7 @@
       <template #body="{data: items}" >
         <div v-if="items" class="more-container">
           <div v-for="item of items.slice(0,150)" :key="item._id" class="item">
-            <img :src="item.image" alt="" @click="$router.push({name:'item', params: {itemId: item._id}})">
+            <img loading="lazy" :src="item.image" alt="" @click="$router.push({name:'item', params: {itemId: item._id}})">
             <div class="title">{{item.name}}</div>
             <div class="add-list" @click="openAddToList(item)"><i class="fas fa-shopping-cart"></i></div>
           </div>
@@ -29,7 +29,7 @@
     </div>
     <div class="items" v-if="list.length">
       <div class="item" v-for="item of list.slice(0, 30)" :key="item._id">
-        <img :src="item.image" alt="" @click="$router.push({name:'item', params: {itemId: item._id}})">
+        <img loading="lazy"  :src="item.image" alt="" @click="$router.push({name:'item', params: {itemId: item._id}})">
         <div class="title">{{item.name}}</div>
         <div class="add-list" @click="openAddToList(item)"><i class="fas fa-shopping-cart"></i></div>
       </div>
@@ -140,11 +140,13 @@ export default {
   }
 }
 .item {
-  margin-right: 3px;
+  width: 100px;
+  margin-right: 10px;
   .title {
     text-align: center;
     text-overflow: ellipsis;
     white-space: nowrap;
+    overflow: hidden;
   }
   .add-list {
     background-color: var(--headerBgColorAccent);
@@ -157,7 +159,7 @@ export default {
   img {
     height: 100px;
     width: 100px;
-    object-fit: contain;
+    object-fit: cover;
   }
 }
 .lists {
