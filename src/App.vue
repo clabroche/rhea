@@ -6,7 +6,7 @@
       <router-view/>
     </div>
     <notification></notification>
-    <div class="version-overlay" v-if="true">
+    <div class="version-overlay" v-if="version && version !== currentVersion">
       <h2>Halte !</h2>
       Une nouvelle version est disponible au téléchargement 
       <a :href="androidURL">
