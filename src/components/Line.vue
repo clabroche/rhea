@@ -78,7 +78,7 @@ export default {
     margin-bottom: 10px;
     margin-top: 10px;
     box-shadow: 0px 0px 4px 1px lightgrey;
-    border-radius: 10px;
+    border-radius: 6px;
     overflow: hidden;
     .line-container {
       background-color: #fff;

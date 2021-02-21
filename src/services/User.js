@@ -11,6 +11,7 @@ function User(user = {}) {
   this._id = user._id || null
   this.email = user.email || ""
   this.username = user.username || ""
+  this.password = ""
   this.shared = user.shared || []
 }
 

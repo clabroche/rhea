@@ -6,7 +6,7 @@
       <router-view/>
     </div>
     <notification></notification>
-    <div class="version-overlay" v-if="version && version !== currentVersion">
+    <div class="version-overlay" v-if="true">
       <h2>Halte !</h2>
       Une nouvelle version est disponible au téléchargement 
       <a :href="androidURL">
@@ -32,6 +32,11 @@ export default {
     Sidebar,
     Navbar
   },
+  computed: {
+    androidURL() {
+      return `${process.env.VUE_APP_SERVER_URL}:${process.env.VUE_APP_SERVER_PORT}/rhea.apk`
+    },
+  },
   data() {
     return {
       version: '',
@@ -52,92 +57,7 @@ export default {
 }
 </script>
 <style lang="scss">
-@import '~@fortawesome/fontawesome-free/css/all.min.css';
-.v--modal-overlay .v--modal-box {
-  overflow: visible !important;
-}
-:root {
-  --fontSize: 1em;
-  --borderRadius: 0px;
-  --headerBorderWidth: 0px;
-  --headerBorderColor: transparent;
-  --headerBgColor: #466c80;
-  --headerBgColorAccent: #2c3e50;
-  --headerBgColorAccentGradient: #508ab1;
-  --headerTextColor: white;
-  --headerTextColorAccent: white;
-  --headerFontWeight: bold;
-  --headerIconTextColor: #ffffff;
-  --contentBorderWidth: 1px;
-  --contentBorderColor: #dddddd;
-  --contentBgColor: #ffffff;
-  --contentTextColor: #362b36;
-  --stateDefaultBorderWidth: 0px;
-  --stateDefaultBorderColor: transparent;
-  --stateDefaultBgColor: #466c80;
-  --stateDefaultTextColor: #ffffff;
-  --stateActiveBorderColor: transparent;
-  --stateActiveBgColor: #7CB342;
-  --stateActiveTextColor: #ffffff;
-  --stateHighlightBorderColor: transparent;
-  --stateHighlightBgColor: #7CB342;
-  --stateHighlightTextColor: #ffffff;
-  --stateFocusBorderColor: transparent;
-  --stateFocusBgColor: #e4f1fb;
-  --stateFocusTextColor: #0070a3;
-  --stateErrorBorderColor: transparent;
-  --stateErrorBgColor: #cd0a0a;
-  --stateErrorTextColor: #ffffff;
-  --stateHoverBorderColor: transparent;
-  --stateHoverBgColor: #455a64;
-  --stateHoverTextColor: white;
-  --inputBgColor: #ffffff;
-  --inputTextColor: #222222;
-  --invalidInputBorderColor: transparent;
-  --inputGroupTextColor: #2779aa;
-  --inputDefaultBorderWidth: 1px;
-  --inputDefaultBorderColor: #dddddd;
-  --inputDefaultBgColor: #ffffff;
-  --inputDefaultTextColor: #000000;
-}
-input {
-  width: 100%;
-  padding: 10px;
-  box-sizing: border-box;
-  margin-bottom: 5px;
-  margin-top: 5px;
-}
-button {
-  width: 100%;
-  padding: 10px;
-  background-color: var(--headerBgColor);
-  color: var(--headerTextColor);
-  border: none;
-}
-body {
-  margin: 0;
-  height: 100vh;
-  width: 100vw;
-  font-family: Jost, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  color: #2c3e50;
-}
-ul {
-  margin: 0;
-  padding: 0;
-  li {
-    margin: 0;
-    list-style-type: none;
-  }
-}
-
-.fade-enter-active, .fade-leave-active {
-  transition: .5s;
-}
-.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
-  transform: translateY(70vh)
-}
+@import './assets/theme/index';
 </style>
 <style lang="scss" scoped>
 .version-overlay {

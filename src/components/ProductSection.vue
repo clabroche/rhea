@@ -96,9 +96,10 @@ export default {
 .product-section-root {
   display: flex;
   flex-direction: column;
-  margin-bottom: 40px;
+  margin-bottom: 30px;
   .label {
     font-size: 1.5em;
+    margin-bottom: 10px;
     i {
       margin-right: 10px;
     }
@@ -126,6 +127,7 @@ export default {
     justify-content: flex-end;
     width: 100%;
     color: var(--headerBgColorAccent);
+    margin-top: 10px;
   }
 }
 .more-container {

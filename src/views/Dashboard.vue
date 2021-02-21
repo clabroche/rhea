@@ -1,5 +1,6 @@
 <template>
   <div class="root-lists">
+    <welcome/>
     <div class="lists-container">
       <product-section 
         headerIcon="fas  fa-fire"
@@ -16,12 +17,14 @@
 </template>
 
 <script>
+import Welcome from '../components/dashboard/Welcome.vue'
 import ProductSection from '../components/ProductSection.vue'
 import header from '../services/Header'
 import items from '../services/items'
 export default {
   components: {
-    ProductSection
+    ProductSection,
+    Welcome
   }, 
   data() {
     return {
@@ -49,6 +52,7 @@ export default {
   justify-content: center;
   height: 100%;
   .lists-container {
+    margin-top: 20px;
     height:100%;
     padding: 10px;
     overflow: auto;

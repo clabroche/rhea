@@ -1,0 +1,11 @@
+button {
+  width: 100%;
+  padding: 10px;
+  background-color: var(--headerBgColor);
+  color: var(--headerTextColor);
+  border: none;
+  &:disabled {
+    background-color: rgb(119, 119, 119);
+    color: rgb(189, 189, 189);
+  }
+}

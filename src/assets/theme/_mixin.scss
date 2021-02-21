@@ -1,6 +1,27 @@
 @mixin backgroundGradient {
-  background: var(--headerBgColorAccent);  /* fallback for old browsers */
-  background: -webkit-linear-gradient(160deg, var(--headerBgColorAccentGradient), var(--headerBgColorAccent));  /* Chrome 10-25, Safari 5.1-6 */
-  background: linear-gradient(160deg, var(--headerBgColorAccentGradient), var(--headerBgColorAccent)); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  $gradient: 160deg, rgba(var(--BgColorAccentGradient), 1), rgba(var(--BgColorAccent), 1);
+  background: var(--headerBgColorAccent);
+  background: -webkit-linear-gradient($gradient);
+  background: linear-gradient($gradient);
   color: white;
+}
+@mixin backgroundGradientImage($opacity, $imageUrl) {
+  $gradient: 160deg, rgba(var(--BgColorAccentGradient), $opacity), rgba(var(--BgColorAccent), $opacity);
+  background: var(--headerBgColorAccent);
+  background: -webkit-linear-gradient($gradient);
+  background: linear-gradient($gradient);
+  color: white;
+  position: relative;
+  &::before {
+    content: "";
+    z-index: -1;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url($imageUrl);
+    background-size: cover;
+    background-position: right;
+  }
 }

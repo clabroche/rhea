@@ -15,8 +15,9 @@ import Dashboard from '../views/Dashboard.vue'
 const routes = [
   {
     path: '/',
-    redirect: {name: 'lists'},
-  },{
+    name: 'home',
+    redirect: { name: 'dashboard' },
+  }, {
     path: '/lists',
     name: 'lists',
     component: Lists
@@ -70,6 +71,7 @@ const routes = [
     name: 'dashboard',
     component: Dashboard
   },
+  { path: '/:pathMatch(.*)*', redirect: {name: 'home'} },
 ]
 
 

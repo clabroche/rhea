@@ -1,6 +1,7 @@
 <template>
   <div class="root-lists">
-    <svg-background :bottom="lists && lists.length" svg="list">
+    <welcome image="bullet" header="Mes listes" description=" " :mini="true" />
+    <svg-background :bottom="lists && lists.length" svg="lists">
       <br>
       <div>Hey !</div>
       <br>
@@ -42,13 +43,15 @@ import sort from 'fast-sort'
 import header from '../services/Header'
 import dayjs from 'dayjs'
 import Socket from '../services/Socket';
+import Welcome from '../components/dashboard/Welcome.vue';
 export default {
   components: {
     'bottom-bar': BottomBarVue,
     'modal-vue': ModalVue,
     'line-vue': LineVue,
     optionsVue: OptionsVue,
-    svgBackground: SvgBackgroundVue
+    svgBackground: SvgBackgroundVue,
+    Welcome
   }, 
   data() {
     return {
@@ -66,7 +69,7 @@ export default {
     }
   },
   async mounted() {
-    header.set('Mes listes')
+    header.set('')
     await this.getLists()
     Socket.socket.on('lists:create', this.getLists)
     Socket.socket.on('lists:delete', this.getLists)

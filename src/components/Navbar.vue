@@ -1,5 +1,5 @@
 <template>
-  <div id="nav" v-if="$route.name !== 'login'">
+  <div id="nav" v-if="isShowing()">
     <div class="trigger" v-if="Auth.user" @click="sidebar.open = true"><i class="fas fa-list" aria-hidden="true"></i></div>
     <div class="navbar-title">
       {{Header.title}}
@@ -11,15 +11,19 @@
 </template>
 
 <script>
+import router from '../router'
 import Auth from '../services/Auth'
 import Header from '../services/Header'
 import sidebar from '../services/sidebar'
 export default {
-  data() {
+  setup() {
     return {
       sidebar,
       Header,
-      Auth
+      Auth,
+      isShowing() {
+        return !['login', 'register'].includes(router.currentRoute.value.name?.toString())
+      }
     }
   }
 }
@@ -39,7 +43,7 @@ export default {
   flex-shrink: 0;
   .trigger {
     position: absolute;
-    top: 0;
+    top: 1px;
     left: 0;
     font-size: 1.5em;
     padding: 10px;
