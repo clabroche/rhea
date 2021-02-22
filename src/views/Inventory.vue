@@ -1,5 +1,6 @@
 <template>
   <div class="root-items">
+    <welcome image="kitchen" header="Mon inventaire" description="Un petit creux ?" :mini="true"  :actions="[{icon: 'fas fa-barcode', cb: openCamera}, {icon: 'fas fa-plus', cb: createItem}]"/>
     <svg-background :bottom="items && items.length" svg="inventory">
       <br>
       <div>Hey !</div>
@@ -20,7 +21,6 @@
           :description="item.description"/>
       </div>
     </div>
-    <bottom-bar :text="items.length + ' items au total'" :actions="[{icon: 'fas fa-barcode', cb: openCamera}, {icon: 'fas fa-plus', cb: createItem}]"/>
     <modal-vue ref="createModal">
       <template #body>
         <multiselect :options="allItems" customKey="_id" customLabel="name" :single="true" placeholder="Choisir un produit..." @input="selectedItem = $event[0]"/>
@@ -65,7 +65,6 @@
 </template>
 
 <script>
-import BottomBarVue from '../components/BottomBar.vue';
 import ModalVue from '../components/Modal.vue';
 import items from '../services/items.js';
 import inventory from '../services/inventory.js';
@@ -76,13 +75,14 @@ import MultiselectVue from '../components/Multiselect.vue';
 import header from '../services/Header'
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 import Socket from '../services/Socket';
+import Welcome from '../components/dashboard/Welcome.vue';
 export default {
   components: {
-    'bottom-bar': BottomBarVue,
     'modal-vue': ModalVue,
     'line-vue': LineVue,
     multiselect: MultiselectVue,
-    svgBackground: SvgBackgroundVue
+    svgBackground: SvgBackgroundVue,
+    Welcome
   }, 
   data() {
     return {

@@ -1,5 +1,6 @@
 <template>
   <div class="root-items">
+    <welcome image="smoothies" header="Mes produits" description="Comme s'il en pleuvait !" :mini="true"  :actions="[{icon: 'fas fa-barcode', cb: openCamera}, {icon: 'fas fa-plus', cb: createItem}]"/>
     <svg-background :bottom="items && items.length" svg="cookie">
       <br>
       <div>Hey !</div>
@@ -21,7 +22,6 @@
           @action="openOptions(item)"/>
       </div>
     </div>
-    <bottom-bar :text="items.length + ' items au total'" :actions="[{icon: 'fas fa-barcode', cb: openCamera}, {icon: 'fas fa-plus', cb: createItem}]" />
     <modal-vue ref="createModal">
       <template #body>
         <input type="text" v-model="itemToCreate.name" placeholder="Nom...">
@@ -51,7 +51,6 @@
 </template>
 
 <script>
-import BottomBarVue from '../components/BottomBar.vue';
 import ModalVue from '../components/Modal.vue';
 import items from '../services/items.js';
 import LineVue from '../components/Line.vue'
@@ -62,14 +61,15 @@ import Category from '../services/Category';
 import header from '../services/Header'
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 import Socket from '../services/Socket';
+import Welcome from '../components/dashboard/Welcome.vue';
 export default {
   components: {
-    'bottom-bar': BottomBarVue,
     'modal-vue': ModalVue,
     'line-vue': LineVue,
     OptionsVue,
     multiselect: MultiselectVue,
-    svgBackground: SvgBackgroundVue
+    svgBackground: SvgBackgroundVue,
+    Welcome
   }, 
   data() {
     return {

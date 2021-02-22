@@ -38,10 +38,18 @@ export default {
   position: relative;
   margin-bottom: 1px;
   flex-shrink: 0;
-  @include backgroundGradientImage(0.6, '../../assets/login.jpg');
+  @include backgroundGradientImage(0.8, '../../assets/login.jpg');
   &.bullet::before  {
     background-image: url('../../assets/bullet.jpg');
     background-position: bottom;
+  }
+  &.kitchen::before  {
+    background-image: url('../../assets/kitchen.jpg');
+    background-position: 50%;
+  }
+  &.smoothies::before  {
+    background-image: url('../../assets/smoothies.jpg');
+    background-position: 50%;
   }
   &.mini {
     height: 100px;
@@ -50,7 +58,7 @@ export default {
     }
     .description {
       font-size: 1em;
-      margin-top: 20px;
+      margin-top: 10px;
     }
   }
   .title {
@@ -74,7 +82,8 @@ export default {
   .action{
     flex-shrink: 0;
     padding: 10px;
-    background-color: rgba(0,0,0,0.2);
+    margin: 5px 0;
+    background-color: rgba(0,0,0,0.4);
     border-radius: 50%;
     width: 20px;
     height: 20px;

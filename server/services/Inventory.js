@@ -3,6 +3,7 @@ const ObjectID = require('mongodb').ObjectID
 const PromiseB = require('bluebird')
 const lodash = require('lodash')
 const Items = require('./Items')
+const sort = require('fast-sort')
 /**
  * 
  * @param {Inventory} list 
@@ -39,6 +40,7 @@ Inventory.getList = async function (ownerId) {
     const item = await mongo.collection('items').findOne({ _id: mongo.getID(conf._id) })
     return Object.assign(conf, item)
   })
+  list.confs = sort(list.confs).asc(items => items.name)
   return new Inventory(list)
 }
 Inventory.updateTotal = async function (ownerId, itemId, amount) {

@@ -1,6 +1,6 @@
 <template>
   <div class="root-lists">
-    <welcome/>
+    <welcome :mini="true"/>
     <div class="lists-container">
       <product-section 
         headerIcon="fas  fa-fire"
