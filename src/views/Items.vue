@@ -78,6 +78,7 @@ export default {
         name: '',
         description: ''
       },
+      max: 10,
       categories: {},
       selectedItem: null,
       filterItems: ''
@@ -85,7 +86,7 @@ export default {
   },
   computed: {
     filteredItems() {
-      return this.items.filter(item => item.name.toUpperCase().includes(this.filterItems.toUpperCase()))
+      return this.items.filter(item => item.name.toUpperCase().includes(this.filterItems.toUpperCase())).slice(0,this.max)
     }
   },
   async mounted() {
@@ -102,8 +103,11 @@ export default {
     Socket.socket.off('item:delete', this.getAllItems)
   },
   methods: {
-    setPosition() {
+    setPosition(evt) {
       this.$root.scroll.listItems = this.$refs.scrollElement.scrollTop
+      if(evt.target.scrollTop + evt.target.offsetHeight > evt.target.scrollHeight - 100) {
+        this.max += 10
+      }
     },
     getCategoriesForItem(item) {
       const category = item.categoriesId.map(categoryId => this.categories[categoryId] ?  ' ' +this.categories[categoryId].name : '').join(', ')

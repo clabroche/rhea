@@ -4,6 +4,7 @@ button {
   background-color: var(--headerBgColor);
   color: var(--headerTextColor);
   border: none;
+  outline: none;
   &:disabled {
     background-color: rgb(119, 119, 119);
     color: rgb(189, 189, 189);

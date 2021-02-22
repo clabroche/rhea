@@ -1,6 +1,6 @@
 <template>
   <div class="root-lists">
-    <welcome image="bullet" header="Mes listes" description=" " :mini="true" />
+    <welcome image="bullet" header="Mes listes" description=" " :mini="true" :actions="[{icon: 'fas fa-plus', cb: createList}]" />
     <svg-background :bottom="lists && lists.length" svg="lists">
       <br>
       <div>Hey !</div>
@@ -19,7 +19,6 @@
         />
       </div>
     </div>
-    <bottom-bar :text="lists.length + ' listes au total'" :actions="[{icon: 'fas fa-plus', cb: createList}]"/>
     <modal-vue ref="createModal">
       <template #body>
         <input type="text" v-model="listToCreate.name" placeholder="Nom...">
@@ -33,7 +32,6 @@
 </template>
 
 <script>
-import BottomBarVue from '../components/BottomBar.vue';
 import ModalVue from '../components/Modal.vue';
 import Lists from '../services/lists.js';
 import LineVue from '../components/Line.vue'
@@ -46,7 +44,6 @@ import Socket from '../services/Socket';
 import Welcome from '../components/dashboard/Welcome.vue';
 export default {
   components: {
-    'bottom-bar': BottomBarVue,
     'modal-vue': ModalVue,
     'line-vue': LineVue,
     optionsVue: OptionsVue,

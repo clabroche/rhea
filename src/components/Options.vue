@@ -52,6 +52,7 @@ export default {
   right: 0;
   display: flex;
   align-items: flex-end;
+  z-index: 2;
   .header {
     padding: 10px;
     background-color: var(--headerBgColor);

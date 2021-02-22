@@ -1,10 +1,10 @@
 <template>
   <div id="app">
     <sidebar/>
-    <navbar/>
     <div class="app-content">
       <router-view/>
     </div>
+    <navbar-bottom/>
     <notification></notification>
     <div class="version-overlay" v-if="version && version !== currentVersion">
       <h2>Halte !</h2>
@@ -25,12 +25,12 @@ import NotificationVue from './components/Notification.vue'
 import notif from './services/notification'
 import version from './services/version'
 import Sidebar from './components/Sidebar.vue'
-import Navbar from './components/Navbar.vue'
+import NavbarBottom from './components/NavbarBottom.vue'
 export default {
   components: {
     notification: NotificationVue,
     Sidebar,
-    Navbar
+    NavbarBottom
   },
   computed: {
     androidURL() {
@@ -90,6 +90,7 @@ input, textarea {
   display: flex;
   flex-direction: column;
   height: 100vh;
+  overflow: hidden;
 }
 .app-content {
   height: calc(100%);

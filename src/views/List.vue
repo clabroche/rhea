@@ -1,66 +1,69 @@
 <template>
-  <div class="list-root">
+  <div class="list-root" v-if="list">
+    <welcome image="bullet" :header="list?.name || ' '" description=" " :mini="true"  :actions="[{icon: 'fas fa-plus', cb: createItem}]"/>
     <svg-background :bottom="categories && categories.length" svg="list">
       <br>
       <div>On y est presque !</div>
       <br>
       Appuies sur le <i class="fas fa-plus" aria-hidden="true"></i> pour ajouter un produit dans cette liste
     </svg-background>
-    <div class="filter-items">
-      <i class="fas fa-search" aria-hidden="true"></i>
-      <input type="text" v-model="filterItems" placeholder="Chercher un produit">
-    </div>
-    <div class="list-container" ref="scrollElement" @scroll="setPosition">
-      <div>
-        <div class="label" @click="missingcollapse = !missingcollapse">
-          <span>Produit pas encore acheté</span>
-          <i class="fas" aria-hidden="true" :class="missingcollapse ? 'fa-chevron-down' : 'fa-chevron-up'"></i>
-        </div>
-        <div v-if="!missingcollapse">
-          <transition-group name="fade">
-          <div  v-for="item of filteredMissingItems" :key="item._id" @click="incrementItem(item)">
-            <line-vue
-              :checkbox="true"
-              :additionalAction="true"
-              :name="item.name"
-              :image="item.image"
-              :description="item.description"
-              :additionalLeft="item.total - item.selected"
-              :additionalCenter="(+item.price || 0).toFixed(2).replace('.', ',') + '€'"
-              :percent="item.selected * 100 / item.total"
-              @action="openOptions(item)"
-              @checkboxClick="checkBoxClick(item, $event)"/>
+    <tabs :tabs="[{id: 'all', label: 'Tout', data: filteredMissingItems}, {id: 'missing', label: 'Non achetés', data: sortedCategories}]" :showLabels="false">
+      <template #default="{ tab}">
+        <div class="list-container">
+          <div class="filter-items">
+            <i class="fas fa-search" aria-hidden="true"></i>
+            <input type="text" v-model="filterItems" placeholder="Chercher un produit">
           </div>
-          </transition-group>
-        </div>
-      </div>
-      <transition-group name="fade">
-      <div v-for="category of sortedCategories" :key="category.label">
-        <div class="label" @click="category.collapse = !category.collapse">
-          <span>{{category.label}}</span>
-          <i class="fas" aria-hidden="true" :class="category.collapse ? 'fa-chevron-down' : 'fa-chevron-up'"></i>
-        </div>
-        <div v-if="!category.collapse">
-          <transition-group name="fade">
-          <div  v-for="item of filteredItems(category.items)" :key="item._id" @click="incrementItem(item)">
-            <line-vue
-              :checkbox="true"
-              :additionalAction="true"
-              :name="item.name"
-              :description="item.description"
-              :additionalLeft="item.total - item.selected"
-              :image="item.image"
-              :additionalCenter="(+item.price || 0).toFixed(2).replace('.', ',') + '€'"
-              :percent="item.selected * 100 / item.total"
-              @action="openOptions(item)"
-              @checkboxClick="checkBoxClick(item, $event)"/>
+        <transition name="fade">
+          <div v-if="tab.id === 'missing'" :key="'missing'">
+            <transition-group name="fade">
+              <div  v-for="item of filteredMissingItems" :key="item._id" @click="incrementItem(item)">
+                <line-vue
+                  :checkbox="true"
+                  :additionalAction="true"
+                  :name="item.name"
+                  :image="item.image"
+                  :description="item.description"
+                  :additionalLeft="item.total - item.selected"
+                  :additionalCenter="(+item.price || 0).toFixed(2).replace('.', ',') + '€'"
+                  :percent="item.selected * 100 / item.total"
+                  @action="openOptions(item)"
+                  @checkboxClick="checkBoxClick(item, $event)"/>
+              </div>
+            </transition-group>
           </div>
-          </transition-group>
-        </div>
-      </div>
-      </transition-group>
-    </div>
-    <bottom-bar v-if="list._id" :actions="[{icon: 'fas fa-plus', cb: createItem}]" :text="list.items.length + ' produits pour un montant de ' + getTotalPrice + '€'"/>
+          <div v-else :key="'all'">
+            <transition-group name="fade" >
+                <div v-for="category of sortedCategories" :key="category.label">
+                  <div class="label" @click="category.collapse = !category.collapse">
+                    <span>{{category.label}}</span>
+                    <i class="fas" aria-hidden="true" :class="category.collapse ? 'fa-chevron-down' : 'fa-chevron-up'"></i>
+                  </div>
+                  <div v-if="!category.collapse">
+                    <transition-group name="fade">
+                    <div  v-for="item of filteredItems(category.items)" :key="item._id" @click="incrementItem(item)">
+                      <line-vue
+                        :checkbox="true"
+                        :additionalAction="true"
+                        :name="item.name"
+                        :description="item.description"
+                        :additionalLeft="item.total - item.selected"
+                        :image="item.image"
+                        :additionalCenter="(+item.price || 0).toFixed(2).replace('.', ',') + '€'"
+                        :percent="item.selected * 100 / item.total"
+                        @action="openOptions(item)"
+                        @checkboxClick="checkBoxClick(item, $event)"/>
+                    </div>
+                </transition-group>
+              </div>
+            </div>
+            </transition-group>
+          </div>
+        </transition>
+          </div>
+      </template>
+    </tabs>
+    <bottom-bar v-if="list._id" :text="list.items.length + ' produits pour un montant de ' + getTotalPrice + '€'"/>
     <modal-vue ref="createModal" height="auto">
       <template #body class="createModal">
         <multiselect :options="allItems" customKey="_id" customLabel="name" :single="true" placeholder="Choisir un produit..." @input="selectItem"/>
@@ -103,6 +106,8 @@ import sort from 'fast-sort'
 import header from '../services/Header'
 import Socket from '../services/Socket';
 import notification from '../services/notification';
+import Welcome from '../components/dashboard/Welcome.vue';
+import Tabs from '../components/Tabs.vue';
 
 export default {
   components: {
@@ -111,7 +116,9 @@ export default {
     lineVue: LineVue,
     modalVue: ModalVue,
     optionsVue: OptionsVue,
-    svgBackground: SvgBackgroundVue
+    svgBackground: SvgBackgroundVue,
+    Welcome,
+    Tabs
   },
   data() {
     return {
@@ -250,6 +257,9 @@ export default {
   flex-direction: column;
   justify-content: center;
   height: 100%;
+  .tabs {
+    flex-grow: 1;
+  }
   .list-container {
     height:100%;
     padding: 10px;
@@ -290,12 +300,15 @@ export default {
     text-align: center;
   }
 }
-.fade-enter-active,.fade-leave-active {
-  transition: all .3s ease;
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+  position: absolute;
+  width: calc(100% - 20px);
 }
-.fade-enter, .fade-leave-to
-/* .fade-leave-active below version 2.1.8 */ {
-  transform: translateX(10px);
+
+.fade-enter-from,
+.fade-leave-to {
   opacity: 0;
 }
 </style>
