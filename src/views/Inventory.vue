@@ -180,8 +180,13 @@ export default {
       this.$refs.createModal.open().subscribe(async res => {
         if(!res || !this.selectedItem._id) return 
         await inventory.addItem(this.selectedItem._id)
+        await this.getAllItems()
+        const itemToOpen = this.items.filter(item => item._id === this.selectedItem._id).pop()
+        if(itemToOpen) {
+          this.openItem(itemToOpen)
+        }
         this.selectedItem = null
-        this.getAllItems()
+        console.log(this.items)
       })
     }
   }
