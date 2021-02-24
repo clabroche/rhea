@@ -1,20 +1,6 @@
 <template>
   <div class="root-recipe">
     <div class="list-container">
-      <!-- <div class="form">
-        <input class="name" type="text" v-model="recipe.name" placeholder="Nom...">
-        <div class="line">
-          <div class="field">
-            <label>Goût</label>
-            <vue-stars class="stars" @input="recipe.score = $event" :value="recipe.score || 0" name="score" shadowColor="none"/>
-          </div>
-          <div class="field">
-            <label>Santé</label>
-            <vue-stars class="stars" @input="recipe.healthy = $event" :value="recipe.healthy || 0" name="healthy" shadowColor="none"/>
-          </div>
-        </div>
-      </div> -->
-
       <div class="items-container">
         <h2>Les produits de cette recette</h2>
         <div class="items-list">

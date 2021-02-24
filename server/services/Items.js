@@ -74,19 +74,19 @@ Item.prototype.fetchByName = async function () {
   }
   return this
 }
-// setTimeout(async () => {
-//   console.log('Enrich images')
-//   const count = await mongo.collection('items').find().count()
-//   const items = await mongo.collection('items').find().toArray()
-//   let i = 0
-//   await PromiseB.map(items, async _item => {
-//     i++
-//     console.log(`sync: ${i}/${count}`)
-//     await Item.updateOrCreate(_item, _item.ownerId)
-//       .catch(console.error)
-//     }, {concurrency: 9})
-//     console.log('End')
-// }, 2000);
+Item.prototype.enrichAll = async function() {
+  console.log('Enrich images')
+  const count = await mongo.collection('items').find().count()
+  const items = await mongo.collection('items').find().toArray()
+  let i = 0
+  await PromiseB.map(items, async _item => {
+    i++
+    console.log(`sync: ${i}/${count}`)
+    await Item.updateOrCreate(_item, _item.ownerId)
+      .catch(console.error)
+    }, {concurrency: 9})
+    console.log('End')
+}
 /** Enrich item with api */
 Item.prototype.enrich = async function (force = false) {
   if(force || !this.images.length) {
@@ -99,8 +99,7 @@ Item.prototype.enrich = async function (force = false) {
       this.images = await PromiseB.map($images.slice(0, 10), async $image => {
         const link = await $image.getProperty('href')
         if(!link) return
-        const src = await link.jsonValue()
-        return src
+        return await link.jsonValue()
       }).filter(a => a)
       console.log(this.images)
       if(!this.image) {
@@ -127,7 +126,7 @@ Item.updateOrCreate = async function(itemToCreate, userId, forceEnrich) {
   itemToCreate.ownerId = mongo.getID(userId)
   const item = new Item(itemToCreate)
   await item.fetchByName()
-  await item.enrich(forceEnrich).catch(() => {})
+  await item.enrich(forceEnrich).catch(console.error)
   delete item.owner
   if(item._id) 
     await mongo

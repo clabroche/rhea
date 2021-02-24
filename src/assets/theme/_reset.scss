@@ -26,9 +26,6 @@ article, aside, details, figcaption, figure,
 footer, header, hgroup, menu, nav, section {
 	display: block;
 }
-body {
-	line-height: 1;
-}
 ol, ul {
 	list-style: none;
 }
@@ -53,6 +50,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
   font-size: 1.1em;
+	line-height: 1;
 }
 ul {
   margin: 0;

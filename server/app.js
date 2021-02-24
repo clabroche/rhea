@@ -1,13 +1,14 @@
 process.title = 'rhea'
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
+const helmet = require("helmet");
 
-var indexRouter = require('./routes/index');
+const indexRouter = require('./routes/index');
 
-var app = express();
-
+const app = express();
+app.use(helmet());
 app.use(logger('dev'));
 app.options('*', function(req,res,next) {
   res.setHeader('Access-Control-Allow-Credentials', 'true')
