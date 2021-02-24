@@ -7,7 +7,7 @@
           <div v-for="item of items.slice(0,150)" :key="item._id" class="item">
             <img loading="lazy" :src="item.image" alt="" @click="$router.push({name:'item', params: {itemId: item._id}})">
             <div class="title">{{item.name}}</div>
-            <div class="add-list" @click="openAddToList(item)"><i class="fas fa-shopping-cart"></i></div>
+            <div class="add-list" @click="openAddToList(item)"><i class="fas fa-shopping-cart" aria-hidden="true"></i></div>
           </div>
         </div>
       </template>
@@ -18,7 +18,7 @@
         <div v-if="item" class="lists">
           <div v-for="list of lists" :key="list._id" @click="addToList(list, item)" class="list">
             {{list.name}}
-            <i class="fas fa-chevron-right"></i>
+            <i class="fas fa-chevron-right" aria-hidden="true"></i>
           </div>
         </div>
       </template>
@@ -31,11 +31,11 @@
       <div class="item" v-for="item of list.slice(0, 30)" :key="item._id">
         <img loading="lazy"  :src="item.image" alt="" @click="$router.push({name:'item', params: {itemId: item._id}})">
         <div class="title">{{item.name}}</div>
-        <div class="add-list" @click="openAddToList(item)"><i class="fas fa-shopping-cart"></i></div>
+        <div class="add-list" @click="openAddToList(item)"><i class="fas fa-shopping-cart" aria-hidden="true"></i></div>
       </div>
     </div>
     <div class="no-items" v-else>
-      <i class="fas fa-plus"></i>
+      <i class="fas fa-plus" aria-hidden="true"></i>
       <div>
         {{noItemsText || 'Pas d\'éléments à afficher.'}}
       </div>

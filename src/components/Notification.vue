@@ -48,21 +48,21 @@ export default {
   flex-direction: column;
   align-items: center;
   .notif {
-    background-color: white;
     max-height: 100px;
     width: 80vw;
     max-width: 420px;
     text-align: center;
     color: white;
-    padding: 10px;background: #11998e;  /* fallback for old browsers */
-    background: -webkit-linear-gradient(to right, #38ef7d, #11998e);  /* Chrome 10-25, Safari 5.1-6 */
+    padding: 10px;
+    background: #11998e;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(right, #38ef7d, #11998e);  /* Chrome 10-25, Safari 5.1-6 */
     background: linear-gradient(to right, #38ef7d, #11998e); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
     box-shadow: 0px 0px 10px 0px #11998e;
     border-radius: 10px;
     margin-bottom: 20px;
     &.error {
       background: #CB356B;  /* fallback for old browsers */
-      background: -webkit-linear-gradient(to right, #BD3F32, #CB356B);  /* Chrome 10-25, Safari 5.1-6 */
+      background: -webkit-linear-gradient(right, #BD3F32, #CB356B);  /* Chrome 10-25, Safari 5.1-6 */
       background: linear-gradient(to right, #BD3F32, #CB356B); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
       box-shadow: 0px 0px 10px 0px #BD3F32;
     }

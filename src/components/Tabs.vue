@@ -42,13 +42,12 @@ export default {
 .buttons {
   display: flex;
   align-items: flex-end;
+  margin: auto;
   margin-bottom: 10px;
   border-bottom: 2px solid var(--headerBgColor);
   height: 45px;
   flex-shrink: 0;
   width: 90%;
-  margin: auto;
-  
   button {
     background-color: white;
     color: black;

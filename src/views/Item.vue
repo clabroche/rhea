@@ -6,7 +6,7 @@
       <div class="images">
         <img loading="lazy" :src="item.image" alt="">
         <div class="other-images">
-          <img loading="lazy" v-for="image of item.images" :key="image" :src="image" @click="changeImage(item, image)"/>
+          <img loading="lazy" v-for="image of item.images" :key="image" :src="image" @click="changeImage(item, image)" alt="item image"/>
         </div>
       </div>
       <div class="form">

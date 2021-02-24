@@ -8,17 +8,17 @@
       <div class="content-box">
         <div class="inputs">
           <div class="input-container">
-            <label><i class="fas fa-user"></i></label>
+            <label><i class="fas fa-user" aria-hidden="true"></i></label>
             <input type="text" :value="user.email" @input="user.email = $event.target.value" placeholder="Email/Pseudo" @keypress.enter="register ? registerFun() : login()">
           </div>
           <div class="input-container">
-            <label><i class="fas fa-key"></i></label>
+            <label><i class="fas fa-key" aria-hidden="true"></i></label>
             <input type="password" :value="user.password" @input="user.password = $event.target.value" placeholder="Mot de passe" @keypress.enter="register ? registerFun() : login()">
           </div>
         </div>
         <div class="action">
-          <button v-if="!register" @click="login" :disabled="!user.email || !user.password">Se connecter <i class="fas fa-sign-in-alt"></i></button>
-          <button v-else @click="registerFun" :disabled="!user.email || !user.password">S'enregistrer <i class="fas fa-sign-in-alt"></i></button>
+          <button v-if="!register" @click="login" :disabled="!user.email || !user.password">Se connecter <i class="fas fa-sign-in-alt" aria-hidden="true"></i></button>
+          <button v-else @click="registerFun" :disabled="!user.email || !user.password">S'enregistrer <i class="fas fa-sign-in-alt" aria-hidden="true"></i></button>
         </div>
         <div class="switch">
           <div v-if="!register">Vous n'avez pas de compte ? <router-link to="register">Enregistrez-vous</router-link></div>
@@ -101,7 +101,7 @@ export default {
   color: white;
   @include backgroundGradientImage(0.6, '../assets/login.jpg');
   .logo {
-    font-family: Logo;
+    font-family: Logo, Helvetica, Arial, sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;

@@ -8,7 +8,7 @@
         <i :class="route.icon" aria-hidden="true"></i>
         {{route.label}}
       </li>
-      <li class="more" @click="openSidebar"><i class="fas fa-ellipsis-h"></i></li>
+      <li class="more" @click="openSidebar"><i class="fas fa-ellipsis-h" aria-hidden="true" ></i></li>
     </ul>
   </div>
 </template>
