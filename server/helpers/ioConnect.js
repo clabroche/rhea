@@ -6,7 +6,12 @@ module.exports = {
   io: null,
   connect(expressApp) {
     this.io = SocketIO(expressApp, {
-      handlePreflightRequest: false,
+      cors: {
+        origin: "*",
+        methods: ["GET", "POST"],
+        allowedHeaders: ["*"],
+        credentials: false
+      }
     })
 
     this.io.use(wrap(authMiddleware))

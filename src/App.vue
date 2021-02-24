@@ -26,6 +26,9 @@ import notif from './services/notification'
 import version from './services/version'
 import Sidebar from './components/Sidebar.vue'
 import NavbarBottom from './components/NavbarBottom.vue'
+import { Plugins } from '@capacitor/core'
+const { SplashScreen } = Plugins
+
 export default {
   components: {
     notification: NotificationVue,
@@ -44,6 +47,7 @@ export default {
     }
   },
   async created() {
+    SplashScreen.hide()
     this.$root.scroll = {}
     httpError.subscribe(err => {
       if(err.response && err.response.status === 403) {

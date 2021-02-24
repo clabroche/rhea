@@ -151,7 +151,7 @@ export default {
 .checkbox-container {
   display: flex;
 }
-input[type='checkbox']{ height: 0; width: 0; }
+input[type='checkbox']{ height: 0; width: 0; display: none;}
 
 input[type='checkbox'] + label{
   position: relative;
@@ -187,7 +187,7 @@ input[type='checkbox'] + label > span{
   width: 1.5em;
   height: 1.5em;
   background: transparent;
-  border: 2px solid #9E9E9E;
+  border: 2px solid var(--headerBgColor);
   border-radius: 2px;
   cursor: pointer;  
   transition: all 250ms cubic-bezier(.4,.0,.23,1);
@@ -206,17 +206,20 @@ input[type='checkbox']:checked + label > ins{
 input[type='checkbox']:checked + label > span{
   animation: shrink-bounce 200ms cubic-bezier(.4,.0,.23,1);
 }
-input[type='checkbox']:checked + label > span:before{
+input[type='checkbox']:checked + label > span::before{
   content: "";
   position: absolute;
   top: .2em;
   left: .2em;
   border-right: 4px solid transparent;
   border-bottom: 4px solid transparent;
-  transform: rotate(45deg);
   transform-origin: 0% 100%;
-  animation: checkbox-check 125ms 250ms cubic-bezier(.4,.0,.23,1) forwards;
-  border-color: #9E9E9E
+  animation: checkboxcheck 125ms 250ms cubic-bezier(.4,.0,.23,1) forwards;
+
+  width: .4em;
+  height: .8em;    
+  border-color: var(--headerBgColor);
+  transform: translate3d(0,-0.5em,0) rotate(45deg)
 }
 
 @keyframes shrink-bounce{
@@ -230,7 +233,7 @@ input[type='checkbox']:checked + label > span:before{
     transform: scale(1);    
   }
 }
-@keyframes checkbox-check{
+@keyframes checkboxcheck{
   0%{
     width: 0;
     height: 0;

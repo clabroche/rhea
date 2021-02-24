@@ -18,7 +18,7 @@
           <transition name="fade-tab">
             <div v-if="tab.id === 'missing'">
 
-              <transition-group name="fade" class="fade">
+              <transition-group name="fade">
                 <div  v-for="item of filteredMissingItems" :key="item._id" @click="incrementItem(item)" class="fade">
                   <line-vue
                     :checkbox="true"
@@ -41,7 +41,7 @@
               </svg-background>
             </div>
             <div v-else>
-              <transition-group name="fade" class="fade" >
+              <transition-group name="fade" >
                   <div v-for="category of sortedCategories" :key="category.label" class="fade">
                     <div class="label" @click="category.collapse = !category.collapse">
                       <span>{{category.label}}</span>
