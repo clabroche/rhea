@@ -54,10 +54,10 @@ export default {
   &.mini {
     height: 100px;
     .title {
-      font-size: 2em;
+      font-size: 1.4em;
     }
     .description {
-      font-size: 1em;
+      font-size: 0.9em;
       margin-top: 10px;
     }
   }

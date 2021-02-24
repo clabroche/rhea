@@ -12,54 +12,63 @@
         <div class="list-container">
           <div class="filter-items">
             <i class="fas fa-search" aria-hidden="true"></i>
-            <input type="text" v-model="filterItems" placeholder="Chercher un produit">
+            <input type="text" :value="filterItems" @input="filterItems = $event.target.value" placeholder="Chercher un produit">
           </div>
-        <transition name="fade">
-          <div v-if="tab.id === 'missing'" :key="'missing'">
-            <transition-group name="fade">
-              <div  v-for="item of filteredMissingItems" :key="item._id" @click="incrementItem(item)">
-                <line-vue
-                  :checkbox="true"
-                  :additionalAction="true"
-                  :name="item.name"
-                  :image="item.image"
-                  :description="item.description"
-                  :additionalLeft="item.total - item.selected"
-                  :additionalCenter="(+item.price || 0).toFixed(2).replace('.', ',') + '€'"
-                  :percent="item.selected * 100 / item.total"
-                  @action="openOptions(item)"
-                  @checkboxClick="checkBoxClick(item, $event)"/>
-              </div>
-            </transition-group>
-          </div>
-          <div v-else :key="'all'">
-            <transition-group name="fade" >
-                <div v-for="category of sortedCategories" :key="category.label">
-                  <div class="label" @click="category.collapse = !category.collapse">
-                    <span>{{category.label}}</span>
-                    <i class="fas" aria-hidden="true" :class="category.collapse ? 'fa-chevron-down' : 'fa-chevron-up'"></i>
-                  </div>
-                  <div v-if="!category.collapse">
-                    <transition-group name="fade">
-                    <div  v-for="item of filteredItems(category.items)" :key="item._id" @click="incrementItem(item)">
-                      <line-vue
-                        :checkbox="true"
-                        :additionalAction="true"
-                        :name="item.name"
-                        :description="item.description"
-                        :additionalLeft="item.total - item.selected"
-                        :image="item.image"
-                        :additionalCenter="(+item.price || 0).toFixed(2).replace('.', ',') + '€'"
-                        :percent="item.selected * 100 / item.total"
-                        @action="openOptions(item)"
-                        @checkboxClick="checkBoxClick(item, $event)"/>
-                    </div>
-                </transition-group>
-              </div>
+          <div class="tabs-content">
+          <transition name="fade-tab">
+            <div v-if="tab.id === 'missing'">
+
+              <transition-group name="fade" class="fade">
+                <div  v-for="item of filteredMissingItems" :key="item._id" @click="incrementItem(item)" class="fade">
+                  <line-vue
+                    :checkbox="true"
+                    :additionalAction="true"
+                    :name="item.name"
+                    :image="item.image"
+                    :description="item.description"
+                    :additionalLeft="item.total - item.selected"
+                    :additionalCenter="(+item.price || 0).toFixed(2).replace('.', ',') + '€'"
+                    :percent="item.selected * 100 / item.total"
+                    @action="openOptions(item)"
+                    @checkboxClick="checkBoxClick(item, $event)"/>
+                </div>
+              </transition-group>
+              <svg-background :bottom="filteredMissingItems?.length || (!categories?.length)" svg="check">
+                <br>
+                <div>Bravo !</div>
+                <br>
+                Fais chauffer la carte bleue maintenant !
+              </svg-background>
             </div>
-            </transition-group>
+            <div v-else>
+              <transition-group name="fade" class="fade" >
+                  <div v-for="category of sortedCategories" :key="category.label" class="fade">
+                    <div class="label" @click="category.collapse = !category.collapse">
+                      <span>{{category.label}}</span>
+                      <i class="fas" aria-hidden="true" :class="category.collapse ? 'fa-chevron-down' : 'fa-chevron-up'"></i>
+                    </div>
+                    <div v-if="!category.collapse">
+                      <transition-group name="fade">
+                      <div  v-for="item of filteredItems(category.items)" :key="item._id" @click="incrementItem(item)">
+                        <line-vue
+                          :checkbox="true"
+                          :additionalAction="true"
+                          :name="item.name"
+                          :description="item.description"
+                          :additionalLeft="item.total - item.selected"
+                          :image="item.image"
+                          :additionalCenter="(+item.price || 0).toFixed(2).replace('.', ',') + '€'"
+                          :percent="item.selected * 100 / item.total"
+                          @action="openOptions(item)"
+                          @checkboxClick="checkBoxClick(item, $event)"/>
+                      </div>
+                  </transition-group>
+                </div>
+              </div>
+              </transition-group>
+            </div>
+          </transition>
           </div>
-        </transition>
           </div>
       </template>
     </tabs>
@@ -140,7 +149,7 @@ export default {
     filteredMissingItems() {
       const categories = sort(this.categories.filter(cat => this.filteredItems(cat.items).length)).asc('label')
       const items = []
-      categories.forEach(cat => items.push(...cat.items.filter(item => item.total !== item.selected)))
+      categories.forEach(cat => items.push(...cat.items.filter(item => +item.total !== +item.selected)))
       return items
     },
     getTotalPrice() {
@@ -152,7 +161,6 @@ export default {
   async mounted() {
     (await Category.getCategories()).map(cat => this.allCategoriesById[cat._id] = cat)
     await this.getList()
-    this.$refs.scrollElement.scrollTop = this.$root.scroll.listItemsProducts
     Socket.socket.on('list:item:add', this.getList)
     Socket.socket.on('list:item:delete', this.getList)
     Socket.socket.on('list:item:increment', this.getList)
@@ -173,9 +181,6 @@ export default {
   methods: {
     filteredItems(items) {
       return items.filter(item => item.name.toUpperCase().includes(this.filterItems.toUpperCase()))
-    },
-    setPosition() {
-      this.$root.scroll.listItemsProducts = this.$refs.scrollElement.scrollTop
     },
     async getList() {
       const list = await lists.getList(this.$route.params.listId)
@@ -256,14 +261,20 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  overflow: auto;
   height: 100%;
-  .tabs {
-    flex-grow: 1;
-  }
   .list-container {
     height:100%;
     padding: 10px;
-    overflow: auto;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    .tabs-content {
+      flex-grow: 1;
+      overflow: auto;
+      position: relative;
+      padding: 5px;
+    }
     .label {
       display: flex;
       align-items: center;
@@ -273,10 +284,9 @@ export default {
     }
   }
 }
- .filter-items {
+.filter-items {
   width: 95%;
   margin: auto;
-  margin-top: 10px;
   i {
     color: lightgrey;
     position: absolute;
@@ -300,15 +310,33 @@ export default {
     text-align: center;
   }
 }
-.fade-enter-active,
-.fade-leave-active {
+.fade-tab-enter-active,
+.fade-tab-leave-active {
   transition: opacity 0.3s ease;
-  position: absolute;
-  width: calc(100% - 20px);
+  position: absolute !important;
+  width: calc(100% - 10px);
+}
+.fade-tab-enter-from,
+.fade-tab-leave-to {
+  opacity: 0;
 }
 
+.fade-enter-active,
+.fade-leave-active {
+  transition: all 0.3s ease;
+}
 .fade-enter-from,
 .fade-leave-to {
+  // opacity: 0;
+  overflow: hidden;
+  max-height: 0;
+  margin: 0;
   opacity: 0;
+}
+
+.fade-enter-to,
+.fade-leave-from {
+  max-height: 100vh;
+  overflow: hidden;
 }
 </style>

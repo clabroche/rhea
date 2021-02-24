@@ -19,6 +19,7 @@ export default {
         category: require('@/assets/category.svg'),
         recipe: require('@/assets/recipe.svg'),
         inventory: require('@/assets/inventory.svg'),
+        check: require('@/assets/check.png'),
       }
     }
   },

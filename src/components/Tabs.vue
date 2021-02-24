@@ -34,13 +34,21 @@ export default {
 <style lang="scss" scoped>
 .tabs {
   margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+  flex-grow: 1;
 }
 .buttons {
   display: flex;
   align-items: flex-end;
   margin-bottom: 10px;
   border-bottom: 2px solid var(--headerBgColor);
-  height: 40px;
+  height: 45px;
+  flex-shrink: 0;
+  width: 90%;
+  margin: auto;
+  
   button {
     background-color: white;
     color: black;
@@ -53,11 +61,14 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
+    margin: 0 5px;
     &.active {
+      border-radius: 5px 5px 0 0;
       height: auto;
       background-color: var(--headerBgColor);
       color: white;
-      font-size: 1.2em;
+      font-size: 0.9em;
+      margin-bottom: -1px;
     }
     label {
       background-color: #fff;
@@ -75,7 +86,8 @@ export default {
   }
 }
 .content {
-  background-color: #fff;
   position: relative;
+  overflow: auto;
+  flex-grow: 1;
 }
 </style>

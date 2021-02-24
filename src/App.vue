@@ -94,7 +94,9 @@ input, textarea {
 }
 .app-content {
   height: calc(100%);
-  overflow: auto;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 </style>
