@@ -174,7 +174,7 @@ export default {
 .vuecal__event {
   display: flex;
   justify-content: center;
-  align-items: center;;
+  align-items: center;
   position: relative;
   .delete {
     position: absolute;

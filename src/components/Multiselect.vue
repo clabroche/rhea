@@ -45,7 +45,6 @@
 
 <script>
 import {some} from 'lodash-es'
-// import Spinner from '@/components/Spinner'
 export default {
   name: 'multiselect',
   props: {

@@ -99,8 +99,8 @@ Item.prototype.enrich = async function (force = false) {
       this.images = await PromiseB.map($images.slice(0, 10), async $image => {
         const link = await $image.getProperty('href')
         if(!link) return
-        return await link.jsonValue()
-      }).filter(a => a)
+        return link.jsonValue()
+      }).filter(a => a ? true : false)
       console.log(this.images)
       if(!this.image) {
         this.image = this.images[0]

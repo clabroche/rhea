@@ -29,12 +29,6 @@ EventsCalendar.deleteEvent = async function (_id) {
     headers: { token: Auth.token },
   })
 } 
-EventsCalendar.deleteEvent = async function () {
-  const { data: events } = await API.get('/events/', {
-    headers: { token: Auth.token },
-  })
-  return events.map(event => new EventsCalendar(event))
-} 
 EventsCalendar.get = async function (eventId) {
   if(!eventId) throw new Error('eventId param missing')
   const { data: event } = await API.get('/events/'+eventId, {

@@ -129,7 +129,7 @@ export default {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      height: 30px;;
+      height: 30px;
       width: 100%;
       background-color: #efefef;
       .additional-center {
