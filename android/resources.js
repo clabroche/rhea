@@ -3,8 +3,8 @@ const fs = require('fs');
 const SOURCE_ANDROID_ICON = 'resources/android/icon/';
 const SOURCE_ANDROID_SPLASH = 'resources/android/splash/';
 
-const TARGET_ANDROID_ICON = 'android/app/src/main/res/';
-const TARGET_ANDROID_SPLASH = 'android/app/src/main/res/';
+const TARGET_ANDROID_ICON = 'app/src/main/res/';
+const TARGET_ANDROID_SPLASH = 'app/src/main/res/';
 
 
 const ANDROID_ICONS = [
