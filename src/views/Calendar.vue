@@ -6,31 +6,17 @@
         <multiselect :random="true" :options="allRecipes" customKey="_id" customLabel="name" :single="true" placeholder="Choisir un produit..." @input="selectItem"/>
       </template>
     </modal-vue>
-    <vue-cal
-      ref="vuecal"
-      locale="fr"
+    <rhea-calendar
       :events="events"
-      :time-from="12*60"
-      :time-step="7*60" 
-      :time-cell-height="120"
-      :minCellWidth="120"
-      :disable-views="['day', 'years', 'year']"
-      :cell-click-hold="false"
-      @cell-click="click"
-      @view-change="viewChange">
-      <template #no-event></template>
-      <template #event="{ event }" class="cell-event" @click="click(event.start)">
-        <div class="delete" @click.stop.prevent="deleteEvent(event)"><i class="fas fa-times" aria-hidden="true"></i></div>
-        <div>{{ event.title }}</div>
-      </template>
-    </vue-cal>
-    <button v-if="currentView === 'week'" @click="generateWeekMeal">Générer mes repas de la semaine</button>
-    <button v-if="currentView === 'week'" @click="generateList">Générer une liste de course</button>
+      @click-morning="clickMorning"
+      @click-afternoon="clickAfternoon"
+      />
+    <button @click="generateWeekMeal">Générer mes repas de la semaine</button>
+    <button @click="generateList">Générer une liste de course</button>
   </div>
 </template>
 
 <script>
-import VueCal from 'vue-cal'
 import moment from 'moment'
 import ModalVue from '../components/Modal.vue'
 import 'vue-cal/dist/vuecal.css'
@@ -42,20 +28,19 @@ import Inventory from '../services/inventory'
 import MultiselectVue from '../components/Multiselect.vue'
 import lists from '../services/lists'
 import header from '../services/Header'
+import RheaCalendar from '../components/RheaCalendar.vue'
 moment.locale('fr')
 export default {
   components: {
-    VueCal,
     ModalVue,
-    multiselect: MultiselectVue
+    multiselect: MultiselectVue,
+    RheaCalendar
   },
   data() {
     return {
       events: [],
       allRecipes: [],
       moment,
-      /** @type {'month' | 'week'} */
-      currentView: 'week',
       current: {
         start: '',
         end: '',
@@ -79,8 +64,8 @@ export default {
       }, 500);
     },
     scrollToday() {
-      const calendar = document.querySelector('.vuecal .vuecal__cells')
-      calendar.scrollTo({ left: (moment().day() - 1) * 120, behavior: 'smooth' })
+      // const calendar = document.querySelector('.vuecal .vuecal__cells')
+      // calendar.scrollTo({ left: (moment().day() - 1) * 120, behavior: 'smooth' })
     },
     async deleteEvent(ev) {
       await Events.deleteEvent(ev._id)
@@ -139,24 +124,52 @@ export default {
         this.current.title = recipes[0].name
       }
     },
+    clickMorning(ev) {
+      if(ev.eventMorning) {
+        this.deleteEvent(ev.eventMorning)
+      } else {
+        this.current = {
+          title: '',
+          content: '',
+          class: 'blue-event',
+        }
+        this.current.start = ev.day.add(12, 'hours').format('YYYY-MM-DD HH:mm')
+        this.current.end = ev.day.add(13, 'hours').format('YYYY-MM-DD HH:mm')
+        
+        this.$refs.createModal.open().subscribe(async res => {
+          if(!res) return
+          await Events.createEvent(this.current)
+          this.loadEvents()
+        })
+      }
+      console.log(ev)
+    },
+
+    clickAfternoon(ev) {
+      if(ev.eventAfternoon) {
+        this.deleteEvent(ev.eventAfternoon)
+      } else {
+        this.current = {
+          title: '',
+          content: '',
+          class: 'blue-event',
+        }
+        this.current.start = ev.day.add(19, 'hours').format('YYYY-MM-DD HH:mm')
+        this.current.end = ev.day.add(20, 'hours').format('YYYY-MM-DD HH:mm')
+        console.log(this.current.start)
+        this.$refs.createModal.open().subscribe(async res => {
+          if(!res) return
+          await Events.createEvent(this.current)
+          this.loadEvents()
+        })
+      }
+      console.log(ev)
+    },
     click($event) {
-      if(this.currentView !== 'week') return 
       const $start = moment($event)
       $start.set({h: $start.hours() <= 19 && $start.hours() !== 0 ? 12 : 19, minutes: 0, seconds: 0})
 
-      this.current = {
-        title: '',
-        content: '',
-        class: 'blue-event',
-      }
-      this.current.start = $start.format('YYYY-MM-DD HH:mm')
-      this.current.end = $start.add(7, 'hours').format('YYYY-MM-DD HH:mm')
       
-      this.$refs.createModal.open().subscribe(async res => {
-        if(!res) return
-        await Events.createEvent(this.current)
-        this.loadEvents()
-      })
     },
   }
 }
