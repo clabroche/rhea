@@ -32,50 +32,32 @@ import dayjs from 'dayjs'
 import { computed, ref } from 'vue'
 import weekOfYear from 'dayjs/plugin/weekOfYear'
 import 'dayjs/locale/fr'
+import date from '../helpers/date'
 dayjs.locale('fr')
 dayjs.extend(weekOfYear)
 export default {
   props: {
     events: {default: () => ([])}
   },
-  setup(props) {
-    const getDatesBetweenDates = (startDate, endDate) => {
-      let dates = []
-      //to avoid modifying the original date
-      const theDate = new Date(startDate)
-      while (theDate < endDate) {
-        dates = [...dates, new Date(theDate)]
-        theDate.setDate(theDate.getDate() + 1)
-      }
-      dates = [...dates]
-      return dates
-    }
+  setup(props, component) {
     const dateNow = ref(dayjs()) 
-    const week = computed(() => {
-      return dateNow.value.week()
-    })
-    const monthName = computed(() => {
-      return dateNow.value.format('MMMM')
-    })
+    const week = computed(() => dateNow.value.week())
+    const monthName = computed(() => dateNow.value.format('MMMM'))
+    const year = computed(() => dateNow.value.get('year'))
 
-    const year = computed(() => {
-      return dateNow.value.get('year')
-    })
     const dates = computed(() => {
-      const dates = getDatesBetweenDates(dateNow.value.startOf('week'), dateNow.value.endOf('week'))
-      return dates.map(date => {
-        return {
-          day: dayjs(date),
-          eventMorning: props.events.filter(ev => {
-            return dayjs(ev.start).get('hour') === 12
-              && dayjs(date).format('YYYY/MM/DD') === dayjs(ev.start).format('YYYY/MM/DD')
-          }).pop(),
-          eventAfternoon: props.events.filter(ev => {
-            return dayjs(ev.start).get('hour') === 19
-              && dayjs(date).format('YYYY/MM/DD') === dayjs(ev.start).format('YYYY/MM/DD')
-          }).pop(),
-        }
-      })
+      const dates = date.getDatesBetweenDates(dateNow.value.startOf('week'), dateNow.value.endOf('week'))
+      return dates.map(date => ({
+        day: dayjs(date),
+        eventMorning: props.events.filter(ev => {
+          return dayjs(ev.start).get('hour') === 12
+            && dayjs(date).format('YYYY/MM/DD') === dayjs(ev.start).format('YYYY/MM/DD')
+        }).pop(),
+        eventAfternoon: props.events.filter(ev => {
+          return dayjs(ev.start).get('hour') === 19
+            && dayjs(date).format('YYYY/MM/DD') === dayjs(ev.start).format('YYYY/MM/DD')
+        }).pop(),
+      }))
     })
     return {
       dateNow,
@@ -85,6 +67,7 @@ export default {
       dates,
       setWeek(week) {
         dateNow.value = dateNow.value.week(week)
+        component.emit('change-date', dateNow.value.startOf('week'))
       }
     }
   }
@@ -110,14 +93,15 @@ export default {
     justify-content: center;
     flex-direction: column;
     align-items: center;
-    border: 1px solid black;
+    border: 1px solid rgb(211, 211, 211);
     text-align: center;
     .day-number {
       font-size: 0.8em;
     }
     .day-name {
       font-weight: bold;
-      margin-bottom: 10px;
+      margin-bottom: 5px;
+      color: #616161
     }
   }
 }

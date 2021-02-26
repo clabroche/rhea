@@ -1,18 +1,21 @@
 <template>
-  <div>
+  <div class="calendar-root">
     <modal-vue ref="createModal" :disabled="!current.recipeId">
       <template #body>
         {{moment(current.start).calendar()}}
         <multiselect :random="true" :options="allRecipes" customKey="_id" customLabel="name" :single="true" placeholder="Choisir un produit..." @input="selectItem"/>
       </template>
     </modal-vue>
-    <rhea-calendar
-      :events="events"
-      @click-morning="clickMorning"
-      @click-afternoon="clickAfternoon"
-      />
-    <button @click="generateWeekMeal">Générer mes repas de la semaine</button>
-    <button @click="generateList">Générer une liste de course</button>
+    <welcome image="calendar" :mini="true" description="On va se régaler cette semaine" header="Calendrier"/>
+    <div class="calendar-container">
+      <rhea-calendar
+        :events="events"
+        @change-date="weekDate = $event"
+        @click-morning="clickMorning"
+        @click-afternoon="clickAfternoon"
+        />
+      <button @click="generateWeekMeal">Générer mes repas de la semaine</button>
+    </div>
   </div>
 </template>
 
@@ -29,15 +32,20 @@ import MultiselectVue from '../components/Multiselect.vue'
 import lists from '../services/lists'
 import header from '../services/Header'
 import RheaCalendar from '../components/RheaCalendar.vue'
+import Welcome from '../components/dashboard/Welcome.vue'
+import date from '../helpers/date'
+import dayjs from 'dayjs'
 moment.locale('fr')
 export default {
   components: {
     ModalVue,
     multiselect: MultiselectVue,
-    RheaCalendar
+    RheaCalendar,
+    Welcome
   },
   data() {
     return {
+      weekDate: dayjs().startOf('week'),
       events: [],
       allRecipes: [],
       moment,
@@ -94,19 +102,17 @@ export default {
       })
     },
     async generateWeekMeal() {
-      const today = moment();
-      const from_date = today.startOf('day');
       const events = []
-      Array(7 - moment().day() + 1).fill(null).forEach((_, i) => {
-        const $date = from_date.clone().add(i, 'days').set({hours: 12})
+      const dates = date.getDatesBetweenDates(this.weekDate.startOf('week'), this.weekDate.endOf('week'))
+      dates.forEach(date => {
         events.push({
           recipeId: this.allRecipes[Math.floor(Math.random() * this.allRecipes.length)]._id,
-          start: $date.format('YYYY-MM-DD HH:mm'),
-          end: $date.add(7, 'hours').format('YYYY-MM-DD HH:mm'),
+          start: date.set('hour', 12).format('YYYY-MM-DD HH:mm'),
+          end: date.set('hour', 13).format('YYYY-MM-DD HH:mm'),
         },{
           recipeId: this.allRecipes[Math.floor(Math.random() * this.allRecipes.length)]._id,
-          start: $date.format('YYYY-MM-DD HH:mm'),
-          end: $date.add(7, 'hours').format('YYYY-MM-DD HH:mm'),
+          start: date.set('hour', 19).format('YYYY-MM-DD HH:mm'),
+          end: date.set('hour', 20).format('YYYY-MM-DD HH:mm'),
         })
       })
       await PromiseB.map(events, Events.createEvent)
@@ -174,43 +180,13 @@ export default {
   }
 }
 </script>
-
-<style lang="scss">
-.vuecal__title-bar {background-color: var(--headerBgColor)}
-.vuecal__title {color: var(--headerTextColor)}
-.vuecal__view-btn.vuecal__view-btn--active {
-  border-bottom: 3px solid var(--headerBgColorAccent)
-}
-.vuecal__flex.vuecal__menu {
-  box-shadow: 0 0 10px 0 black;
-}
-.vuecal__event {
+<style lang="scss" scoped>
+.calendar-root {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  .delete {
-    position: absolute;
-    top: 5px;
-    right: 5px;
-    width: 30px;
-    height: 30px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 0.7em;
-    z-index: 10;
+  flex-direction: column;
+  overflow: hidden;
+  .calendar-container {
+    overflow: auto;
   }
 }
-.vuecal__cell-date {
-  height: 50px;
-}
-.vuecal__cell-events-count {
-  width: 4px;
-  min-width: 0;
-  height: 4px;
-  padding: 0;
-  color: transparent;
-}
-
 </style>

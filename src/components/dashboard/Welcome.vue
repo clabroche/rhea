@@ -51,6 +51,10 @@ export default {
     background-image: url('../../assets/smoothies.jpg');
     background-position: 50%;
   }
+  &.calendar::before  {
+    background-image: url('../../assets/calendar.jpg');
+    background-position: 100% 100%;
+  }
   &.mini {
     height: 100px;
     .title {
