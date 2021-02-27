@@ -33,7 +33,7 @@ import lists from '../services/lists'
 import header from '../services/Header'
 import RheaCalendar from '../components/RheaCalendar.vue'
 import Welcome from '../components/dashboard/Welcome.vue'
-import date from '../helpers/date'
+import {getDatesBetweenDates} from '../helpers/date'
 import dayjs from 'dayjs'
 moment.locale('fr')
 export default {
@@ -62,18 +62,10 @@ export default {
     header.set('Calendrier')
     this.allRecipes = await Recipes.getRecipes()
     this.loadEvents()
-    this.scrollToday()
   },
   methods: {
     viewChange($event) {
       this.currentView = $event.view
-      setTimeout(() => {
-        this.scrollToday()
-      }, 500);
-    },
-    scrollToday() {
-      // const calendar = document.querySelector('.vuecal .vuecal__cells')
-      // calendar.scrollTo({ left: (moment().day() - 1) * 120, behavior: 'smooth' })
     },
     async deleteEvent(ev) {
       await Events.deleteEvent(ev._id)
@@ -103,18 +95,18 @@ export default {
     },
     async generateWeekMeal() {
       const events = []
-      const dates = date.getDatesBetweenDates(this.weekDate.startOf('week'), this.weekDate.endOf('week'))
-      dates.forEach(date => {
-        events.push({
-          recipeId: this.allRecipes[Math.floor(Math.random() * this.allRecipes.length)]._id,
-          start: date.set('hour', 12).format('YYYY-MM-DD HH:mm'),
-          end: date.set('hour', 13).format('YYYY-MM-DD HH:mm'),
-        },{
-          recipeId: this.allRecipes[Math.floor(Math.random() * this.allRecipes.length)]._id,
-          start: date.set('hour', 19).format('YYYY-MM-DD HH:mm'),
-          end: date.set('hour', 20).format('YYYY-MM-DD HH:mm'),
+      getDatesBetweenDates(this.weekDate.startOf('week'), this.weekDate.endOf('week'))
+        .forEach(date => {
+          events.push({
+            recipeId: this.allRecipes[Math.floor(Math.random() * this.allRecipes.length)]._id,
+            start: date.set('hour', 12).format('YYYY-MM-DD HH:mm'),
+            end: date.set('hour', 13).format('YYYY-MM-DD HH:mm'),
+          },{
+            recipeId: this.allRecipes[Math.floor(Math.random() * this.allRecipes.length)]._id,
+            start: date.set('hour', 19).format('YYYY-MM-DD HH:mm'),
+            end: date.set('hour', 20).format('YYYY-MM-DD HH:mm'),
+          })
         })
-      })
       await PromiseB.map(events, Events.createEvent)
       await this.loadEvents()
     },
@@ -141,16 +133,9 @@ export default {
         }
         this.current.start = ev.day.add(12, 'hours').format('YYYY-MM-DD HH:mm')
         this.current.end = ev.day.add(13, 'hours').format('YYYY-MM-DD HH:mm')
-        
-        this.$refs.createModal.open().subscribe(async res => {
-          if(!res) return
-          await Events.createEvent(this.current)
-          this.loadEvents()
-        })
+        this.askForRecipe()
       }
-      console.log(ev)
     },
-
     clickAfternoon(ev) {
       if(ev.eventAfternoon) {
         this.deleteEvent(ev.eventAfternoon)
@@ -163,13 +148,15 @@ export default {
         this.current.start = ev.day.add(19, 'hours').format('YYYY-MM-DD HH:mm')
         this.current.end = ev.day.add(20, 'hours').format('YYYY-MM-DD HH:mm')
         console.log(this.current.start)
-        this.$refs.createModal.open().subscribe(async res => {
-          if(!res) return
-          await Events.createEvent(this.current)
-          this.loadEvents()
-        })
+        this.askForRecipe()
       }
-      console.log(ev)
+    },
+    askForRecipe() {
+      this.$refs.createModal.open().subscribe(async res => {
+        if(!res) return
+        await Events.createEvent(this.current)
+        this.loadEvents()
+      })
     },
     click($event) {
       const $start = moment($event)
