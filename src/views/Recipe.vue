@@ -1,14 +1,25 @@
 <template>
   <div class="root-recipe">
     <div class="list-container">
+      <welcome :header="recipe.name" description=" " headerFontSize="1.4em">
+        <div class="scores">
+          <div class="score">
+            <label>Santé</label>
+            <stars v-model:score="recipe.healthy"/>
+          </div>
+          <div class="score">
+            <label>Goût</label>
+            <stars v-model:score="recipe.score"/>
+          </div>
+        </div>
+      </welcome>
       <div class="items-container">
-        <h2>Les produits de cette recette</h2>
         <div class="items-list">
           <div class="item" v-for="item of itemsForRecipe" :key="item._id">
             <div class="actions">
               <div class="delete" @click="deleteLink(item._id)"><i class="fas fa-times" aria-hidden="true"></i></div>
             </div>
-            <input class="item-quantity" :value="item.quantity || 1"/>
+            <input v-if="recipe.quantities" class="item-quantity" v-model.number="recipe.quantities[item._id]"/>
             <div class="item-name">{{item.name}}</div>
           </div>
           <button class="link-item" @click="linkItem">Ajouter un ingrédient</button>
@@ -21,7 +32,7 @@
         Lier des produits à une recette
       </template>
       <template #body>
-        <search-items v-model="itemsSelected" :excludedItems="itemsForRecipe"></search-items>
+        <search-items v-model:value="itemsSelected" :excludedItems="itemsForRecipe"></search-items>
       </template>
     </modal-vue>
   </div>
@@ -36,12 +47,16 @@ import PromiseB from 'bluebird'
 import SearchItemsVue from '../components/SearchItems.vue';
 import notification from '../services/notification'
 import header from '../services/Header'
+import Welcome from '../components/dashboard/Welcome.vue';
+import Stars from '../components/Stars.vue';
 
 export default {
   components: {
-      'bottom-bar': BottomBarVue,
-      modalVue: ModalVue,
-      searchItems: SearchItemsVue,
+    'bottom-bar': BottomBarVue,
+    modalVue: ModalVue,
+    searchItems: SearchItemsVue,
+    Welcome,
+    Stars
   },
   data() {
     return {
@@ -54,9 +69,6 @@ export default {
   async mounted() {
     this.recipeId = this.$route.params.recipeId 
     this.reload()
-  },
-  beforeUnmount() {
-    clearInterval(this.interval)
   },
   methods: {
     async reload() {
@@ -197,6 +209,19 @@ export default {
       height: 1px;
       width: 30%;
       background-color: var(--headerBgColor);
+    }
+  }
+  .scores {
+    display: flex;
+    justify-content: space-between;
+    text-align: center;
+    margin-top: 10px;
+    .score {
+      margin: 0 20px;
+      label {
+        display: inline-block;
+        margin-bottom: 5px;
+      }
     }
   }
 }

@@ -13,6 +13,8 @@ function Recipe(recipe) {
   this.healthy = recipe.healthy || 0
   /** @type {Items} */
   this.items = recipe.items || null
+  /** @type {{[key:string]:any}} */
+  this.quantities = recipe.quantities || {}
   /** @type {ObjectID[] | string[]} */
   this.itemsId = recipe.itemsId || []
 }
@@ -45,6 +47,7 @@ Recipe.update = async function (ownerId, recipe) {
         name: recipe.name,
         score: recipe.score,
         healthy: recipe.healthy,
+        quantities: recipe.quantities || {},
         ownerId: mongo.getID(ownerId)
       }
     }, { upsert: true }
@@ -52,7 +55,7 @@ Recipe.update = async function (ownerId, recipe) {
 }
 Recipe.delete = async function (ownerId, recipeId) {
   await mongo.collection('recipes')
-    .remove({ ownerId: mongo.getID(ownerId), _id: mongo.getID(recipeId) })
+    .deleteOne({ ownerId: mongo.getID(ownerId), _id: mongo.getID(recipeId) })
 }
 
 Recipe.get = async function (ownerId, recipeId) {
@@ -60,11 +63,15 @@ Recipe.get = async function (ownerId, recipeId) {
     .findOne({ ownerId: mongo.getID(ownerId), _id: mongo.getID(recipeId) })
 }
 Recipe.linkItems = async function (ownerId, recipeId, itemsId) {
+  const quantities = {}
+  itemsId.map(itemId => {
+    quantities[itemId] = 1
+  })
   return PromiseB.map(itemsId, async itemId => {
     await mongo.collection('recipes')
       .updateOne(
         { ownerId: mongo.getID(ownerId), _id: mongo.getID(recipeId) },
-        { $addToSet: { itemsId: mongo.getID(itemId) } }
+        { $addToSet: { itemsId: mongo.getID(itemId) }, $set: {quantities } }
       )
     return mongo.collection('items')
       .updateOne(

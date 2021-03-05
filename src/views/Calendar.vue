@@ -35,6 +35,7 @@ import RheaCalendar from '../components/RheaCalendar.vue'
 import Welcome from '../components/dashboard/Welcome.vue'
 import {getDatesBetweenDates} from '../helpers/date'
 import dayjs from 'dayjs'
+import sort from "fast-sort"
 moment.locale('fr')
 export default {
   components: {
@@ -94,15 +95,19 @@ export default {
       })
     },
     async generateWeekMeal() {
+      const isWeekDay = (date) => date.get('days') === 0 || date.get('days') === 6
       const events = []
+      const healthyMeals = sort(this.allRecipes.filter(recipe => recipe.healthy >= 3)).asc(() => Math.random() - 0.5)
+      const cheapMeals = sort(this.allRecipes.filter(recipe => recipe.score >= 4 && recipe.healthy <=3 )).asc(() => Math.random() - 0.5)
       getDatesBetweenDates(this.weekDate.startOf('week'), this.weekDate.endOf('week'))
-        .forEach(date => {
+        .forEach((date) => {
+          console.log(date.get('days'))
           events.push({
-            recipeId: this.allRecipes[Math.floor(Math.random() * this.allRecipes.length)]._id,
+            recipeId: (isWeekDay(date) ? cheapMeals : healthyMeals).pop()?._id,
             start: date.set('hour', 12).format('YYYY-MM-DD HH:mm'),
             end: date.set('hour', 13).format('YYYY-MM-DD HH:mm'),
           },{
-            recipeId: this.allRecipes[Math.floor(Math.random() * this.allRecipes.length)]._id,
+            recipeId: (isWeekDay(date) ? cheapMeals : healthyMeals).pop()?._id,
             start: date.set('hour', 19).format('YYYY-MM-DD HH:mm'),
             end: date.set('hour', 20).format('YYYY-MM-DD HH:mm'),
           })

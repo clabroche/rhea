@@ -1,10 +1,11 @@
 <template>
   <div class="welcome-root" :class="{[image]: image, mini}">
-    <div class="title">
+    <div class="title" :style="{fontSize: headerFontSize }">
       {{header}}
     </div>
     <div class="description">
       {{description}}
+      <slot></slot>
     </div>
     <div class="actions" v-if="actions?.length">
       <div class="action" @click="action.cb()" v-for="(action, i) of actions" :key="'action-' + i">
@@ -19,6 +20,7 @@ export default {
   props: {
     image: {},
     header: {default: 'Bonjour !'},
+    headerFontSize: {default: null}, 
     description: {default: 'Un petit achat ?'},
     mini: {default: false},
     actions: {default: () => []},
@@ -67,10 +69,12 @@ export default {
   }
   .title {
     font-size: 3em;
+    text-align: center;
   }
   .description {
     font-size: 1em;
     margin-top: 20px;
+    text-align: center;
   }
 }
 .actions {

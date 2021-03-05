@@ -17,7 +17,7 @@
     "capacitor:serve": "vue-cli-service capacitor:serve",
     "client": "vue-cli-service serve ",
     "postinstall": "cd server && npm i",
-    "server": "cd server && nodemon --delay 2 bin/www"
+    "server": "cd server && npm run serve"
   },
   "dependencies": {
     "@capacitor/android": "^2.0.0",

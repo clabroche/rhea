@@ -1,9 +1,11 @@
 <template>
   <div>
-     <div class="filter-container">
+    <div class="filter-container">
       <div class="filter-items">
         <i class="fas fa-search" aria-hidden="true"></i>
-        <input type="text" v-model="filterItemsInPopup" placeholder="Chercher un produit">
+        <input type="text"
+          :value="filterItemsInPopup" @input="filterItemsInPopup = $event.target.value"
+          placeholder="Chercher un produit">
       </div>
         <div class="checkbox-container" v-if="onlyNotCategorizeActive">
         <input type="checkbox"  v-model="onlyNotCategorize">
@@ -18,7 +20,8 @@
     <div class="items">
       <div class="item" v-for="item of allItemsMinusItemInRecipe" :key="item._id">
         <div class="checkbox-container">
-          <input type="checkbox"  :id="item._id"  :value="item._id" @input="toggleItem(item)">
+          <input type="checkbox"  :id="item._id" 
+            :value="item._id" @input="toggleItem(item)">
           <label :for="item._id">
             <span></span>
             {{item.name}}
@@ -32,48 +35,59 @@
 <script>
 import sort from 'fast-sort'
 import items from '../services/items'
+import { ref } from '@vue/reactivity'
+import { computed, onMounted, watch } from '@vue/runtime-core'
+import { cloneDeep } from 'lodash-es'
 export default {
   props: {
     value: {default: () => ([])},
     excludedItems: {default: () => ([])},
     onlyNotCategorizeActive: {default: false}
   },
-  data() {
+  setup(props, comp) {
+    // Filter binding
+    /** @type {import('vue').Ref<{[key:string]: any}>} */
+    const localValue = ref(props.value)
+    watch(() => cloneDeep(props.value), () => localValue.value = props.value, { deep: true })
+    watch(() => cloneDeep(localValue), () => comp.emit('update:filter', localValue.value), { deep: true })
+
+
+    const filterItemsInPopup = ref('')
+    const allItems = ref([])
+    const itemsSelected = ref([])
+    const onlyNotCategorize = ref(false)
+    onMounted(async() => {
+      allItems.value = await items.getAll()
+    })
     return {
-      filterItemsInPopup: '',
-      allItems: [],
-      itemsSelected: [],
-      onlyNotCategorize: false,
-    }
-  },
-  computed: {
-    allItemsMinusItemInRecipe() {
-      const itemFilter = item => {
-        let isNotFiltered = true
-        if(item.name && this.filterItemsInPopup) {
-          isNotFiltered = item.name.toUpperCase().includes(this.filterItemsInPopup.toUpperCase()) && !this.excludedItems.map(it => it._id).includes(item._id)
+      filterItemsInPopup,
+      allItems,
+      itemsSelected,
+      onlyNotCategorize,
+      allItemsMinusItemInRecipe: computed(() => {
+        const itemFilter = item => {
+          let isNotFiltered = true
+          if(item.name && filterItemsInPopup.value) {
+            isNotFiltered = item.name.toUpperCase().includes(filterItemsInPopup.value.toUpperCase()) && !props.excludedItems.map(it => it._id).includes(item._id)
+          }
+          if(isNotFiltered && onlyNotCategorize.value) {
+            return !item.recipesId || !item.recipesId.length
+          }
+          return isNotFiltered
+        } 
+        return sort(allItems.value.filter(itemFilter)).asc('name')
+      }),
+      toggleItem(item) {
+        if(!localValue.value.includes(item)) {
+          localValue.value.push(item)
+        } else {
+          localValue.value.splice(localValue.value.indexOf(item), 1)
         }
-        if(isNotFiltered && this.onlyNotCategorize) {
-          return !item.recipesId || !item.recipesId.length
-        }
-        return isNotFiltered
-      } 
-      return sort(this.allItems.filter(itemFilter)).asc('name')
-    },
-  },
-  async mounted() {
-    this.allItems = await items.getAll()
-  },
-  methods: {
-    toggleItem(item) {
-      if(!this.value.includes(item)) {
-        // eslint-disable-next-line vue/no-mutating-props
-        this.value.push(item)
-      } else {
-        // eslint-disable-next-line vue/no-mutating-props
-        this.value.splice(this.value.indexOf(item), 1)
       }
     }
+  },
+  methods: {
+    
   }
 }
 </script>

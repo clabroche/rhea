@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "node ./bin/www",
+    "serve": "nodemon --delay 2 bin/www"
   },
   "dependencies": {
     "axios": "^0.21.1",
@@ -19,10 +20,13 @@
     "helmet": "^4.4.1",
     "lodash": "^4.17.19",
     "moment": "^2.24.0",
-    "mongodb": "^3.3.3",
+    "mongodb": "^3.6.3",
     "morgan": "~1.9.1",
     "puppeteer": "^5.5.0",
     "socket.io": "^3.1.1",
     "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7"
   }
 }

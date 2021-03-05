@@ -10,6 +10,7 @@ function Recipe(recipe = {}) {
   this._id = recipe._id || null
   this.name = recipe.name || ""
   this.items = recipe.items || []
+  this.quantities = recipe.quantities || {}
 }
 
 
