@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <link rel="icon" href="<%= BASE_URL %>favicon.ico">
     <title>rhea</title>
+    <meta http-equiv="Content-Security-Policy" content="default-src *;
+       img-src * 'self' data: https:; script-src 'self' 'unsafe-inline' 'unsafe-eval' *;
+       style-src  'self' 'unsafe-inline' *">
     <script src="https://unpkg.com/@ionic/pwa-elements@0.0.14/dist/ionicpwaelements.js"></script>
     <link rel="stylesheet" href="https://indestructibletype.com/fonts/Jost.css" type="text/css"/>
   </head>
