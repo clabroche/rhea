@@ -158,7 +158,7 @@ export default {
       }, 0).toFixed(2).replace('.', ',')
     }
   },
-  async mounted() {
+  async created() {
     (await Category.getCategories()).map(cat => this.allCategoriesById[cat._id] = cat)
     await this.getList()
     Socket.socket.on('list:item:add', this.getList)

@@ -2,10 +2,14 @@
   <div id="app">
     <sidebar/>
     <div class="app-content">
-      <router-view/>
+      <router-view v-slot="{Component}">
+        <transition :name="transitionName">
+          <component :is="Component" :key="$router.currentRoute.value.fullPath"/>
+        </transition>
+      </router-view>
     </div>
     <navbar-bottom/>
-    <notification></notification>
+    <notification/>
     <div class="version-overlay" v-if="version && version !== currentVersion">
       <h2>Halte !</h2>
       Une nouvelle version est disponible au téléchargement 
@@ -40,8 +44,17 @@ export default {
       return `${process.env.VUE_APP_SERVER_URL}:${process.env.VUE_APP_SERVER_PORT}/rhea.apk`
     },
   },
+  watch: {
+    '$route' (to, from) {
+      const toDepth = to.path.split('/').length
+      const fromDepth = from.path.split('/').length
+      this.transitionName = toDepth < fromDepth ? 'room-right' : 'room-left'
+    }
+  },
   data() {
     return {
+      transitionName: 'room-right',
+      a: 0,
       version: '',
       currentVersion: process.env.VUE_APP_VERSION
     }
@@ -58,6 +71,9 @@ export default {
     })
     this.version = await version.get()
   },
+  mounted() {
+    this.a = 1
+  }
 }
 </script>
 <style lang="scss">
@@ -103,4 +119,27 @@ input, textarea {
   flex-direction: column;
 }
 
+.room-right-enter-active,
+.room-right-leave-active,
+.room-left-enter-active,
+.room-left-leave-active  {
+  transition: all 0.5s ease;
+  transition-property: transform opacity;
+  will-change: transform, opacity;
+}
+.room-right-enter-from,
+.room-right-leave-to, 
+.room-left-enter-from,
+.room-left-leave-to  {
+  opacity: 0
+}
+.room-right-enter-active,
+.room-left-enter-active {
+  position: absolute;
+  width: 100vw;
+}
+.room-right-enter-from {transform: translateX(-100%) scale(0.2) rotate(10deg)}
+.room-right-leave-to {transform: translateX(100%) scale(0.2) rotate(10deg)}
+.room-left-enter-from {transform: translateX(100%) scale(0.2) rotate(10deg)}
+.room-left-leave-to {transform: translateX(-100%) scale(0.2) rotate(10deg)}
 </style>

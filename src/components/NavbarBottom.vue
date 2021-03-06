@@ -46,6 +46,7 @@ export default {
   box-shadow: 0 0 10px 0px lightgrey;
   z-index: 1;
   color: var(--headerBgColor);
+  background-color: #fff;
   .main-routes {
     display: flex;
     justify-content: space-between;
