@@ -7,7 +7,7 @@
           :value="filterItemsInPopup" @input="filterItemsInPopup = $event.target.value"
           placeholder="Chercher un produit">
       </div>
-        <div class="checkbox-container" v-if="onlyNotCategorizeActive">
+      <div class="checkbox-container" v-if="onlyNotCategorizeActive">
         <input type="checkbox"  v-model="onlyNotCategorize">
         <label @click="onlyNotCategorize = !onlyNotCategorize">
           <span></span>
@@ -71,7 +71,7 @@ export default {
             isNotFiltered = item.name.toUpperCase().includes(filterItemsInPopup.value.toUpperCase()) && !props.excludedItems.map(it => it._id).includes(item._id)
           }
           if(isNotFiltered && onlyNotCategorize.value) {
-            return !item.recipesId || !item.recipesId.length
+            return !item.categoriesId || !item.categoriesId.length
           }
           return isNotFiltered
         } 
@@ -95,6 +95,11 @@ export default {
 <style lang="scss" scoped>
 .filter-container {
   display: flex;
+  justify-content: space-between;
+  input[type="checkbox"]~label span {
+    margin: 0;
+    margin-left: 20px;
+  }
   .checkbox-container {
     width: auto;
   }
@@ -192,8 +197,12 @@ export default {
     border-bottom: 4px solid transparent;
     transform: rotate(45deg);
     transform-origin: 0% 100%;
-    animation: checkbox-check 125ms 250ms cubic-bezier(.4,.0,.23,1) forwards;
-    border-color: #9E9E9E
+    border-color: #9E9E9E;
+
+    width: .4em;
+    height: .8em;    
+    border-color: var(--headerBgColor);
+    transform: translate3d(0,-0.5em,0) rotate(45deg);
   }
 
 @keyframes checkbox-check{

@@ -27,32 +27,7 @@
         Lier des produits à une catégorie
       </template>
       <template #body>
-        <div class="filter-container">
-          <div class="filter-items">
-            <i class="fas fa-search" aria-hidden="true"></i>
-            <input type="text" v-model="filterItemsInPopup" placeholder="Chercher un produit">
-          </div>
-           <div class="checkbox-container">
-            <input type="checkbox"  v-model="onlyNotCategorize">
-            <label @click="onlyNotCategorize = !onlyNotCategorize">
-              <span></span>
-            </label>
-          </div>
-        </div>
-        <div v-if="onlyNotCategorize" class="only-not-categorize">
-          Seul les produits sans catégorie sont affichés
-        </div>
-        <div class="items">
-          <div class="item" v-for="item of allItemsMinusItemInCategory" :key="item._id">
-            <div class="checkbox-container">
-              <input type="checkbox"  :id="item._id" v-model="itemsSelected" :value="item._id">
-              <label :for="item._id">
-                <span></span>
-                {{item.name}}
-              </label>
-            </div>
-          </div>
-        </div>
+        <search-items v-model:value="itemsSelected" :onlyNotCategorizeActive="true"></search-items>
       </template>
     </modal-vue>
   </div>
@@ -66,10 +41,12 @@ import items from '../services/items';
 import PromiseB from 'bluebird'
 import sort from 'fast-sort'
 import header from '../services/Header'
+import SearchItems from '../components/SearchItems.vue';
 export default {
   components: {
-      'bottom-bar': BottomBarVue,
-      modalVue: ModalVue,
+    'bottom-bar': BottomBarVue,
+    modalVue: ModalVue,
+    SearchItems,
   },
   data() {
     return {
@@ -98,7 +75,7 @@ export default {
       return sort(this.allItems.filter(itemFilter)).asc('name')
     },
     filteredItems() {
-      return sort(this.itemsForCategory.filter(item => item.name.toUpperCase().includes(this.filterItems.toUpperCase()))).asc('name')
+      return sort(this.itemsForCategory.filter(item => item ? item.name.toUpperCase().includes(this.filterItems.toUpperCase()): '')).asc('name')
     }
   },
   async mounted() {
@@ -127,7 +104,7 @@ export default {
     async linkItem() {
       this.$refs.linkModal.open().subscribe(async res => {
         if(!res) return 
-        await Category.linkItems(this.categoryId, this.itemsSelected)
+        await Category.linkItems(this.categoryId, this.itemsSelected.map(item => item._id))
         this.itemsSelected = []
         this.reload()
       })
