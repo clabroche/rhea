@@ -37,7 +37,7 @@
           <div v-if="!selectedItem">
             ou créer un nouvel item
             <input type="text" v-model="data.product.product_name" >
-            <img loading="lazy"  :src="data.product.image_url" alt="">
+            <img loading="lazy"  :src="api.getImageURL(data.product.image_url)" alt="">
           </div>
         </div>
         <div v-else>Produit non trouvé</div>
@@ -62,6 +62,7 @@ import header from '../services/Header'
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 import Socket from '../services/Socket';
 import Welcome from '../components/dashboard/Welcome.vue';
+import api from '../services/API';
 export default {
   components: {
     'modal-vue': ModalVue,
@@ -73,6 +74,7 @@ export default {
   }, 
   data() {
     return {
+      api,
       items: [],
       itemToCreate: {
         name: '',

@@ -11,4 +11,8 @@ api.interceptors.response.use(function (response) {
   return Promise.reject(error);
 });
 
+api.getImageURL = (image) => {
+  return api.defaults.baseURL.toString() + `/images?url=${image}`
+}
+
 export default api

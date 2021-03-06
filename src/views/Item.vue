@@ -4,9 +4,9 @@
     </svg-background>
     <div class="item-infos">
       <div class="images">
-        <img loading="lazy" :src="item.image" alt="">
+        <img loading="lazy" :src="api.getImageURL(item.image)" alt="">
         <div class="other-images">
-          <img loading="lazy" v-for="image of item.images" :key="image" :src="image" @click="changeImage(item, image)" alt="item image"/>
+          <img loading="lazy" v-for="image of item.images" :key="image" :src="api.getImageURL(image)" @click="changeImage(item, image)" alt="item image"/>
         </div>
       </div>
       <div class="form">
@@ -37,9 +37,11 @@ import SvgBackgroundVue from '../components/SvgBackground.vue';
 import MultiselectVue from '../components/Multiselect.vue';
 import Category from '../services/Category';
 import header from '../services/Header'
+import api from '../services/API';
 export default {
   data() {
     return {
+      api,
       itemId: null,
       categoryToAdd: [],
       categories: [],

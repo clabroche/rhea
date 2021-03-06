@@ -17,7 +17,7 @@
         </div>
       </div>
       <div v-if="image" class="image">
-        <img loading="lazy" :src="image" alt="">
+        <img loading="lazy" :src="api.getImageURL(image)" alt="">
       </div>
     </div>
     <div class="bottom-line">
@@ -35,6 +35,7 @@
 </template>
 
 <script>
+import api from '../services/API'
 export default {
   props: {
     name: {default: ''},
@@ -49,6 +50,7 @@ export default {
   },
   data() {
     return {
+      api
     }
   },
   methods: {

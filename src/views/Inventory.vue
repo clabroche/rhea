@@ -38,7 +38,7 @@
         </div>
         <div v-else-if="data && data.product" class="confirm-product">
           <h2>{{data.product.product_name}}</h2>
-          <img loading="lazy" :src="data.product.image_url" alt="">
+          <img loading="lazy" :src="api.getImageURL(data.product.image_url)" alt="">
         </div>
         <div v-else>Produit non trouvé</div>
       </template>
@@ -52,7 +52,7 @@
           <div v-if="!selectedItem">
             ou créer un nouvel item
             <input type="text" v-model="data.product.product_name" >
-            <img loading="lazy" :src="data.product.image_url" alt="">
+            <img loading="lazy" :src="api.getImageURL(data.product.image_url)" alt="">
           </div>
           <div>
             Produit inexistant, le créer ?
@@ -76,6 +76,7 @@ import header from '../services/Header'
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 import Socket from '../services/Socket';
 import Welcome from '../components/dashboard/Welcome.vue';
+import api from '../services/API';
 export default {
   components: {
     'modal-vue': ModalVue,
@@ -86,6 +87,7 @@ export default {
   }, 
   data() {
     return {
+      api,
       items: [],
       allItems: [],
       itemToCreate: {

@@ -5,7 +5,7 @@
       <template #body="{data: items}" >
         <div v-if="items" class="more-container">
           <div v-for="item of items.slice(0,150)" :key="item._id" class="item">
-            <img loading="lazy" :src="item.image" alt="" @click="$router.push({name:'item', params: {itemId: item._id}})">
+            <img loading="lazy" :src="api.getImageURL(item.image)" alt="" @click="$router.push({name:'item', params: {itemId: item._id}})">
             <div class="title">{{item.name}}</div>
             <div class="add-list" @click="openAddToList(item)"><i class="fas fa-shopping-cart" aria-hidden="true"></i></div>
           </div>
@@ -29,7 +29,7 @@
     </div>
     <div class="items" v-if="list.length">
       <div class="item" v-for="item of list.slice(0, 30)" :key="item._id">
-        <img loading="lazy"  :src="item.image" alt="" @click="$router.push({name:'item', params: {itemId: item._id}})">
+        <img loading="lazy"  :src="api.getImageURL(item.image)" alt="" @click="$router.push({name:'item', params: {itemId: item._id}})">
         <div class="title">{{item.name}}</div>
         <div class="add-list" @click="openAddToList(item)"><i class="fas fa-shopping-cart" aria-hidden="true"></i></div>
       </div>
@@ -51,6 +51,7 @@ import sort from 'fast-sort'
 import lists from '../services/lists'
 import ModalVue from './Modal.vue'
 import notification from '../services/notification'
+import api from '../services/API'
 export default {
   components: {
     modalVue: ModalVue
@@ -63,6 +64,7 @@ export default {
   },
   data() {
     return {
+      api,
       maxLimit: 5,
       lists: []
     }
