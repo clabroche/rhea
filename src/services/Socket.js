@@ -1,10 +1,10 @@
 import io from 'socket.io-client'
 
 export default {
-  /** @property {SocketIOClient.Socket} socket */
-  socket: null,
+  /** @property {io.Socket} socket */
+  socket: io.io(),
   connect(token) {
-    this.socket = io.connect(`${process.env.VUE_APP_SERVER_URL}:${process.env.VUE_APP_SERVER_PORT}`, {
+    this.socket = io.io(`${process.env.VUE_APP_SERVER_URL}:${process.env.VUE_APP_SERVER_PORT}`, {
       transports: ['polling', 'websocket'],
       secure: true,
       rejectUnauthorized: false,

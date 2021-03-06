@@ -22,12 +22,12 @@ module.exports = {
       // @ts-ignore
       if(socket.user) {
         const userId = socket.user._id
-        socket.join(userId)
+        socket.join(userId.toString())
       }
     })
   },
   notifyUsers(user, scope, data) {
-    return this.io.to(user._id).emit(scope, {
+    return this.io.to(user._id.toString()).emit(scope, {
       scope,
       data
     })
