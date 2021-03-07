@@ -48,7 +48,11 @@ export default {
     '$route' (to, from) {
       const toDepth = to.path.split('/').length
       const fromDepth = from.path.split('/').length
-      this.transitionName = toDepth < fromDepth ? 'room-right' : 'room-left'
+      if(toDepth === fromDepth) {
+        this.transitionName = 'fade'
+        return
+      }
+      this.transitionName = toDepth < fromDepth ? 'fade' : 'fade' 
     }
   },
   data() {
@@ -124,22 +128,32 @@ input, textarea {
 .room-left-enter-active,
 .room-left-leave-active  {
   transition: all 0.5s ease;
-  transition-property: transform opacity;
-  will-change: transform, opacity;
-}
-.room-right-enter-from,
-.room-right-leave-to, 
-.room-left-enter-from,
-.room-left-leave-to  {
-  opacity: 0
+  transition-property: transform;
+  will-change: transform;
 }
 .room-right-enter-active,
 .room-left-enter-active {
   position: absolute;
   width: 100vw;
 }
-.room-right-enter-from {transform: translateX(-100%) scale(0.2) rotate(10deg)}
-.room-right-leave-to {transform: translateX(100%) scale(0.2) rotate(10deg)}
-.room-left-enter-from {transform: translateX(100%) scale(0.2) rotate(10deg)}
-.room-left-leave-to {transform: translateX(-100%) scale(0.2) rotate(10deg)}
+.room-right-enter-from {transform: translateX(-100%) scale(0.2)}
+.room-right-leave-to {transform: translateX(100%) scale(0.2)}
+.room-left-enter-from {transform: translateX(100%) scale(0.2)}
+.room-left-leave-to {transform: translateX(-100%) scale(0.2)}
+
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.fade-enter-active {
+  position: absolute;
+  width: 100vw;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
 </style>
