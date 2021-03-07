@@ -2,11 +2,13 @@
   <div id="app">
     <sidebar/>
     <div class="app-content">
-      <router-view v-slot="{Component}">
-        <transition :name="transitionName">
-          <component :is="Component" :key="$router.currentRoute.value.fullPath"/>
-        </transition>
-      </router-view>
+        <router-view v-slot="{Component}">
+          <transition :name="transitionName">
+            <keep-alive max="2">
+              <component :is="Component" :key="$router.currentRoute.value.fullPath"/>
+            </keep-alive>
+          </transition>
+        </router-view>
     </div>
     <navbar-bottom/>
     <notification/>
