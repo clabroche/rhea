@@ -20,8 +20,17 @@ export default {
     return list
   },
   async getList(listId) {
-    if(!listId) throw new Error('Provide listId param')
-    const {data: list} = await API.get('/lists/' + listId, {
+    if (!listId) throw new Error('Provide listId param')
+    const { data: list } = await API.get('/lists/' + listId, {
+      headers: {
+        token: Auth.token
+      },
+    })
+    return list
+  },
+  async getRecommendations(listId) {
+    if (!listId) throw new Error('Provide listId param')
+    const { data: list } = await API.get('/lists/' + listId +'/recommendations', {
       headers: {
         token: Auth.token
       },

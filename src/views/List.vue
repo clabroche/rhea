@@ -75,6 +75,9 @@
     <bottom-bar v-if="list._id" :text="list.items.length + ' produits pour un montant de ' + getTotalPrice + '€'"/>
     <modal-vue ref="createModal" height="auto">
       <template #body class="createModal">
+        <product-section headerText="Populaires:" :mini="true" :listToAdd="list" :list="popularsComputed" @close="getRecommendations"></product-section>
+        <product-section headerText="Recettes jusqu'à la semaine prochaine:" :mini="true" :listToAdd="list" :list="recipesComputed" @close="getRecommendations"></product-section>
+        ou sélectionne un produit
         <multiselect :options="allItems" customKey="_id" customLabel="name" :single="true" placeholder="Choisir un produit..." @input="selectItem"/>
         <div v-if="!itemToCreate._id">
           <label>ou créé en un</label>
@@ -117,6 +120,7 @@ import Socket from '../services/Socket';
 import notification from '../services/notification';
 import Welcome from '../components/dashboard/Welcome.vue';
 import Tabs from '../components/Tabs.vue';
+import ProductSection from '../components/ProductSection.vue';
 
 export default {
   components: {
@@ -127,7 +131,8 @@ export default {
     optionsVue: OptionsVue,
     svgBackground: SvgBackgroundVue,
     Welcome,
-    Tabs
+    Tabs,
+    ProductSection
   },
   data() {
     return {
@@ -138,10 +143,18 @@ export default {
       allItems: [],
       allCategoriesById: {},
       filterItems: '',
-      missingcollapse: true
+      missingcollapse: true,
+      populars: [],
+      recipes: [],
     }
   },
   computed: {
+    popularsComputed() {
+      return this.populars
+    },
+    recipesComputed() {
+      return this.recipes
+    },
     sortedCategories() {
       if(!this.missingcollapse) return true
       return sort(this.categories.filter(cat => this.filteredItems(cat.items).length)).asc('label')
@@ -183,6 +196,7 @@ export default {
       return items.filter(item => item.name.toUpperCase().includes(this.filterItems.toUpperCase()))
     },
     async getList() {
+      await this.getRecommendations()
       const list = await lists.getList(this.$route.params.listId)
       header.set('Ma liste') 
       header.subtitle = list.name
@@ -196,6 +210,11 @@ export default {
         return {_id: key, label ,items: categories[key], collapse: false}
       })
       this.list = list
+    },
+    async getRecommendations() {
+      const {populars, recipes} = await lists.getRecommendations(this.$route.params.listId)
+      this.populars = populars
+      this.recipes = recipes
     },
     selectItem(items) {
       this.itemToCreate._id = items[0] ? items[0]._id : null

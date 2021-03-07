@@ -1,3 +1,4 @@
+const dayjs = require('dayjs')
 const {mongo} = require('../helpers/mongoConnect')
 const Recipes = require('./Recipes')
 function Event(event) {
@@ -28,13 +29,34 @@ Event.all = async function (userId) {
     .match({ ownerId: mongo.getID(userId) })
     .lookup({
       from: 'recipes',
-       localField: 'recipeId',
-       foreignField: '_id',
-       as: 'recipes'
+      localField: 'recipeId',
+      foreignField: '_id',
+      as: 'recipes'
     })
     .sort({ name: 1 })
     .toArray()
   return events.map(event => new Event(event))
+}
+Event.getWeek = async function (userId) {
+  const weekstart = dayjs()
+  const weekend = dayjs().add(1, 'week').endOf('week')
+  const events = await mongo.collection('events')
+    .aggregate()
+    .match({
+      ownerId: mongo.getID(userId), 
+      start: { $gte: weekstart.format('YYYY-MM-DD') },
+      end: { $lte: weekend.format('YYYY-MM-DD') }
+    })
+    .lookup({
+      from: 'recipes',
+      localField: 'recipeId',
+      foreignField: '_id',
+      as: 'recipes'
+    })
+    .toArray()
+  return events
+    .filter(event => event.recipeId)
+    .map(event => new Event(event))
 }
 
 Event.create = async function (ownerId, event) {

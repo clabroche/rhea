@@ -1,5 +1,5 @@
 <template>
-  <div class="product-section-root">
+  <div class="product-section-root" :class="{mini}">
     <modal-vue ref="viewMore" height="auto" :noActions="true">
       <template #header>Liste des produits</template>
       <template #body="{data: items}" >
@@ -61,12 +61,14 @@ export default {
     headerText: {default: '', type: String},
     noItemsText: {default: '', type: String},
     list: {default: () =>([]), type: Array},
+    listToAdd: {default: null},
+    mini: {default: false}
   },
   data() {
     return {
       api,
       maxLimit: 5,
-      lists: []
+      lists: [],
     }
   },
   async mounted() {
@@ -78,10 +80,14 @@ export default {
       this.$refs.viewMore.open(this.list)
     },
     openAddToList(item) {
+      if(this.listToAdd) {
+        return this.addToList(this.listToAdd, item)
+      }
       this.$refs.addToList.open(item)
     },
     async addToList(list, item) {
       this.$refs.addToList.close()
+      this.$emit('close', item)
       await lists.addItem(list._id, {
         _id: item._id,
         selected: 0,
@@ -99,6 +105,23 @@ export default {
   display: flex;
   flex-direction: column;
   margin-bottom: 30px;
+  &.mini {
+    font-size: 0.8em;
+    margin-bottom: 10px;
+    .label {
+      font-size: 1.2em;
+    }
+    .item {
+      width: 50px;
+    }
+    img {
+      width: 50px;
+      height: 50px;
+    }
+    .more {
+      display: none;
+    }
+  }
   .label {
     font-size: 1.5em;
     margin-bottom: 10px;

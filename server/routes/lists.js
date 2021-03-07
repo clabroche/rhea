@@ -15,9 +15,13 @@ router.post('/', authentification, async function(req, res, next) {
   res.json(list)
 })
 
-router.get('/:listId', authentification, async function(req, res, next) {
+router.get('/:listId', authentification, async function (req, res, next) {
   const list = await Lists.getList(req.params.listId)
   await list.loadItems()
+  res.json(list)
+})
+router.get('/:listId/recommendations', authentification, async function (req, res, next) {
+  const list = await Lists.getListRecommendations(req.params.listId, req.user._id)
   res.json(list)
 })
 router.post('/:listId/addItem', authentification, async function(req, res, next) {

@@ -3,6 +3,8 @@ const ObjectID = require('mongodb').ObjectID
 const PromiseB = require('bluebird')
 const lodash = require('lodash')
 const Items = require('./Items')
+const Events = require('./Events')
+// const Inventory = require('./Inventory')
 /**
  * 
  * @param {List} list 
@@ -43,6 +45,34 @@ List.getList = async function (listId) {
     return Object.assign(conf, item)
   })
   return new List(list)
+}
+/** @param {string} listId */
+List.getListRecommendations = async function (listId, userId) {
+  const populars = await Items.getPopular(userId)
+  const list = await List.getList(listId)
+  const existingItemsIds = list.confs.map(conf => conf._id.toString())
+  // const inventory = await Inventory.getList(userId)
+  // let inventoryItemsId = inventory.confs.map(conf => conf._id)
+  // console.log(inventoryItemsId)
+  const filter = item =>  !existingItemsIds.includes(item._id.toString())
+  const events = await Events.getWeek(userId)
+  let itemsFromRecipes = []
+  await PromiseB.map(events, ev => {
+    if(ev.recipes) {
+      return PromiseB.map(ev.recipes, async recipe => {
+        await PromiseB.map(recipe.itemsId, async itemId => {
+          itemsFromRecipes.push(await Items.getItem(itemId))
+        })
+      });
+    }
+  })
+  itemsFromRecipes = itemsFromRecipes
+    .filter(v => v && v._id)
+    .filter((v, i, a) => a.findIndex(t => (t._id.toString() === v._id.toString())) === i)
+  return {
+    populars: populars.slice(0, 20).filter(filter),
+    recipes: itemsFromRecipes.filter(filter),
+  }
 }
 /** @param {string} listId */
 List.increment = async function (listId, itemId, amount) {
