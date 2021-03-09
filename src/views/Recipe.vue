@@ -15,9 +15,10 @@
       </welcome>
       <div class="items-container">
         <div class="items-list">
-          <div class="item" v-for="item of itemsForRecipe" :key="item._id">
+          <div class="item" v-for="item of itemsForRecipe" :key="item._id" :class="{missing: isInventoryMissing(item)}">
             <div class="actions">
               <div class="delete" @click="deleteLink(item._id)"><i class="fas fa-times" aria-hidden="true"></i></div>
+              <button class="addToList" v-if="isInventoryMissing(item)" @click="openAddToList(item)"> <i class="fas fa-shopping-cart"></i></button>
             </div>
             <input v-if="recipe.quantities" class="item-quantity" v-model.number="recipe.quantities[item._id]"/>
             <div class="item-name">{{item.name}}</div>
@@ -35,6 +36,19 @@
         <search-items v-model:value="itemsSelected" :excludedItems="itemsForRecipe"></search-items>
       </template>
     </modal-vue>
+    <modal-vue ref="addToListModal">
+      <template #header>
+        Insérer dans une liste
+      </template>
+      <template #body="{data: item}" >
+        <div v-if="item" class="lists">
+          <div v-for="list of lists" :key="list._id" @click="addToList(list, item)" class="list">
+            {{list.name}}
+            <i class="fas fa-chevron-right" aria-hidden="true"></i>
+          </div>
+        </div>
+      </template>
+    </modal-vue>
   </div>
 </template>
 
@@ -50,6 +64,8 @@ import Welcome from '../components/dashboard/Welcome.vue';
 import Stars from '../components/Stars.vue';
 import { computed, onMounted, ref, watch } from '@vue/runtime-core';
 import router from '../router';
+import Inventory from '../services/inventory.js';
+import Lists from '../services/lists';
 
 export default {
   components: {
@@ -94,7 +110,47 @@ export default {
       notification.next('success', 'L\'ingrédient a été retiré à la liste.')
       return getRecipe()
     }
+
+    // Inventory behavior
+    const inventoryItemsConf = ref([])
+    onMounted(async() => {
+      const inventory = await Inventory.get()
+      if(inventory && inventory.confs) {
+        inventoryItemsConf.value = inventory.confs
+      }
+    })
+    const isInventoryMissing = (item) => {
+      const itemInInventory = inventoryItemsConf.value.find(i => i?._id === item?._id)
+      return itemInInventory ? true : false
+    }
+
+    // add to list 
+    const addToListModal = ref()
+    const openAddToList = (item) => {
+      addToListModal.value.open(item).subscribe(res => {
+        console.log(res)
+      }) 
+    }
+    const addToList = async (list, item) => {
+      addToListModal.value.close()
+      await Lists.addItem(list._id, {
+        _id: item._id,
+        selected: 0,
+        total: 1
+      })
+      .then(() => notification.next('success', `Le produit a été ajouté à la liste ${list.name}.`))
+      .catch(() => notification.next('error', `Le produit n'a pu être ajouté à la liste ${list.name}.`))
+    }
+    const lists = ref([])
+    onMounted(async() => {
+      lists.value = await Lists.getLists()
+      getRecipe()
+    })
     return {
+      addToListModal,
+      openAddToList,
+      addToList,
+      lists,
       recipeId,
       recipe,
       itemsSelected,
@@ -102,6 +158,8 @@ export default {
       linkItem,
       deleteLink,
       linkModal,
+      inventoryItemsConf,
+      isInventoryMissing,
       async update() {
         await Recipe.createRecipe(recipe.value)
           .then(() => notification.next('success', 'La recette est mise à jour.'))
@@ -183,6 +241,9 @@ export default {
         display: flex;
         padding: 10px 15px;
         box-sizing: border-box;
+        &.missing .item-name {
+          color: red;
+        }
         .item-quantity {
           width: 30px;
           margin: 0;
@@ -194,7 +255,15 @@ export default {
           border: none;
         }
         .actions {
-          margin-right: 10px
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          &>* {
+            margin-right: 10px
+          }
+          .addToList {
+            border-radius: 10px;
+          }
         }
       }
       .link-item {
@@ -232,6 +301,20 @@ export default {
         display: inline-block;
         margin-bottom: 5px;
       }
+    }
+  }
+}
+
+.lists {
+  max-height: 150px;
+  overflow: auto;
+  .list {
+    padding: 10px 0;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    justify-content: space-between;
+    &:last-of-type {
+      border-bottom: none;
     }
   }
 }
