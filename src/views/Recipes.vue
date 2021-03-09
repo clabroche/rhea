@@ -10,7 +10,7 @@
       <i class="fas fa-search" aria-hidden="true"></i>
       <input type="text" v-model="filterItems" placeholder="Chercher un produit">
     </div>
-    <div class="recipes-container" ref="scrollElement" @scroll="setPosition">
+    <div class="recipes-container" save-scroll>
       <div v-for="recipe of filteredRecipes" :key="recipe._id" @click="$router.push({name:'recipe', params: {recipeId: recipe._id}})">
         <line-vue
           :additionalLeft="recipe.itemsId.length"
@@ -68,7 +68,6 @@ export default {
   async mounted() {
     header.set('Mes recettes')
     await this.getRecipes()
-    this.$refs.scrollElement.scrollTop = this.$root.scroll.listRecipes
     Socket.socket.on('recipes:update', this.getRecipes)
     Socket.socket.on('recipes:item:add', this.getRecipes)
     Socket.socket.on('recipes:item:delete', this.getRecipes)
@@ -81,9 +80,6 @@ export default {
     Socket.socket.off('recipes:delete', this.getRecipes)
   },
   methods: {
-    setPosition() {
-      this.$root.scroll.listRecipes = this.$refs.scrollElement.scrollTop
-    },
     async openOptions(recipe) {
       this.$refs.options.open(recipe.name)
       this.selectedRecipe = recipe

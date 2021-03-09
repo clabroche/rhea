@@ -10,7 +10,7 @@
       <i class="fas fa-search" aria-hidden="true"></i>
       <input type="text" v-model="filterCategories" placeholder="Chercher un produit">
     </div>
-    <div class="categories-container" ref="scrollElement" @scroll="setPosition">
+    <div class="categories-container" save-scroll>
       <div v-for="category of filteredCategories" :key="category._id" @click="$router.push({name:'category', params: {categoryId: category._id}})">
         <line-vue
           :additionalLeft="category.itemsId.length"
@@ -68,7 +68,6 @@ export default {
   async mounted() {
     header.set('Catégories')
     await this.getCategories()
-    this.$refs.scrollElement.scrollTop = this.$root.scroll.listCategories
     Socket.socket.on('category:item:add', this.getCategories)
     Socket.socket.on('category:item:delete', this.getCategories)
     Socket.socket.on('category:delete', this.getCategories)
@@ -81,9 +80,6 @@ export default {
     Socket.socket.off('category:update', this.getCategories)
   },
   methods: {
-    setPosition() {
-      this.$root.scroll.listCategories = this.$refs.scrollElement.scrollTop
-    },
     async openOptions(category) {
       this.$refs.options.open(category.name)
       this.selectedCategory = category

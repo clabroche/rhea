@@ -20,7 +20,7 @@
       </div>
     </div>
     <div v-if="onlyNotCategorize" class="onlyNotCategorizeText">Seul les produits sans catégories sont affichés</div>
-    <div class="items-container" @scroll="setPosition" ref="scrollElement">
+    <div class="items-container" save-scroll>
       <div v-for="item of filteredItems" :key="item._id" @click="$router.push({name:'item', params: {itemId: item._id}})">
         <line-vue
           :additionalAction="true"
@@ -124,7 +124,6 @@ export default {
   async mounted() {
     header.set('Mes produits')
     await this.refresh()
-    this.$refs.scrollElement.scrollTop = this.$root.scroll.listItems
     Socket.socket.on('item:update', this.refresh)
     Socket.socket.on('item:delete', this.refresh)
     Socket.socket.on('category:update', this.refresh)
@@ -150,7 +149,6 @@ export default {
       categories.forEach(categ => this.categories[categ._id] = categ)
     },
     setPosition(evt) {
-      this.$root.scroll.listItems = this.$refs.scrollElement.scrollTop
       if(evt.target.scrollTop + evt.target.offsetHeight > evt.target.scrollHeight - 100) {
         this.max += 10
       }

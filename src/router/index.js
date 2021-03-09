@@ -78,7 +78,23 @@ const routes = [
 
 const router = createRouter({
   history: createWebHashHistory(),
-  routes
+  routes,
+  scrollBehavior(to, from, savedHistory) {
+    try {
+      localStorage.setItem(`scroll-${from.name.toString()}`, document.querySelector('[save-scroll]')?.scrollTop.toFixed())
+      if(savedHistory) {
+        const saved = localStorage.getItem(`scroll-${to.name.toString()}`)
+        setTimeout(() => {
+          const a = document.querySelector('[save-scroll]')
+          if(a) {
+            a.scrollTop = +saved
+          }
+        }, 100);
+      }
+    // eslint-disable-next-line no-empty
+    } catch (error) {
+    }
+  }
 })
 
 export default router

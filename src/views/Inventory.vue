@@ -11,7 +11,7 @@
       <i class="fas fa-search" aria-hidden="true"></i>
       <input type="text" v-model="filterInventory" placeholder="Chercher un produit">
     </div>
-    <div class="items-container" @scroll="setPosition" ref="scrollElement">
+    <div class="items-container" save-scroll>
       <div v-for="item of filteredItems" :key="item._id" @click="openItem(item)">
         <line-vue
           :additionalLeft="item.total"
@@ -109,7 +109,6 @@ export default {
     await this.getAllItems()
     const categories = await Category.getCategories() 
     categories.forEach(categ => this.categories[categ._id] = categ)
-    this.$refs.scrollElement.scrollTop = this.$root.scroll.listItems
     Socket.socket.on('inventory:update', this.getAllItems)
     Socket.socket.on('inventory:item:add', this.getAllItems)
     Socket.socket.on('inventory:item:delete', this.getAllItems)
@@ -167,9 +166,6 @@ export default {
         await inventory.updateTotal(item._id, item.total)
         await this.getAllItems()
       }) 
-    },
-    setPosition() {
-      this.$root.scroll.listItems = this.$refs.scrollElement.scrollTop
     },
     getCategoriesForItem(item) {
       return item.categoriesId.map(categoryId => this.categories[categoryId] ?  ' ' +this.categories[categoryId].name : '').join(', ')

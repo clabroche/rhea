@@ -67,7 +67,6 @@ export default {
   },
   async created() {
     SplashScreen.hide()
-    this.$root.scroll = {}
     httpError.subscribe(err => {
       if(err.response && err.response.status === 403) {
         notif.next('error', 'Vous n\'êtes pas authentifié.')
