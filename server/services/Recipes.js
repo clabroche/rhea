@@ -63,10 +63,13 @@ Recipe.get = async function (ownerId, recipeId) {
     .findOne({ ownerId: mongo.getID(ownerId), _id: mongo.getID(recipeId) })
 }
 Recipe.linkItems = async function (ownerId, recipeId, itemsId) {
-  const quantities = {}
+  const recipe = await Recipe.get(ownerId, recipeId)
+  if(!recipe) return
+  const quantities = recipe.quantities || {}
   itemsId.map(itemId => {
     quantities[itemId] = 1
   })
+  console.log(quantities)
   return PromiseB.map(itemsId, async itemId => {
     await mongo.collection('recipes')
       .updateOne(

@@ -1,6 +1,6 @@
 <template>
   <div class="root-recipe">
-    <div class="list-container">
+    <div class="list-container" v-if="recipe">
       <welcome :header="recipe.name" description=" " headerFontSize="1.4em">
         <div class="scores">
           <div class="score">
@@ -46,9 +46,10 @@ import items from '../services/items';
 import PromiseB from 'bluebird'
 import SearchItemsVue from '../components/SearchItems.vue';
 import notification from '../services/notification'
-import header from '../services/Header'
 import Welcome from '../components/dashboard/Welcome.vue';
 import Stars from '../components/Stars.vue';
+import { computed, onMounted, ref, watch } from '@vue/runtime-core';
+import router from '../router';
 
 export default {
   components: {
@@ -58,47 +59,56 @@ export default {
     Welcome,
     Stars
   },
-  data() {
-    return {
-      recipeId: null,
-      recipe: {},
-      itemsSelected: [],
-      itemsForRecipe: [],
+  setup() {
+    const recipeId = computed(() => router.currentRoute.value.params.recipeId) 
+
+    /** @type {import('vue').Ref<import('../services/Recipe').default>} */
+    const recipe = ref(null)
+    const getRecipe = async() => {
+      recipe.value = await Recipe.get(recipeId.value)
     }
-  },
-  async mounted() {
-    this.recipeId = this.$route.params.recipeId 
-    this.reload()
-  },
-  methods: {
-    async reload() {
-      await this.getRecipe()
-    },
-    async getRecipe() {
-      this.recipe = await Recipe.get(this.recipeId)
-      header.set('Ma recette', this.recipe.name)
-      if(this.recipe.itemsId) {
-        this.itemsForRecipe = await PromiseB.map(this.recipe.itemsId, itemId => items.get(itemId))
+    onMounted(getRecipe)
+
+    const itemsForRecipe = ref([])
+    watch(() => recipe.value, async () => {
+      if(recipe.value.itemsId) {
+        itemsForRecipe.value = await PromiseB.map(recipe.value.itemsId, itemId => items.get(itemId))
       }
-    },
-    async update() {
-      await Recipe.createRecipe(this.recipe)
-        .then(() => notification.next('success', 'La recette est mise à jour.'))
-        .catch(() => notification.next('error', 'La recette n\'à pas pu être mise à jour.'))
-      await this.getRecipe()
-    },
-    async linkItem() {
-      this.$refs.linkModal.open().subscribe(async res => {
+    })
+
+    // Link ItemBehavior
+    const linkModal = ref(null)
+    const itemsSelected = ref([])
+    const linkItem = async () => {
+      linkModal.value.open().subscribe(async res => {
         if(!res) return 
-        await Recipe.linkItems(this.recipeId, this.itemsSelected.map(item => item._id))
+        await Recipe.linkItems(recipeId.value, itemsSelected.value.map(item => item._id))
         notification.next('success', 'L\'ingrédient a été ajouté à la liste.')
-        this.reload()
+        getRecipe()
       })
-    },
-    async deleteLink(itemId) {
-      await Recipe.deleteLink(this.recipeId, itemId)
+    }
+
+    // delete item behavior
+    const deleteLink = async (itemId) => {
+      await Recipe.deleteLink(recipeId.value, itemId)
       notification.next('success', 'L\'ingrédient a été retiré à la liste.')
-      return this.reload()
+      return getRecipe()
+    }
+    return {
+      recipeId,
+      recipe,
+      itemsSelected,
+      itemsForRecipe,
+      linkItem,
+      deleteLink,
+      linkModal,
+      async update() {
+        await Recipe.createRecipe(recipe.value)
+          .then(() => notification.next('success', 'La recette est mise à jour.'))
+          .catch(() => notification.next('error', 'La recette n\'à pas pu être mise à jour.'))
+        await getRecipe()
+      },
+      
     }
   }
 }
