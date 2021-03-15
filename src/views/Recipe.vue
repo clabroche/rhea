@@ -121,7 +121,7 @@ export default {
     })
     const isInventoryMissing = (item) => {
       const itemInInventory = inventoryItemsConf.value.find(i => i?._id === item?._id)
-      return itemInInventory ? true : false
+      return itemInInventory ? false : true
     }
 
     // add to list 
