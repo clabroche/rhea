@@ -61,6 +61,7 @@ export default {
     }
   },
   computed: {
+    /** @return {import('../services/Recipe').default[]} */
     filteredRecipes() {
       return this.recipes.filter(recipe => recipe.name.toUpperCase().includes(this.filterItems.toUpperCase()))
     }
@@ -84,9 +85,10 @@ export default {
       this.$refs.options.open(recipe.name)
       this.selectedRecipe = recipe
     },
+    /**@param {import('../services/Recipe').default} recipe*/
     async deleteRecipe() {
-      await Recipe.deleteRecipe(this.selectedRecipe._id) 
-      this.selecteRecipe = null
+      await this.selectedRecipe.deleteRecipe() 
+      this.selectedRecipe = null
       return this.getRecipes()
     },
     async getRecipes() {
