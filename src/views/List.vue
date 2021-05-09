@@ -1,6 +1,6 @@
 <template>
   <div class="list-root" v-if="list">
-    <welcome image="bullet" :header="list?.name || ' '" description=" " :mini="true"  :actions="[{icon: 'fas fa-plus', cb: createItem}]"/>
+    <welcome image="bullet" :header="list?.name || ' '" description="Ma liste" :mini="true"  :actions="[{icon: 'fas fa-plus', cb: createItem}]"/>
     <svg-background :bottom="categories && categories.length" svg="list">
       <br>
       <div>On y est presque !</div>
@@ -42,7 +42,7 @@
             </div>
             <div v-else>
               <transition-group name="fade" >
-                  <div v-for="category of sortedCategories" :key="category.label" class="fade">
+                  <div v-for="category of sortedCategories" :key="category.label" class="fade group">
                     <div class="label" @click="category.collapse = !category.collapse">
                       <span>{{category.label}}</span>
                       <i class="fas" aria-hidden="true" :class="category.collapse ? 'fa-chevron-down' : 'fa-chevron-up'"></i>
@@ -75,7 +75,7 @@
     <bottom-bar v-if="list._id" :text="list.items.length + ' produits pour un montant de ' + getTotalPrice + '€'"/>
     <modal-vue ref="createModal" height="auto">
       <template #body class="createModal">
-        <product-section headerText="Populaires:" :mini="true" :listToAdd="list" :list="popularsComputed" @close="getRecommendations"></product-section>
+        <product-section headerText="Populaires" :mini="true" :listToAdd="list" :list="popularsComputed" @close="getRecommendations"></product-section>
         <product-section headerText="Recettes jusqu'à la semaine prochaine:" :mini="true" :listToAdd="list" :list="recipesComputed" @close="getRecommendations"></product-section>
         ou sélectionne un produit
         <multiselect :options="allItems" customKey="_id" customLabel="name" :single="true" placeholder="Choisir un produit..." @input="selectItem"/>
@@ -284,7 +284,6 @@ export default {
   height: 100%;
   .list-container {
     height:100%;
-    padding: 10px;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
@@ -292,14 +291,17 @@ export default {
       flex-grow: 1;
       overflow: auto;
       position: relative;
-      padding: 5px;
+      padding: 5px 15px;
+      box-sizing: border-box;
     }
     .label {
       display: flex;
       align-items: center;
       justify-content: space-between;
+      margin-top: 20px;
       font-size: 1.5em;
-      color: var(--headerBgColor)
+      color: var(--headerBgColor);
+      
     }
   }
 }
@@ -329,11 +331,16 @@ export default {
     text-align: center;
   }
 }
+.group:first-child {
+  .label {
+    margin-top: 0px;
+  }
+}
 .fade-tab-enter-active,
 .fade-tab-leave-active {
   transition: opacity 0.3s ease;
   position: absolute !important;
-  width: calc(100% - 10px);
+  width: calc(100% - 30px);
 }
 .fade-tab-enter-from,
 .fade-tab-leave-to {

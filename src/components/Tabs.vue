@@ -1,8 +1,9 @@
 <template>
   <div class="tabs">
-    <div class="buttons">
-      <button @click="currentTab = tab" v-for="tab of tabs" :key="tab.label" :class="{active: tab?.id === currentTab?.id}">
-        {{tab.label}}
+    <div class="buttons" :class="{invert:invertColor}">
+      <button @click="currentTab = tab;save()" v-for="tab of tabs" :key="tab.label" :class="{active: tab?.id === currentTab?.id}">
+        <div v-if="tab.label && !tab.icon">{{tab.label}}</div>
+        <i v-if="tab.icon" :class="tab.icon" aria-hidden="true"></i>
         <label v-if="showLabels">{{tab?.data?.value?.length || tab?.data?.length || 0}}</label>
       </button>
     </div>
@@ -17,15 +18,22 @@ import { ref, onMounted } from 'vue'
 export default {
   props: {
     tabs: {default: () => []},
-    showLabels: {default: true}
+    showLabels: {default: true},
+    invertColor: {default: false}
   },
   setup(props) {
     const currentTab = ref()
     onMounted(() => {
-      if(props.tabs) currentTab.value = props.tabs[0]
+      if(props.tabs) {
+        const tabId = localStorage.getItem('tab')
+        currentTab.value = props.tabs[+tabId || 0]
+      }
     })
     return {
-      currentTab
+      currentTab,
+      save() {
+        localStorage.setItem('tab', props.tabs.findIndex(tab => tab.id === currentTab.value.id))
+      }
     }
   }
 }
@@ -41,38 +49,66 @@ export default {
 }
 .buttons {
   display: flex;
+  justify-content: center;
   align-items: flex-end;
   margin: auto;
   margin-bottom: 10px;
-  border-bottom: 2px solid var(--headerBgColor);
   height: 45px;
   flex-shrink: 0;
   width: 90%;
+  &.invert {
+    button.active {
+      color: #fff;
+      border-bottom-color: #fff;
+      background: transparent;
+      box-shadow: 2px 2px 5px rgba(0,0,0,0.2) inset,
+      -2px -2px 5px rgba(255,255,255,0.2) inset;
+    }
+    button {
+      color: #ccc;
+      border-color: rgba(0,0,0,0.1);
+      border-color: transparent;
+      box-shadow: 2px 2px 5px rgba(0,0,0,0.2),
+      -2px -2px 5px rgba(255,255,255,0.2);
+    }
+  }
   button {
-    background-color: white;
-    color: black;
+    outline: none;
+    color: #999;
     border-radius: 5px 5px 0 0;
-    transition: 300ms;
-    border: 1px solid var(--headerBgColor);
+    transition: 200ms;
+    transition-property: font-size, box-shadow;
     border-bottom: 0;
-    box-shadow: 0 0 7px -1px darkgrey;
-    height: 30px;
+    height: 40px;
+    padding: 0 20px;
     display: flex;
     justify-content: center;
     align-items: center;
+    background: transparent;
     margin: 0 5px;
+    font-size: 1em;
+    box-shadow: 5px 5px 10px rgba(0,0,0,0.2),
+      -5px -5px 10px rgba(255,255,255,0.8);
+    border: 1px solid #efefef;
+    &:hover {
+      box-shadow: none;
+      transform: none;
+    }
+    i {
+      font-size: 1.2em;
+    }
     &.active {
       border-radius: 5px 5px 0 0;
-      height: auto;
-      background-color: var(--headerBgColor);
-      color: white;
-      font-size: 0.9em;
+      color: #777;
       margin-bottom: -1px;
+      border-bottom: 3px solid #0076bc;
+      box-shadow: 2px 2px 7px rgba(0,0,0,0.2) inset,
+      -5px -5px 7px rgba(255,255,255,0.6) inset;
     }
     label {
       background-color: #fff;
       margin-left: 10px;
-      color: var(--headerBgColor);
+      color: #0076bc;
       display: flex;
       justify-content: center;
       align-items: center;

@@ -1,13 +1,15 @@
 <template>
-  <div class="welcome-root" :class="{[image]: image, mini}">
-    <div class="title" :style="{fontSize: headerFontSize }">
-      {{header}}
+  <div class="welcome-root">
+    <div class="left">
+      <div class="title" :style="{fontSize: headerFontSize }">
+        {{header}}
+      </div>
+      <div class="description" v-if="description.trim()">
+        {{description}}
+        <slot></slot>
+      </div>
     </div>
-    <div class="description">
-      {{description}}
-      <slot></slot>
-    </div>
-    <div class="actions" v-if="actions?.length">
+    <div class="right" v-if="actions?.length">
       <div class="action" @click="action.cb()" v-for="(action, i) of actions" :key="'action-' + i">
         <i :class="'fas fa-'+ action.icon" aria-hidden="true"></i>
       </div>
@@ -30,74 +32,39 @@ export default {
 
 <style lang="scss" scoped>
 .welcome-root {
+  height: 50px;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
+  justify-content: space-between;
+  padding: 10px 20px;
+  padding-bottom: 0;
   align-items: center;
-  height: 175px;
   background-size: cover;
   color: white;
   position: relative;
   margin-bottom: 1px;
   flex-shrink: 0;
-  @include backgroundGradientImage(0.8, '../../assets/login.jpg');
-  &.bullet::before  {
-    background-image: url('../../assets/bullet.jpg');
-    background-position: bottom;
-  }
-  &.kitchen::before  {
-    background-image: url('../../assets/kitchen.jpg');
-    background-position: 50%;
-  }
-  &.smoothies::before  {
-    background-image: url('../../assets/smoothies.jpg');
-    background-position: 50%;
-  }
-  &.calendar::before  {
-    background-image: url('../../assets/calendar.jpg');
-    background-position: 100% 100%;
-  }
-  &.mini {
-    height: 100px;
-    .title {
-      font-size: 1.4em;
-    }
-    .description {
-      font-size: 0.9em;
-      margin-top: 10px;
-    }
-  }
   .title {
-    font-size: 3em;
-    text-align: center;
+    font-size: 1.8em;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: var(--headerBgColor);
   }
   .description {
     font-size: 1em;
-    margin-top: 20px;
-    text-align: center;
+    font-size: 0.9em;
+    color: var(--headerBgColor);
   }
 }
-.actions {
-  position: absolute;
-  right: 0;
-  top: 0;
+.right {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  margin: 0 10px;
   .action{
     flex-shrink: 0;
-    padding: 10px;
-    margin: 5px 0;
-    background-color: rgba(0,0,0,0.4);
-    border-radius: 50%;
-    width: 20px;
-    height: 20px;
     display: flex;
     justify-content: center;
     align-items: center;
+    color: var(--headerBgColor);
+    margin: 0 10px;
+    font-size: 1.5em;
   }
 }
 </style>

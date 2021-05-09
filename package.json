@@ -45,7 +45,7 @@
     "vue-stars": "^1.2.2"
   },
   "devDependencies": {
-    "@iryu54/stack-monitor": "^1.6.26",
+    "@iryu54/stack-monitor": "^1.7.3",
     "@nklayman/vue-cli-plugin-capacitor": "^0.4.0",
     "@vue/cli-plugin-babel": "^4.5.11",
     "@vue/cli-plugin-eslint": "^4.5.11",

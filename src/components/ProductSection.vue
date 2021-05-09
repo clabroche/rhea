@@ -125,6 +125,7 @@ export default {
   .label {
     font-size: 1.5em;
     margin-bottom: 10px;
+    color: var(--headerBgColor);
     i {
       margin-right: 10px;
     }
@@ -132,6 +133,8 @@ export default {
   .items {
     display: flex;
     overflow: auto;
+    padding: 2px;
+    box-sizing: border-box;
   }
   .no-items {
     display: flex;
@@ -187,6 +190,11 @@ export default {
     height: 100px;
     width: 100px;
     object-fit: cover;
+    border-radius: 10px;
+    background-color: #fff;
+    box-shadow: 0 0 10px 2px #ccc;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
   }
 }
 .lists {

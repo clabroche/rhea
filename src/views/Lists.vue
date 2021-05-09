@@ -61,6 +61,7 @@ export default {
     }
   },
   computed: {
+    /** @return {Array} */
     sortedLists() {
       return sort(this.lists).desc('_id')
     }
@@ -88,7 +89,7 @@ export default {
     },
     async deleteList() {
       await Lists.deleteList(this.selectedList._id) 
-      this.selecteList = null
+      this.selectedList = null
       return this.getLists()
     },
     async getLists() {
@@ -116,7 +117,7 @@ export default {
   height: 100%;
   .lists-container {
     height:100%;
-    padding: 10px;
+    padding: 0 10px;
     overflow: auto;
   }
 }
