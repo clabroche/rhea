@@ -5,8 +5,6 @@ const router = express.Router();
 
 router.get('/', async(req, res) => {
   const url = req.query.url
-  console.log(url)
-
   axios.get(url.toString(), {responseType: 'arraybuffer'})
     .then(async({data})=> {
       const headers = {

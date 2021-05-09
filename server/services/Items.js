@@ -94,14 +94,15 @@ Item.prototype.enrich = async function (force = false) {
     const page = await browser.newPage()
     try {
       await page.goto(url)
-      await page.waitForSelector('.result__link', {timeout: 5000})
-      const $images = await page.$$('.result__link')
+      await page.waitForSelector('.Images-module__ImagesGrid___KhooK', {timeout: 5000})
+      const $images = await page.$$('[data-testid="imageResult"] img')
       this.images = await PromiseB.map($images.slice(0, 10), async $image => {
-        const link = await $image.getProperty('href')
+        const link = await $image.getProperty('src')
         if(!link) return
         return link.jsonValue()
       }).filter(a => a ? true : false)
-      console.log(this.images)
+        // @ts-ignore
+        .map((a) => a.split('?u=')[1])
       if(!this.image) {
         this.image = this.images[0]
       }
