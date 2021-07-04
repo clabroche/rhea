@@ -1,1 +1,15 @@
-{"appId":"com.coco.rhea","appName":"Rhea","bundledWebRuntime":false,"webDir":"./server/public"}
+{
+	"appId": "com.coco.rhea",
+	"appName": "Rhea",
+	"bundledWebRuntime": false,
+	"webDir": "./server/public",
+	"plugins": {
+		"SplashScreen": {
+			"launchAutoHide": false,
+			"androidScaleType": "CENTER_CROP",
+			"showSpinner": false,
+			"splashFullScreen": false,
+			"splashImmersive": false
+		}
+	}
+}

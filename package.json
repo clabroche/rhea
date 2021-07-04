@@ -20,9 +20,9 @@
     "server": "cd server && npm run serve"
   },
   "dependencies": {
-    "@capacitor/android": "^2.0.0",
-    "@capacitor/cli": "^2.0.0",
-    "@capacitor/core": "^2.0.0",
+    "@capacitor/android": "^3.0.2",
+    "@capacitor/cli": "^3.0.2",
+    "@capacitor/core": "^3.0.2",
     "@fortawesome/fontawesome-free": "^5.15.2",
     "@ionic-native/barcode-scanner": "^5.31.1",
     "@ionic-native/core": "^5.31.1",
