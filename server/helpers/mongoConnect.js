@@ -22,8 +22,9 @@ MongoConnect.prototype.connect = async function(url) {
     const client = await MongoClient.connect(url, {poolSize: 10, useNewUrlParser: true})
     this.client = client
     this.db = client.db(db)
-    this.db.on('close', () => {
-      this.db = null
+    this.client.on('close', () => {
+      console.log('Connection Mongo lost: Reconnect...')
+      this.connect(url)
     })
     await this.createIndexes()
     return this.db
